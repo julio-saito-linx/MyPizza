@@ -20,7 +20,8 @@ namespace Pizzaria.Dominio.Servicos
 
         public Pizza PesquisarNome(string nome)
         {
-            return new Pizza{ Id = 1000, Nome = nome };
+            //FIXME: Cria uma nova pizza só para retornar valor teste.
+            return new Pizza{Id = 0, Nome = nome};
         }
 
         public IList<Pizza> PesquisarTodos()

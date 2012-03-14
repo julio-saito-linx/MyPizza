@@ -30,7 +30,8 @@
         <asp:TextBox ID="txtConsulta" runat="server"></asp:TextBox>
     </p>
         <!--<asp:Button ID="btConsulta" runat="server" Text="Buscar" />-->
-        <input id="btConsulta" type="button" value="Buscar" />  
+        <input id="btConsulta" type="button" value="Buscar" />
+        <input id="btConsulta2" type="button" value="Buscar V'arios" />  
     <div id="divResultado2">
     </div>
       
@@ -75,6 +76,29 @@
             });
 
             request.fail(function(jqXHR, textStatus) {
+                alert("Request failed: " + textStatus);
+            });
+        });
+
+        $("#btConsulta2").click(function () {
+            var nome = $("#txtConsulta").val();
+
+            var request = $.ajax({
+                type: "POST",
+                //url: "Default.aspx?sel=1",
+                url: "Default.aspx/Pizzas",
+                contentType: "application/json",
+                data: "{nome:'" + nome + "'}"
+            });
+
+            request.done(function (data) {
+                $("#divResultado2").html("");
+                $.each(data.d, function (index) {
+                    $("#divResultado2").append("<p>ID: " + data.d[index].Id + "</p><p>Nome: " + data.d[index].Nome + "</p>");
+                });
+            });
+
+            request.fail(function (jqXHR, textStatus) {
                 alert("Request failed: " + textStatus);
             });
         });

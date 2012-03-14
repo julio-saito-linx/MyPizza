@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Pizzaria.Dominio.Entidades;
@@ -7,6 +9,8 @@ using Pizzaria.Dominio.Repositorios;
 using Pizzaria.Dominio.Servicos;
 using Pizzaria.NHibernate.Helpers;
 using Pizzaria.NHibernate.Repositorios;
+
+using NHibernate.Criterion;
 
 namespace Pizzaria
 {
@@ -59,7 +63,7 @@ namespace Pizzaria
             IPizzaServico pizzaServico = _container.Resolve<IPizzaServico>();
             return pizzaServico.PesquisarTodos().Count;
         }
-        
+
         private int InsertNewPizza()
         {
             var provider = new SessionFactoryProvider();
@@ -73,9 +77,9 @@ namespace Pizzaria
                 var pizza = new Pizza {Nome = nome};
                 sessaoAtual.Save(pizza);
 
-                var ingrediente1 = new Ingrediente { Nome = Request.Form["I1"].ToString() };
-                var ingrediente2 = new Ingrediente { Nome = Request.Form["I2"].ToString() };
-                var ingrediente3 = new Ingrediente { Nome = Request.Form["I3"].ToString() };
+                var ingrediente1 = new Ingrediente {Nome = Request.Form["I1"].ToString()};
+                var ingrediente2 = new Ingrediente {Nome = Request.Form["I2"].ToString()};
+                var ingrediente3 = new Ingrediente {Nome = Request.Form["I3"].ToString()};
 
                 pizza.AcrescentarIngrediente(ingrediente1);
                 pizza.AcrescentarIngrediente(ingrediente2);
@@ -100,25 +104,61 @@ namespace Pizzaria
         private int InsertNewPizza2()
         {
             //var pizzaServico = _container.Resolve<IPizzaServico>();
-            Global global = new Global();
+            var global = new Global();
             var pizzaServico = global.Container.Resolve<IPizzaServico>();
 
             string nome = Request.Form["Nome"].ToString();
 
-            var pizza = new Pizza { Nome = nome };
+            var pizza = new Pizza {Nome = nome};
             pizzaServico.Save(pizza);
 
             return pizza.Id;
         }
 
         [System.Web.Services.WebMethod]
-        public static Pizza Pizza(string nome)
+        public static Pizza Pizza(string nome) 
         {
-            IPizzaServico pizzaServico = _container.Resolve<IPizzaServico>();
+            //IPizzaServico pizzaServico = _container.Resolve<IPizzaServico>();
+            //Pizza pizza = pizzaServico.PesquisarNome(nome);
 
-            Pizza pizza = pizzaServico.PesquisarNome(nome);
+            var provider = new SessionFactoryProvider();
+            var sessionProvider = new SessionProvider(provider);
+            var sessaoAtual = sessionProvider.GetCurrentSession();
+
+           Pizza pizza = new Pizza();
+           pizza = sessaoAtual.QueryOver<Pizza>()
+                .Where(Restrictions.On<Pizza>(p => p.Nome).IsLike(nome, MatchMode.Start))
+                .OrderBy(p => p.Nome).Asc
+                .List<Pizza>().FirstOrDefault<Pizza>() 
+                ?? new Pizza();
             
+            pizza.Ingredientes = null;
+
+            //JavaScriptSerializer jss = new JavaScriptSerializer();
+            //string s = jss.Serialize(pizza);
+            //pizza = jss.Deserialize<Pizza>(s);
+
             return pizza;
+        }
+
+        [System.Web.Services.WebMethod]
+        public static IList<Pizza> Pizzas(string nome)
+        {
+            var provider = new SessionFactoryProvider();
+            var sessionProvider = new SessionProvider(provider);
+            var sessaoAtual = sessionProvider.GetCurrentSession();
+            
+            IList<Pizza> pizzas = sessaoAtual.QueryOver<Pizza>()
+                .Where(Restrictions.On<Pizza>(p => p.Nome).IsLike(nome, MatchMode.Start))
+                .OrderBy(p => p.Nome).Asc()
+                .List<Pizza>();
+            
+            foreach (var pizza in pizzas)
+            {
+                pizza.Ingredientes = null;
+            }
+            
+            return pizzas;
         }
     }
 }
