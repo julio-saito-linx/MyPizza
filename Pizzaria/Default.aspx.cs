@@ -20,7 +20,7 @@ namespace Pizzaria
 
             if (Request.QueryString["new"] != null)
             {
-                int p = InsertNewPizza();
+                int p = InsertNewPizza2();
 
                 Response.Write(String.Format("Pizza inserida com sucesso! Codigo {0}", p.ToString()));
                 Response.End();
@@ -60,18 +60,6 @@ namespace Pizzaria
             return pizzaServico.PesquisarTodos().Count;
         }
         
-        private int InsertNewPizza2()
-        {
-            var pizzaServico = _container.Resolve<IPizzaServico>();
-            
-            string nome = Request.Form["Nome"].ToString();
-
-            var pizza = new Pizza { Nome = nome };
-            pizzaServico.Save(pizza);
-
-            return pizza.Id;
-        }
-
         private int InsertNewPizza()
         {
             var provider = new SessionFactoryProvider();
@@ -107,6 +95,30 @@ namespace Pizzaria
             {
                 return 0;
             }
+        }
+
+        private int InsertNewPizza2()
+        {
+            //var pizzaServico = _container.Resolve<IPizzaServico>();
+            Global global = new Global();
+            var pizzaServico = global.Container.Resolve<IPizzaServico>();
+
+            string nome = Request.Form["Nome"].ToString();
+
+            var pizza = new Pizza { Nome = nome };
+            pizzaServico.Save(pizza);
+
+            return pizza.Id;
+        }
+
+        [System.Web.Services.WebMethod]
+        public static Pizza Pizza(string nome)
+        {
+            IPizzaServico pizzaServico = _container.Resolve<IPizzaServico>();
+
+            Pizza pizza = pizzaServico.PesquisarNome(nome);
+            
+            return pizza;
         }
     }
 }

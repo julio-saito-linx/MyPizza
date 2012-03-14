@@ -24,18 +24,16 @@
     </div>
     <div id="divResultado1">
     </div>
-    <div id="divResultado2">
-    </div>
+    
     <p>
     <b>Consulta:</b>
         <asp:TextBox ID="txtConsulta" runat="server"></asp:TextBox>
     </p>
         <!--<asp:Button ID="btConsulta" runat="server" Text="Buscar" />-->
-        <input id="btConsulta" type="button" value="Buscar" />
-
-    <asp:GridView ID="GridView1" runat="server">
-    </asp:GridView>
-    
+        <input id="btConsulta" type="button" value="Buscar" />  
+    <div id="divResultado2">
+    </div>
+      
     <script src="Scripts/jquery-1.6.4.min.js" type="text/javascript"> </script>
     <script type="text/javascript">
         $("#btIncluir").click(function() {
@@ -61,19 +59,19 @@
             });
         });
 
-        $("#btConsulta").click(function() {
-            var dados = {
-                Nome: $("#txtConsulta").val()
-            };
+        $("#btConsulta").click(function () {
+            var nome = $("#txtConsulta").val();
 
             var request = $.ajax({
-                    type: "POST",
-                    url: "Default.aspx?sel=1",
-                    data: dados
-                });
-
+                type: "POST",
+                //url: "Default.aspx?sel=1",
+                url: "Default.aspx/Pizza",
+                contentType: "application/json",
+                data: "{nome:'" + nome + "'}"
+            });
+            
             request.done(function(data) {
-                $("#divResultado2").html(data);
+                $("#divResultado2").html("<p>ID: " + data.d.Id + "</p><p>Nome: " + data.d.Nome + "</p>");
             });
 
             request.fail(function(jqXHR, textStatus) {

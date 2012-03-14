@@ -18,6 +18,11 @@ namespace Pizzaria.Dominio.Servicos
             return _pizzaDAO.Get(id);
         }
 
+        public Pizza PesquisarNome(string nome)
+        {
+            return new Pizza{ Id = 1000, Nome = nome };
+        }
+
         public IList<Pizza> PesquisarTodos()
         {
             return _pizzaDAO.GetAll();
