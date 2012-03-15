@@ -72,6 +72,7 @@
     <Content Include="Account\Register.aspx" />
     <Content Include="CriarDados.aspx" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
+    <Content Include="Scripts\jquery-json-yui-gridview-afilho.js" />
     <Content Include="Styles\Site.css" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />

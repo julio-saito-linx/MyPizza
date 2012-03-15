@@ -192,33 +192,5 @@
                 }).render("#pizzaview");
             });
         }
-
-        function garcomGrid(d) {
-            $("#garcomview").html("");
-
-            YUI().use('datatable', function (Y) {
-                // Creates a Columnset with 3 Columns. "cost" is not rendered.
-                //var cols = ["id","name","price"];
-                var cols = [
-                    { key: "Id", sortable: true }
-                , { key: "Nome", sortable: true}];
-
-                // Columns must match data parameter names
-                //var data = [
-                //    { id: "ga-3475", name: "gadget", price: "$6.99", cost: "$5.99" },
-                //    { id: "sp-9980", name: "sprocket", price: "$3.75", cost: "$3.25" },
-                //    { id: "wi-0650", name: "widget", price: "$4.25", cost: "$3.75" }
-                //];
-                var data = d.d;
-
-                // Creates a DataTable with 3 columns and 3 rows
-                var table = new Y.DataTable.Base({
-                    columnset: cols,
-                    recordset: data,
-                    caption: "Pizzas",
-                    plugins: Y.Plugin.DataTableSort
-                }).render("#garcom");
-            });
-        }
     </script>
 </asp:Content>
