@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Web.Script.Serialization;
+using System.Web.UI.WebControls;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Pizzaria.Dominio.Entidades;
@@ -37,6 +38,15 @@ namespace Pizzaria
                 Response.Write(String.Format("Foram encontradas {0} pizzas!", p.ToString()));
                 Response.End();
             }
+
+            GetPeriodo();
+        }
+
+        private void GetPeriodo()
+        {
+            IPeriodoServico periodoServico = _container.Resolve<IPeriodoServico>();
+            ddlPeriodo.DataSource = periodoServico.PesquisarTodos();
+            ddlPeriodo.DataBind();
         }
 
         private static WindsorContainer InicializarContainer()
@@ -54,6 +64,10 @@ namespace Pizzaria
                 _container.Register(Component.For<IIngredienteServico>().ImplementedBy<IngredienteServico>());
                 _container.Register(Component.For<IPizzaDAO>().ImplementedBy<PizzaDAO>());
                 _container.Register(Component.For<IIngredienteDAO>().ImplementedBy<IngredienteDAO>());
+                _container.Register(Component.For<IGarcomDAO>().ImplementedBy<GarcomDAO>());
+                _container.Register(Component.For<IGarcomServico>().ImplementedBy<GarcomServico>());
+                _container.Register(Component.For<IPeriodoDAO>().ImplementedBy<PeriodoDAO>());
+                _container.Register(Component.For<IPeriodoServico>().ImplementedBy<PeriodoServico>());
             }
             return _container;
         }
@@ -147,18 +161,32 @@ namespace Pizzaria
             var provider = new SessionFactoryProvider();
             var sessionProvider = new SessionProvider(provider);
             var sessaoAtual = sessionProvider.GetCurrentSession();
-            
+
             IList<Pizza> pizzas = sessaoAtual.QueryOver<Pizza>()
                 .Where(Restrictions.On<Pizza>(p => p.Nome).IsLike(nome, MatchMode.Start))
-                .OrderBy(p => p.Nome).Asc()
+                .OrderBy(p => p.Id).Asc()
                 .List<Pizza>();
             
             foreach (var pizza in pizzas)
             {
                 pizza.Ingredientes = null;
             }
-            
+
             return pizzas;
+        }
+
+        [System.Web.Services.WebMethod]
+        public static string GarcomSave(string nome, int id)
+        {
+            IPeriodoServico periodoServico = _container.Resolve<IPeriodoServico>();
+            var periodo = periodoServico.PesquisarID(id);
+            
+            IGarcomServico garcomServico = _container.Resolve<IGarcomServico>();
+            var garcom = new Garcom {Nome = nome};
+            garcom.SalvarPeriodo(periodo);
+            garcomServico.Save(garcom);
+
+            return String.Format("Garcom inserido com sucesso! Codigo: {0}", garcom.Id);
         }
     }
 }

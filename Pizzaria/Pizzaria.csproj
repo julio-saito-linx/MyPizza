@@ -70,6 +70,7 @@
     <Content Include="Account\ChangePasswordSuccess.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
+    <Content Include="CriarDados.aspx" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
     <Content Include="Styles\Site.css" />
     <Content Include="Default.aspx" />
@@ -113,6 +114,13 @@
     </Compile>
     <Compile Include="Account\Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CriarDados.aspx.cs">
+      <DependentUpon>CriarDados.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CriarDados.aspx.designer.cs">
+      <DependentUpon>CriarDados.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

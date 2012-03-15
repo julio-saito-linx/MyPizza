@@ -67,12 +67,21 @@ namespace Pizzaria {
         protected global::System.Web.UI.WebControls.TextBox txtConsulta;
         
         /// <summary>
-        /// btConsulta control.
+        /// txtGarcom control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btConsulta;
+        protected global::System.Web.UI.WebControls.TextBox txtGarcom;
+        
+        /// <summary>
+        /// ddlPeriodo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPeriodo;
     }
 }
