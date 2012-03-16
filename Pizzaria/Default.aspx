@@ -6,8 +6,6 @@
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent"> 
     
-    <h1>Pizzaria!</h1>    
-    
     <div id="PizzaPanel" 
     style="padding: 10px; background-color:White; border-color:Red; border-style:dashed;">
         <p>
@@ -25,6 +23,7 @@
             <asp:TextBox ID="txtIngrediente3" runat="server"></asp:TextBox></p>
         <div>
             <input id="btIncluir" type="button" value="Salvar AJAX" />
+            <input id="btExcluir" type="button" value="Excluir AJAX" />
         </div>
     </div>    
     

@@ -9,5 +9,6 @@ namespace Pizzaria.Dominio.Repositorios
         Pizza PesquisarNome(string nome);
         IList<Pizza> PesquisarTodos();
         void Save(Pizza pizza);
+        void Delete(int id);
     }
 }

@@ -121,6 +121,24 @@ namespace Pizzaria
         }
 
         [System.Web.Services.WebMethod]
+        public static string ExcluirPizza(int id)
+        {
+            IPizzaServico pizzaServico = _container.Resolve<IPizzaServico>();
+            Pizza pizza = pizzaServico.PesquisarID(id);
+
+            IIngredienteServico ingredienteServico =
+                _container.Resolve<IIngredienteServico>();
+            foreach (Ingrediente ingrediente in pizza.Ingredientes)
+            {
+                //ingredienteServico.Delete(ingrediente.Id);
+            }
+
+            pizzaServico.Delete(pizza.Id);
+
+            return "Pizza excluida com sucesso!";
+        }
+
+        [System.Web.Services.WebMethod]
         public static Pizza PizzaByName(string nome)
         {
             var provider = new SessionFactoryProvider();
@@ -174,6 +192,7 @@ namespace Pizzaria
             var sessionProvider = new SessionProvider(provider);
             var sessaoAtual = sessionProvider.GetCurrentSession();
 
+            sessaoAtual.Clear();
             IList<Pizza> pizzas = sessaoAtual.QueryOver<Pizza>()
                 .Where(Restrictions.On<Pizza>(p => p.Nome).IsLike(nome, MatchMode.Start))
                 .OrderBy(p => p.Id).Asc()

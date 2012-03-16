@@ -67,6 +67,28 @@ $("#btIncluir").click(function () {
     });
 });
 
+//Excluir pizza
+$("#btExcluir").click(function () {
+    var dados = "{ id:" + $("#txtId").val() + "}";
+
+    var request = $.ajax({
+        type: "POST",
+        url: "Default.aspx/ExcluirPizza",
+        contentType: "application/json",
+        data: dados
+    });
+
+    request.done(function (data) {
+        noty({ text: data.d, type: "success" });
+        panel.hide();
+        $("#btConsulta").click();
+    });
+
+    request.fail(function (jqXHR, textStatus) {
+        noty({ text: "Request failed: " + textStatus, type: "error" });
+    });
+});
+
 //Consulta pizzas
 $("#btConsulta").click(function () {
     var nome = $("#txtConsulta").val();
@@ -79,10 +101,6 @@ $("#btConsulta").click(function () {
     });
 
     request.done(function (data) {
-        //$("#divResultado2").html("");
-        //$.each(data.d, function (index) {
-        //    $("#divResultado2").append("<p>ID: " + data.d[index].Id + "</p><p>Nome: " + data.d[index].Nome + "</p>");
-        //});
         pizzaGrid(data);
     });
 

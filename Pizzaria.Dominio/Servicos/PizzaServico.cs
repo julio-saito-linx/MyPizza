@@ -33,5 +33,10 @@ namespace Pizzaria.Dominio.Servicos
         {
             _pizzaDAO.Save(pizza);
         }
+
+        public void Delete(int id)
+        {
+            _pizzaDAO.Delete(id);
+        }
     }
 }

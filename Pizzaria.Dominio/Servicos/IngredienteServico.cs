@@ -17,14 +17,19 @@ namespace Pizzaria.Dominio.Servicos
             return _ingredienteDao.GetAll();
         }
 
-        public Ingrediente PesquisarID(int Id)
+        public Ingrediente PesquisarID(int id)
         {
-            return _ingredienteDao.Get(Id);
+            return _ingredienteDao.Get(id);
         }
 
         public void Save(Ingrediente ingrediente)
         {
             _ingredienteDao.Save(ingrediente);
+        }
+
+        public void Delete(int id)
+        {
+            _ingredienteDao.Delete(id);
         }
     }
 }

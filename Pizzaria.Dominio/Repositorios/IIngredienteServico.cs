@@ -8,5 +8,6 @@ namespace Pizzaria.Dominio.Repositorios
         IList<Ingrediente> PesquisarTodos();
         Ingrediente PesquisarID(int Id);
         void Save(Ingrediente ingrediente);
+        void Delete(int id);
     }
 }
