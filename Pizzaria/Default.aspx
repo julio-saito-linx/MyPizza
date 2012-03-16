@@ -54,6 +54,7 @@
         <p>
         <b>Nome da Pizza:</b>
         <br />
+        <input type="hidden" ID="txtId" value="0"/>
         <asp:TextBox ID="txtNome" runat="server"></asp:TextBox>
         </p>
         <p>Ingredientes:</p>
@@ -95,6 +96,7 @@
         //Inclui uma  nova pizza
         $("#btIncluir").click(function () {
             var dados = {
+                Id: $("#txtId").val(),
                 Nome: $("#txtNome").val(),
                 I1: $("#txtIngrediente1").val(),
                 I2: $("#txtIngrediente2").val(),
@@ -167,15 +169,13 @@
         //Monta e carrega o grid
         function pizzaGrid(d) {
             $("#pizzaview").html("");
-            
+
             YUI().use('datatable', function (Y) {
-                // Creates a Columnset with 3 Columns. "cost" is not rendered.
                 //var cols = ["id","name","price"];
                 var cols = [
-                    { key: "Id", sortable: true }
-                , { key: "Nome", sortable: true}];
+                    { key: "Id", sortable: true },
+                    { key: "Nome", sortable: true}];
 
-                // Columns must match data parameter names
                 //var data = [
                 //    { id: "ga-3475", name: "gadget", price: "$6.99", cost: "$5.99" },
                 //    { id: "sp-9980", name: "sprocket", price: "$3.75", cost: "$3.25" },
@@ -190,6 +190,46 @@
                     caption: "Pizzas",
                     plugins: Y.Plugin.DataTableSort
                 }).render("#pizzaview");
+
+                YUIGridFormat();
+            });
+        }
+        
+        function YUIGridFormat() {
+            var tr = $(".yui3-datatable-data tr");
+
+            tr.mouseover(function() {
+                $(this).css("color", "red");
+            });
+            tr.mouseout(function() {
+                $(this).css("color", "gray");
+            });
+
+            tr.append("<td><a>ingredientes</a></td>");
+            
+            tr.click(function () {
+                var id = $(this).find("td:eq(0)").text();
+
+                var dados = "{id :" + id + "}";
+
+                var request = $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "Default.aspx/PizzaById",
+                    contentType: "application/json",
+                    data: dados
+                });
+
+                request.done(function (data) {
+                    $("#txtId").val(data.d.Id);
+                    $("#txtNome").val(data.d.Nome);
+
+                    panel.show();
+                });
+
+                request.fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
             });
         }
     </script>

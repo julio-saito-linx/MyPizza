@@ -122,10 +122,18 @@ namespace Pizzaria
             var pizzaServico = global.Container.Resolve<IPizzaServico>();
 
             string nome = Request.Form["Nome"].ToString();
-
-            var pizza = new Pizza {Nome = nome};
-            pizzaServico.Save(pizza);
-
+            int id = Convert.ToInt32(Request.Form["Id"].ToString()??"0");
+            Pizza pizza;
+            if (id == 0)
+            {
+                pizza = new Pizza {Nome = nome};
+                pizzaServico.Save(pizza);
+            }
+            else
+            {
+                pizza = new Pizza {Id = id, Nome = nome};
+                pizzaServico.Save(pizza);
+            }
             return pizza.Id;
         }
 
@@ -139,14 +147,24 @@ namespace Pizzaria
             var sessionProvider = new SessionProvider(provider);
             var sessaoAtual = sessionProvider.GetCurrentSession();
 
-           Pizza pizza = new Pizza();
-           pizza = sessaoAtual.QueryOver<Pizza>()
+           Pizza pizza = sessaoAtual.QueryOver<Pizza>()
                 .Where(Restrictions.On<Pizza>(p => p.Nome).IsLike(nome, MatchMode.Start))
                 .OrderBy(p => p.Nome).Asc
                 .List<Pizza>().FirstOrDefault<Pizza>() 
                 ?? new Pizza();
             
-            pizza.Ingredientes = null;
+            return pizza;
+        }
+
+        [System.Web.Services.WebMethod]
+        public static Pizza PizzaById(int id)
+        {
+            var provider = new SessionFactoryProvider();
+            var sessionProvider = new SessionProvider(provider);
+            var sessaoAtual = sessionProvider.GetCurrentSession();
+
+            Pizza pizza = sessaoAtual.QueryOver<Pizza>()
+                 .Where(p => p.Id == id).List<Pizza>()[0];
 
             //JavaScriptSerializer jss = new JavaScriptSerializer();
             //string s = jss.Serialize(pizza);
@@ -166,11 +184,6 @@ namespace Pizzaria
                 .Where(Restrictions.On<Pizza>(p => p.Nome).IsLike(nome, MatchMode.Start))
                 .OrderBy(p => p.Id).Asc()
                 .List<Pizza>();
-            
-            foreach (var pizza in pizzas)
-            {
-                pizza.Ingredientes = null;
-            }
 
             return pizzas;
         }
