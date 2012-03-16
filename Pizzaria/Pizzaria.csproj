@@ -70,7 +70,18 @@
     <Content Include="Account\ChangePasswordSuccess.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
+    <Content Include="AJAX\Default.js" />
     <Content Include="CriarDados.aspx" />
+    <Content Include="needim-noty-2481627\.gitignore" />
+    <Content Include="needim-noty-2481627\css\jquery.noty.css" />
+    <Content Include="needim-noty-2481627\img\alert-lines.png" />
+    <Content Include="needim-noty-2481627\img\closelabel.png" />
+    <Content Include="needim-noty-2481627\img\mitgux\alert.png" />
+    <Content Include="needim-noty-2481627\img\mitgux\bg.png" />
+    <Content Include="needim-noty-2481627\img\mitgux\close.png" />
+    <Content Include="needim-noty-2481627\img\mitgux\done.png" />
+    <Content Include="needim-noty-2481627\img\mitgux\error.png" />
+    <Content Include="needim-noty-2481627\js\jquery.noty.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
     <Content Include="Styles\Site.css" />
     <Content Include="Default.aspx" />
@@ -157,6 +168,9 @@
       <Project>{29D45F95-6946-4368-B063-7F520C8AA9F5}</Project>
       <Name>Pizzaria.NHibernate</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="needim-noty-2481627\README.markdown" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

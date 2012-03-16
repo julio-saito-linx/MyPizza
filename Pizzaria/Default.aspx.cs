@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Script.Serialization;
-using System.Web.UI.WebControls;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Pizzaria.Dominio.Entidades;
@@ -25,17 +23,7 @@ namespace Pizzaria
 
             if (Request.QueryString["new"] != null)
             {
-                int p = InsertNewPizza2();
-
-                Response.Write(String.Format("Pizza inserida com sucesso! Codigo {0}", p.ToString()));
-                Response.End();
-            }
-
-            if (Request.QueryString["sel"] != null)
-            {
-                int p = SelectAllPizza();
-
-                Response.Write(String.Format("Foram encontradas {0} pizzas!", p.ToString()));
+                Response.Write(InsertNewPizza());
                 Response.End();
             }
 
@@ -72,28 +60,32 @@ namespace Pizzaria
             return _container;
         }
 
-        private int SelectAllPizza()
-        {
-            IPizzaServico pizzaServico = _container.Resolve<IPizzaServico>();
-            return pizzaServico.PesquisarTodos().Count;
-        }
-
-        private int InsertNewPizza()
+        private string InsertNewPizza()
         {
             var provider = new SessionFactoryProvider();
             var sessionProvider = new SessionProvider(provider);
             var sessaoAtual = sessionProvider.GetCurrentSession();
+            IPizzaServico pizzaServico = _container.Resolve<IPizzaServico>();
 
-            if (Request.Form["Nome"] != null)
+            int id = Convert.ToInt32(Request.Form["Id"].ToString() ?? "0");
+            string nome = Request.Form["Nome"].ToString();
+            string[] ingredientes = {
+                                        Request.Form["I1"].ToString(), 
+                                        Request.Form["I2"].ToString(),
+                                        Request.Form["I3"].ToString()
+                                    };
+
+            Pizza pizza;
+            string response;
+            if (id == 0)
             {
-                string nome = Request.Form["Nome"].ToString();
+                pizza = new Pizza {Nome = nome};
 
-                var pizza = new Pizza {Nome = nome};
                 sessaoAtual.Save(pizza);
 
-                var ingrediente1 = new Ingrediente {Nome = Request.Form["I1"].ToString()};
-                var ingrediente2 = new Ingrediente {Nome = Request.Form["I2"].ToString()};
-                var ingrediente3 = new Ingrediente {Nome = Request.Form["I3"].ToString()};
+                Ingrediente ingrediente1 = new Ingrediente { Nome = ingredientes[0] };
+                Ingrediente ingrediente2 = new Ingrediente { Nome = ingredientes[1] };
+                Ingrediente ingrediente3 = new Ingrediente { Nome = ingredientes[2] };
 
                 pizza.AcrescentarIngrediente(ingrediente1);
                 pizza.AcrescentarIngrediente(ingrediente2);
@@ -103,56 +95,44 @@ namespace Pizzaria
                 sessaoAtual.Save(ingrediente2);
                 sessaoAtual.Save(ingrediente3);
 
-                sessaoAtual.Clear();
-
-                Pizza p = sessaoAtual.Get<Pizza>(pizza.Id);
-
-                return p.Id;
+                response = "Pizza inserida com sucesso! Codigo {0}";
             }
             else
             {
-                return 0;
-            }
-        }
+                pizza = pizzaServico.PesquisarID(id);
+                
+                pizza.Nome = nome;
 
-        private int InsertNewPizza2()
-        {
-            //var pizzaServico = _container.Resolve<IPizzaServico>();
-            var global = new Global();
-            var pizzaServico = global.Container.Resolve<IPizzaServico>();
+                pizza.Ingredientes[0].Nome = ingredientes[0];
+                pizza.Ingredientes[1].Nome = ingredientes[1];
+                pizza.Ingredientes[2].Nome = ingredientes[2];
 
-            string nome = Request.Form["Nome"].ToString();
-            int id = Convert.ToInt32(Request.Form["Id"].ToString()??"0");
-            Pizza pizza;
-            if (id == 0)
-            {
-                pizza = new Pizza {Nome = nome};
                 pizzaServico.Save(pizza);
+                //sessaoAtual.Save(pizza);
+                //sessaoAtual.Save(pizza.Ingredientes[0]);
+                //sessaoAtual.Save(pizza.Ingredientes[1]);
+                //sessaoAtual.Save(pizza.Ingredientes[2]);
+
+                response = "Pizza atualizada com sucesso! Codigo {0}";
             }
-            else
-            {
-                pizza = new Pizza {Id = id, Nome = nome};
-                pizzaServico.Save(pizza);
-            }
-            return pizza.Id;
+            sessaoAtual.Clear();
+
+            return String.Format(response, pizza.Id);
         }
 
         [System.Web.Services.WebMethod]
-        public static Pizza Pizza(string nome) 
+        public static Pizza PizzaByName(string nome)
         {
-            //IPizzaServico pizzaServico = _container.Resolve<IPizzaServico>();
-            //Pizza pizza = pizzaServico.PesquisarNome(nome);
-
             var provider = new SessionFactoryProvider();
             var sessionProvider = new SessionProvider(provider);
             var sessaoAtual = sessionProvider.GetCurrentSession();
 
-           Pizza pizza = sessaoAtual.QueryOver<Pizza>()
-                .Where(Restrictions.On<Pizza>(p => p.Nome).IsLike(nome, MatchMode.Start))
-                .OrderBy(p => p.Nome).Asc
-                .List<Pizza>().FirstOrDefault<Pizza>() 
-                ?? new Pizza();
-            
+            Pizza pizza = sessaoAtual.QueryOver<Pizza>()
+                              .Where(Restrictions.On<Pizza>(p => p.Nome).IsLike(nome, MatchMode.Start))
+                              .OrderBy(p => p.Nome).Asc
+                              .List<Pizza>().FirstOrDefault<Pizza>()
+                          ?? new Pizza();
+
             return pizza;
         }
 
@@ -164,13 +144,27 @@ namespace Pizzaria
             var sessaoAtual = sessionProvider.GetCurrentSession();
 
             Pizza pizza = sessaoAtual.QueryOver<Pizza>()
-                 .Where(p => p.Id == id).List<Pizza>()[0];
-
-            //JavaScriptSerializer jss = new JavaScriptSerializer();
-            //string s = jss.Serialize(pizza);
-            //pizza = jss.Deserialize<Pizza>(s);
+                .Where(p => p.Id == id).List<Pizza>()[0];
 
             return pizza;
+        }
+        
+        [System.Web.Services.WebMethod]
+        public static IList<Ingrediente> Ingredientes(int id)
+        {
+            var provider = new SessionFactoryProvider();
+            var sessionProvider = new SessionProvider(provider);
+            var sessaoAtual = sessionProvider.GetCurrentSession();
+
+            IList<Ingrediente> ingredientes = sessaoAtual.QueryOver<Ingrediente>()
+                .Where(i => i.Pizza.Id == id)
+                .List<Ingrediente>();
+
+            var pizza = PizzaById(id);
+
+            ingredientes = pizza.Ingredientes;
+
+            return ingredientes;
         }
 
         [System.Web.Services.WebMethod]
