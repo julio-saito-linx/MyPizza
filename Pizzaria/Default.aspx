@@ -22,7 +22,7 @@
         <div style="float: left; width: 460px">
                 <p>
                     <p>
-                        <b>Nome da Pizza:</b></p>
+                        <b>Detalhe da Pizza:</b></p>
                     <input type="hidden" id="txtId" value="0" />
                     <asp:TextBox ID="txtNome" runat="server"></asp:TextBox>
                 </p>

@@ -20,6 +20,7 @@ namespace Pizzaria.AJAX
         public Pizzas()
         {
             CriarMapeamentosDto();
+            InicializarContainer();
         }
 
         private static WindsorContainer InicializarContainer()
@@ -61,15 +62,9 @@ namespace Pizzaria.AJAX
         [System.Web.Services.WebMethod]
         public static string ExcluirPizza(int id)
         {
-            IPizzaServico pizzaServico = _container.Resolve<IPizzaServico>();
-            Pizza pizza = pizzaServico.PesquisarID(id);
+            var pizzaServico = _container.Resolve<IPizzaServico>();
 
-            IIngredienteServico ingredienteServico =
-                _container.Resolve<IIngredienteServico>();
-            foreach (Ingrediente ingrediente in pizza.Ingredientes)
-            {
-                //ingredienteServico.Delete(ingrediente.Id);
-            }
+            Pizza pizza = pizzaServico.PesquisarID(id);
 
             pizzaServico.Delete(pizza.Id);
 
