@@ -74,6 +74,7 @@
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="AJAX\Default.js" />
+    <Content Include="AJAX\Pizzas.aspx" />
     <Content Include="CriarDados.aspx" />
     <Content Include="needim-noty-2481627\.gitignore" />
     <Content Include="needim-noty-2481627\css\jquery.noty.css" />
@@ -86,6 +87,7 @@
     <Content Include="needim-noty-2481627\img\mitgux\error.png" />
     <Content Include="needim-noty-2481627\js\jquery.noty.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
+    <Content Include="Scripts\underscore\underscore-min.js" />
     <Content Include="Styles\Site.css" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
@@ -128,6 +130,15 @@
     </Compile>
     <Compile Include="Account\Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AJAX\DTO\IngredienteDto.cs" />
+    <Compile Include="AJAX\DTO\PizzaDto.cs" />
+    <Compile Include="AJAX\Pizzas.aspx.cs">
+      <DependentUpon>Pizzas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AJAX\Pizzas.aspx.designer.cs">
+      <DependentUpon>Pizzas.aspx</DependentUpon>
     </Compile>
     <Compile Include="CriarDados.aspx.cs">
       <DependentUpon>CriarDados.aspx</DependentUpon>

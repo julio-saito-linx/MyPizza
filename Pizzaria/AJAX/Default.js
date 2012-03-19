@@ -1,36 +1,7 @@
-﻿//Panel
-YUI().use('datatable-base', 'panel', 'dd-plugin', function (Y) {
-    panel = new Y.Panel({
-        srcNode: '#PizzaPanel',
-        headerContent: '- Pizza -',
-        width: 250,
-        zIndex: 5,
-        centered: true,
-        modal: true,
-        visible: false,
-        render: true,
-        plugins: [Y.Plugin.Drag]
-    });
-
-    panel.addButton({
-        value: 'X',
-        section: Y.WidgetStdMod.HEADER,
-        action: function (e) {
-            panel.hide();
-        }
-    });
-
-    Y.one("#btPizzaAdd").on("click", function () {
-        $("#txtId").val("0");
-        $("#PizzaPanel").find(":input[type=text]").each(function () {
-            $(this).val("");
-        });
-        panel.show();
-    });
-});
+﻿var pizzas = [];
 
 //Inclui uma  nova pizza
-$("#btIncluir").click(function () {
+$("#btIncluir").click(function() {
     var dados = {
         Id: $("#txtId").val(),
         Nome: $("#txtNome").val(),
@@ -45,19 +16,18 @@ $("#btIncluir").click(function () {
         data: dados
     });
 
-    request.done(function (data) {
+    request.done(function(data) {
         noty({ text: data, type: "success" });
-        panel.hide();
         $("#btConsulta").click();
     });
 
-    request.fail(function (jqXHR, textStatus) {
+    request.fail(function(jqXHR, textStatus) {
         noty({ text: "Request failed: " + textStatus, type: "error" });
     });
 });
 
 //Excluir pizza
-$("#btExcluir").click(function () {
+$("#btExcluir").click(function() {
     var dados = "{ id:" + $("#txtId").val() + "}";
 
     var request = $.ajax({
@@ -67,39 +37,38 @@ $("#btExcluir").click(function () {
         data: dados
     });
 
-    request.done(function (data) {
+    request.done(function(data) {
         noty({ text: data.d, type: "success" });
-        panel.hide();
         $("#btConsulta").click();
     });
 
-    request.fail(function (jqXHR, textStatus) {
+    request.fail(function(jqXHR, textStatus) {
         noty({ text: "Request failed: " + textStatus, type: "error" });
     });
 });
 
 //Consulta pizzas
-$("#btConsulta").click(function () {
+$("#btConsulta").click(function() {
     var nome = $("#txtConsulta").val();
 
     var request = $.ajax({
         type: "POST",
-        url: "Default.aspx/Pizzas",
+        url: "/AJAX/Pizzas.aspx/PizzasLista",
         contentType: "application/json",
         data: "{nome:'" + nome + "'}"
     });
 
-    request.done(function (data) {
+    request.done(function(data) {
         pizzaGrid(data);
     });
 
-    request.fail(function (jqXHR, textStatus) {
+    request.fail(function(jqXHR, textStatus) {
         noty({ text: "Request failed: " + textStatus, type: "error" });
     });
 });
 
 //Salva o garcom
-$("#btGarcom").click(function () {
+$("#btGarcom").click(function() {
     var nome = $("#txtGarcom").val();
     var id = $("#ddlPeriodo").val();
 
@@ -113,34 +82,29 @@ $("#btGarcom").click(function () {
         data: dados
     });
 
-    request.done(function (data) {
+    request.done(function(data) {
         noty({ text: data.d, type: "success" });
     });
 
-    request.fail(function (jqXHR, textStatus) {
+    request.fail(function(jqXHR, textStatus) {
         noty({ text: "Request failed: " + textStatus, type: "error" });
     });
 });
+
 
 //Monta e carrega o grid
 var pizzaGrid = function (d) {
     $("#pizzaview").html("");
 
     YUI().use('datatable', function (Y) {
-        //var cols = ["id","name","price"];
-        var cols = [
-        { key: "Id", sortable: false },
-        { key: "Nome", sortable: false}];
+        var cols = [{ key: "Id", sortable: false },
+                    { key: "Nome", sortable: false}];
 
-        //var data = [
-        //    { id: "ga-3475", name: "gadget", price: "$6.99", cost: "$5.99" },
-        //    { id: "sp-9980", name: "sprocket", price: "$3.75", cost: "$3.25" },
-        //    { id: "wi-0650", name: "widget", price: "$4.25", cost: "$3.75" }
-        //];
         var data = d.d;
+        pizzas = data;
 
         // Creates a DataTable with 3 columns and 3 rows
-        var table = new Y.DataTable.Base({
+        new Y.DataTable.Base({
             columnset: cols,
             recordset: data,
             caption: "Pizzas",
@@ -151,7 +115,7 @@ var pizzaGrid = function (d) {
     });
 };
 
-var ingredienteGrid = function (id) {
+var ingredienteGrid = function(id) {
     var dados = "{id :" + id + "}";
 
     var request = $.ajax({
@@ -162,19 +126,20 @@ var ingredienteGrid = function (id) {
         data: dados
     });
 
-    request.done(function (data) {
+    request.done(function(data) {
         $("#txtIngrediente1").val(data.d[0].Nome);
         $("#txtIngrediente2").val(data.d[1].Nome);
         $("#txtIngrediente3").val(data.d[2].Nome);
     });
 
-    request.fail(function (jqXHR, textStatus) {
+    request.fail(function(jqXHR, textStatus) {
         noty({ text: "Request failed: " + textStatus, type: "error" });
     });
 };
 
 var YUIGridFormat = function () {
     var tr = $(".yui3-datatable-data tr");
+    tr.css("cursor", "pointer");
 
     tr.mouseover(function () {
         $(this).css("color", "red");
@@ -183,34 +148,17 @@ var YUIGridFormat = function () {
         $(this).css("color", "gray");
     });
 
-    //tr.append("<td><a>ingredientes</a></td>");
-
     tr.click(function () {
-        var id = $(this).find("td:eq(0)").text();
-
-        var dados = "{id :" + id + "}";
-
-        var request = $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "Default.aspx/PizzaById",
-            contentType: "application/json",
-            data: dados
+        var id = parseInt($(this).find("td:eq(0)").text());
+        var pizza = _.find(pizzas, function (p) {
+            return p.Id === id;
         });
 
-        request.done(function (data) {
-            $("#txtId").val(data.d.Id);
-            $("#txtNome").val(data.d.Nome);
+        $("#txtId").val(pizza.Id);
+        $("#txtNome").val(pizza.Nome);
 
-            $("#txtIngrediente1").val(data.d.Ingredientes[0].Nome);
-            $("#txtIngrediente2").val(data.d.Ingredientes[1].Nome);
-            $("#txtIngrediente3").val(data.d.Ingredientes[2].Nome);
-
-            panel.show();
-        });
-
-        request.fail(function (jqXHR, textStatus) {
-            noty({ text: "Request failed: " + textStatus, type: "error" });
-        });
+        $("#txtIngrediente1").val(pizza.Ingredientes[0].Nome);
+        $("#txtIngrediente2").val(pizza.Ingredientes[1].Nome);
+        $("#txtIngrediente3").val(pizza.Ingredientes[2].Nome);
     });
 };
