@@ -6,7 +6,7 @@ namespace Pizzaria.Dominio.Entidades
     {
         public virtual int Id { get; set; }
         public virtual string Nome { get; set; }
-        [ScriptIgnore]
+        //[ScriptIgnore] /* comentado para testar o automapping*/
         public virtual Pizza Pizza { get; set; }
     }
 }

@@ -32,19 +32,11 @@ namespace Pizzaria.NHibernate.Helpers
             {
                 _fluentConfiguration = Fluently.Configure()
                     .Database(MsSqlConfiguration.MsSql2008.ShowSql()
-                                  .ConnectionString(c => c.FromConnectionStringWithKey("ConnectionString")))
-                                  //.ConnectionString(@"Data Source=.\sqlexpress;Initial Catalog=Pizzaria;Integrated Security=True"))
+                    .ConnectionString(c => c.FromConnectionStringWithKey("ConnectionString")))
                     //.Mappings(m => m.AutoMappings.Add(AutoMap.AssemblyOf<Pizza>(new AppAutomappingCfg())));
                     .Mappings(m => m.FluentMappings.AddFromAssemblyOf<PizzaMap>());
-                                  //.Conventions.Setup(GetConventions()));
 
                 _sessionFactory = _fluentConfiguration.BuildSessionFactory();
-
-                //var cfg = Fluently.Configure()
-                //    .Mappings(m => m.FluentMappings.AddFromAssemblyOf<Usuario>())
-                //    .Database(MsSqlConfiguration.MsSql2008.ShowSql()
-                //                  .ConnectionString(c => c.FromConnectionStringWithKey("ConnectionString"))
-                //    );
             }
 
             return _sessionFactory;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Pizzaria.Dominio.Entidades;
@@ -15,6 +16,11 @@ namespace Pizzaria
 {
     public partial class _Default : System.Web.UI.Page
     {
+        public _Default()
+        {
+            CriarMapeamentosDto();
+        }
+
         private static WindsorContainer _container;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -28,6 +34,12 @@ namespace Pizzaria
             }
 
             GetPeriodo();
+        }
+
+        private static void CriarMapeamentosDto()
+        {
+            Mapper.CreateMap<Pizza, PizzaDto>();
+            Mapper.CreateMap<Ingrediente, IngredienteDto>();
         }
 
         private void GetPeriodo()
@@ -155,7 +167,7 @@ namespace Pizzaria
         }
 
         [System.Web.Services.WebMethod]
-        public static Pizza PizzaById(int id)
+        public static PizzaDto PizzaById(int id)
         {
             var provider = new SessionFactoryProvider();
             var sessionProvider = new SessionProvider(provider);
@@ -164,11 +176,11 @@ namespace Pizzaria
             Pizza pizza = sessaoAtual.QueryOver<Pizza>()
                 .Where(p => p.Id == id).List<Pizza>()[0];
 
-            return pizza;
+            return Mapper.Map<Pizza, PizzaDto>(pizza);
         }
         
         [System.Web.Services.WebMethod]
-        public static IList<Ingrediente> Ingredientes(int id)
+        public static IList<IngredienteDto> Ingredientes(int id)
         {
             var provider = new SessionFactoryProvider();
             var sessionProvider = new SessionProvider(provider);
@@ -178,28 +190,29 @@ namespace Pizzaria
                 .Where(i => i.Pizza.Id == id)
                 .List<Ingrediente>();
 
-            var pizza = PizzaById(id);
+            //var pizza = PizzaById(id);
+            //ingredientes = pizza.Ingredientes;
 
-            ingredientes = pizza.Ingredientes;
-
-            return ingredientes;
+            return Mapper.Map<IList<Ingrediente>, IList<IngredienteDto>>(ingredientes);
         }
 
         [System.Web.Services.WebMethod]
-        public static IList<Pizza> Pizzas(string nome)
+        public static IList<PizzaDto> Pizzas(string nome)
         {
             var provider = new SessionFactoryProvider();
             var sessionProvider = new SessionProvider(provider);
             var sessaoAtual = sessionProvider.GetCurrentSession();
 
-            sessaoAtual.Clear();
             IList<Pizza> pizzas = sessaoAtual.QueryOver<Pizza>()
                 .Where(Restrictions.On<Pizza>(p => p.Nome).IsLike(nome, MatchMode.Start))
                 .OrderBy(p => p.Id).Asc()
                 .List<Pizza>();
 
-            return pizzas;
+            var pizzaDtos = Mapper.Map<IList<Pizza>, IList<PizzaDto>>(pizzas);
+
+            return pizzaDtos;
         }
+
 
         [System.Web.Services.WebMethod]
         public static string GarcomSave(string nome, int id)
@@ -214,5 +227,18 @@ namespace Pizzaria
 
             return String.Format("Garcom inserido com sucesso! Codigo: {0}", garcom.Id);
         }
+    }
+
+    public class PizzaDto
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public IList<IngredienteDto> Ingredientes { get; set; }
+    }
+
+    public class IngredienteDto
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
     }
 }

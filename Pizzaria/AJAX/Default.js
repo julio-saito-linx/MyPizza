@@ -20,17 +20,6 @@ YUI().use('datatable-base', 'panel', 'dd-plugin', function (Y) {
         }
     });
 
-    /*
-    panel.addButton({
-    value: 'Add Item',
-    section: Y.WidgetStdMod.FOOTER,
-    action: function (e) {
-    e.preventDefault();
-    //addItem();
-    }
-    });
-    */
-
     Y.one("#btPizzaAdd").on("click", function () {
         $("#txtId").val("0");
         $("#PizzaPanel").find(":input[type=text]").each(function () {
@@ -134,35 +123,35 @@ $("#btGarcom").click(function () {
 });
 
 //Monta e carrega o grid
-function pizzaGrid(d) {
+var pizzaGrid = function (d) {
     $("#pizzaview").html("");
 
     YUI().use('datatable', function (Y) {
-    //var cols = ["id","name","price"];
-    var cols = [
+        //var cols = ["id","name","price"];
+        var cols = [
         { key: "Id", sortable: false },
         { key: "Nome", sortable: false}];
 
-    //var data = [
-    //    { id: "ga-3475", name: "gadget", price: "$6.99", cost: "$5.99" },
-    //    { id: "sp-9980", name: "sprocket", price: "$3.75", cost: "$3.25" },
-    //    { id: "wi-0650", name: "widget", price: "$4.25", cost: "$3.75" }
-    //];
-    var data = d.d;
+        //var data = [
+        //    { id: "ga-3475", name: "gadget", price: "$6.99", cost: "$5.99" },
+        //    { id: "sp-9980", name: "sprocket", price: "$3.75", cost: "$3.25" },
+        //    { id: "wi-0650", name: "widget", price: "$4.25", cost: "$3.75" }
+        //];
+        var data = d.d;
 
-    // Creates a DataTable with 3 columns and 3 rows
-    var table = new Y.DataTable.Base({
-        columnset: cols,
-        recordset: data,
-        caption: "Pizzas",
-        plugins: Y.Plugin.DataTableSort
-    }).render("#pizzaview");
+        // Creates a DataTable with 3 columns and 3 rows
+        var table = new Y.DataTable.Base({
+            columnset: cols,
+            recordset: data,
+            caption: "Pizzas",
+            plugins: Y.Plugin.DataTableSort
+        }).render("#pizzaview");
 
-    YUIGridFormat();
+        YUIGridFormat();
     });
-}
+};
 
-function ingredienteGrid(id) {
+var ingredienteGrid = function (id) {
     var dados = "{id :" + id + "}";
 
     var request = $.ajax({
@@ -182,15 +171,15 @@ function ingredienteGrid(id) {
     request.fail(function (jqXHR, textStatus) {
         noty({ text: "Request failed: " + textStatus, type: "error" });
     });
-}
+};
 
-function YUIGridFormat() {
+var YUIGridFormat = function () {
     var tr = $(".yui3-datatable-data tr");
 
-    tr.mouseover(function() {
+    tr.mouseover(function () {
         $(this).css("color", "red");
     });
-    tr.mouseout(function() {
+    tr.mouseout(function () {
         $(this).css("color", "gray");
     });
 
@@ -213,13 +202,15 @@ function YUIGridFormat() {
             $("#txtId").val(data.d.Id);
             $("#txtNome").val(data.d.Nome);
 
-            ingredienteGrid(data.d.Id);
+            $("#txtIngrediente1").val(data.d.Ingredientes[0].Nome);
+            $("#txtIngrediente2").val(data.d.Ingredientes[1].Nome);
+            $("#txtIngrediente3").val(data.d.Ingredientes[2].Nome);
 
             panel.show();
         });
 
         request.fail(function (jqXHR, textStatus) {
-            noty({text:"Request failed: " + textStatus, type:"error" });
+            noty({ text: "Request failed: " + textStatus, type: "error" });
         });
     });
-}
+};
