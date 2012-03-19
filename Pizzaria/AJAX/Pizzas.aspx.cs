@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Services;
 using AutoMapper;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Pizzaria.AJAX.DTO;
 using Pizzaria.Dominio.Entidades;
 using Pizzaria.Dominio.Repositorios;
 using Pizzaria.Dominio.Servicos;
@@ -13,6 +15,7 @@ using NHibernate.Criterion;
 
 namespace Pizzaria.AJAX
 {
+    [ScriptService]
     public partial class Pizzas : System.Web.UI.Page
     {
         private static WindsorContainer _container;
@@ -48,8 +51,8 @@ namespace Pizzaria.AJAX
 
         private static void CriarMapeamentosDto()
         {
-            Mapper.CreateMap<Pizza, DTO.PizzaDto>();
-            Mapper.CreateMap<Ingrediente, DTO.IngredienteDto>();
+            Mapper.CreateMap<Pizza, PizzaDto>();
+            Mapper.CreateMap<Ingrediente, IngredienteDto>();
         }
 
         
@@ -115,6 +118,7 @@ namespace Pizzaria.AJAX
         }
 
         [System.Web.Services.WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public static IList<DTO.PizzaDto> PizzasLista(string nome)
         {
             var provider = new SessionFactoryProvider();
@@ -129,6 +133,39 @@ namespace Pizzaria.AJAX
             var pizzaDtos = Mapper.Map<IList<Pizza>, IList<DTO.PizzaDto>>(pizzas);
 
             return pizzaDtos;
+        }
+
+        [System.Web.Services.WebMethod]
+        public static string SavePizza(PizzaDto pizzaDto)
+        {
+            Pizza pizzaIncluir;
+
+            var provider = new SessionFactoryProvider();
+            var sessionProvider = new SessionProvider(provider);
+            var sessaoAtual = sessionProvider.GetCurrentSession();
+
+            if (pizzaDto.Id == 0)
+            {
+                // nova pizza
+                pizzaIncluir = new Pizza();
+            }
+            else
+            {
+                // pesquisa para UPDATE
+                pizzaIncluir = sessaoAtual.Get<Pizza>(pizzaDto.Id);
+            }
+
+            pizzaIncluir.Nome = pizzaDto.Nome;
+
+            for (int i = 0; i < pizzaDto.Ingredientes.Count; i++)
+            {
+                pizzaIncluir.Ingredientes[i].Nome = pizzaDto.Ingredientes[i].Nome;
+            }
+
+            sessaoAtual.Save(pizzaIncluir);
+            sessaoAtual.Flush();
+
+            return String.Format("Pizza salva com sucesso!");
         }
 
 

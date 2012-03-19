@@ -11,8 +11,7 @@ namespace Pizzaria.NHibernate.Mappings
 
             Map(x => x.Nome);
 
-            //HasMany(x => x.Ingredientes);
-            HasMany(x => x.Ingredientes).Cascade.Delete();
+            HasMany(x => x.Ingredientes).Cascade.All();
         }
     }
 }

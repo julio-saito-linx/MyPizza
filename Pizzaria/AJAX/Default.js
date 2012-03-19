@@ -66,31 +66,32 @@ var YUIGridFormat = function () {
     });
 };
 
-
-//Consulta pizzas
-$("#btPizzaAdd").click(function () {
+var limparDadosPizza = function () {
     $("#txtId").val(0);
     $("#txtNome").val("");
-
     $("#txtIngrediente1").val("");
     $("#txtIngrediente2").val("");
     $("#txtIngrediente3").val("");
+};
+
+//Consulta pizzas
+$("#btPizzaAdd").click(function () {
+    limparDadosPizza();
 });
 
 
 //Consulta pizzas
 $("#btConsulta").click(function () {
-    var nome = $("#txtConsulta").val();
-
     var request = $.ajax({
         type: "POST",
         url: "/AJAX/Pizzas.aspx/PizzasLista",
         contentType: "application/json",
-        data: "{nome:'" + nome + "'}"
+        data: JSON.stringify({ nome: $("#txtConsulta").val() })
     });
 
     request.done(function (data) {
         pizzaGrid(data);
+        limparDadosPizza();
     });
 
     request.fail(function (jqXHR, textStatus) {
@@ -100,27 +101,35 @@ $("#btConsulta").click(function () {
 
 
 //Inclui uma  nova pizza
-$("#btIncluir").click(function() {
-    var dados = {
-        Id: $("#txtId").val(),
-        Nome: $("#txtNome").val(),
-        I1: $("#txtIngrediente1").val(),
-        I2: $("#txtIngrediente2").val(),
-        I3: $("#txtIngrediente3").val()
-    };
+$("#btIncluir").click(function () {
+    // http://encosia.com/using-complex-types-to-make-calling-services-less-complex/
+    // Initialize the object, before adding data to it.
+    //  { } is declarative shorthand for new Object().
+    var pizzaDto = {};
+
+    pizzaDto.Id = $("#txtId").val();
+    pizzaDto.Nome = $("#txtNome").val();
+    pizzaDto.Ingredientes = [];
+    pizzaDto.Ingredientes.push({ Nome: $("#txtIngrediente1").val() });
+    pizzaDto.Ingredientes.push({ Nome: $("#txtIngrediente2").val() });
+    pizzaDto.Ingredientes.push({ Nome: $("#txtIngrediente3").val() });
+
+    // Create a data transfer object (DTO) with the proper structure.
+    var DTO = { 'pizzaDto': pizzaDto };
 
     var request = $.ajax({
         type: "POST",
-        url: "Default.aspx?new=1",
-        data: dados
+        url: "/AJAX/Pizzas.aspx/SavePizza",
+        contentType: "application/json",
+        data: JSON.stringify(DTO)
     });
 
-    request.done(function(data) {
-        exibirNoty(data, "success");
+    request.done(function (data) {
+        exibirNoty(data.d, "success");
         $("#btConsulta").click();
     });
 
-    request.fail(function(jqXHR, textStatus) {
+    request.fail(function (jqXHR, textStatus) {
         exibirNoty("Request failed: " + textStatus, "error");
     });
 });
