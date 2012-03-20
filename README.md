@@ -3,10 +3,16 @@
 
 Seguem os passos:
 
-### referenciar a DLL
-```
-	Castle.Facilities.NHibernateIntegration
-```	
+### referenciar as DLLs
+* AutoMapper                     2.1.265
+* Castle.Core                    2.5.2
+* Castle.Services.Transaction    2.5.0
+* Castle.Windsor                 2.5.3
+* FluentNHibernate               1.2.0.712
+* Iesi.Collections               3.1.0.4000
+* NHibernate                     3.1.0.4000
+* NHibernate.Castle              3.1.0.4000
+	
 	
 ### Repositório: Fluent NHibernate Mapping
 ```
