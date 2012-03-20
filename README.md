@@ -4,7 +4,7 @@
 Seguem os passos:
 
 ### Fluent NHibernate Mapping
-<code>
+```
     public static class NhCastle
     {
         public static ISessionFactory InitSessionFactory()
@@ -19,7 +19,7 @@ Seguem os passos:
             return cfg.BuildSessionFactory();
         }
     }
-</code>
+```
 
 
 ### Castle Windsor Component Register
