@@ -1,10 +1,9 @@
-Como configurar o NHibernate, FluentNhibernate e Castle para funcionar com o Asp.Net WebForms?
-
-Simples. Não, não é. É um saco.
+## Como configurar o NHibernate, FluentNhibernate e Castle para funcionar com o Asp.Net WebForms?
+### Simples. Não, não é. É um saco.
 
 Seguem os passos:
 
-Fluent NHibernate Mapping
+### Fluent NHibernate Mapping
 <code>
     public static class NhCastle
     {
@@ -23,7 +22,7 @@ Fluent NHibernate Mapping
 </code>
 
 
-Castle Windsor Component Register
+### Castle Windsor Component Register
 ```
     public static class FabricaContainer
     {
@@ -64,7 +63,7 @@ Castle Windsor Component Register
 ```
 
 
-Global.asax
+### Global.asax
 ```
     public class Global : HttpApplication, IContainerAccessor
     {
@@ -91,7 +90,7 @@ Global.asax
         }
 ```
 
-Colocar a plicação no IIS 7 e no Web.Config
+### Colocar a aplicação no IIS 7 e no Web.Config
 ```
   <system.webServer>
     <modules runAllManagedModulesForAllRequests="true" >
