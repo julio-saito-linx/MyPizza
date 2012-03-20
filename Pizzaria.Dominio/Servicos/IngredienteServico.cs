@@ -7,10 +7,13 @@ namespace Pizzaria.Dominio.Servicos
     public class IngredienteServico : IIngredienteServico
     {
         private readonly IIngredienteDAO _ingredienteDao;
+
         public IngredienteServico(IIngredienteDAO ingredienteDAO)
         {
             _ingredienteDao = ingredienteDAO;
         }
+
+        #region IIngredienteServico Members
 
         public IList<Ingrediente> PesquisarTodos()
         {
@@ -31,5 +34,7 @@ namespace Pizzaria.Dominio.Servicos
         {
             _ingredienteDao.Delete(id);
         }
+
+        #endregion
     }
 }

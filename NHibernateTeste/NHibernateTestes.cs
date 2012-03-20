@@ -1,34 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using System.Transactions;
-using Pizzaria.NHibernate.Helpers;
+﻿using NUnit.Framework;
 using Pizzaria.Dominio.Entidades;
-
-using NHibernate;
+using Pizzaria.NHibernate.Helpers;
 
 namespace NHibernateTeste
 {
     [TestFixture]
     public class NhibernateTeste
     {
-        [Test]
-        public void criarBanco()
-        {
-            //BancoDadosCreator bdc = new BancoDadosCreator();
-            //bdc.AutoCriarBancoDeDados();
-        }
-
-        [Test]
+        [Test] 
         public void inserirPizza()
         {
             var provider = new SessionFactoryProvider();
             var sessionProvider = new SessionProvider(provider);
             var sessaoAtual = sessionProvider.GetCurrentSession();
 
-            var pizza = new Pizza{Nome = "Muçarela"};
+            var pizza = new Pizza {Nome = "Muçarela"};
             sessaoAtual.Save(pizza);
 
             var ingrediente1 = new Ingrediente {Nome = "Queijo"};
@@ -45,9 +31,8 @@ namespace NHibernateTeste
             sessaoAtual.Clear();
 
             Assert.AreEqual("Muçarela", sessaoAtual.Get<Pizza>(pizza.Id).Nome);
-            
+
             Assert.AreEqual(3, sessaoAtual.Get<Pizza>(pizza.Id).Ingredientes.Count);
         }
-
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-
+using NHibernate;
 using Pizzaria.Dominio.Repositorios;
 using Pizzaria.NHibernate.Helpers;
-using NHibernate;
 
 namespace Pizzaria.NHibernate
 {
@@ -47,7 +46,7 @@ namespace Pizzaria.NHibernate
 
         public IList<T> GetAll()
         {
-            ICriteria criteria = Session.CreateCriteria(typeof(T));
+            ICriteria criteria = Session.CreateCriteria(typeof (T));
             return criteria.List<T>();
         }
 

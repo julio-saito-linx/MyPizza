@@ -1,7 +1,8 @@
 ﻿var pizzas = [];
 
 var exibirNoty = function(mensagem, tipoAlert) {
-    noty({ "text": mensagem,
+    noty({
+        "text": mensagem,
         "layout": "top",
         "type": tipoAlert,
         "textAlign": "center",
@@ -16,12 +17,12 @@ var exibirNoty = function(mensagem, tipoAlert) {
 };
 
 //Monta e carrega o grid
-var pizzaGrid = function (d) {
+var pizzaGrid = function(d) {
     $("#pizzaview").html("");
 
-    YUI().use('datatable', function (Y) {
+    YUI().use('datatable', function(Y) {
         var cols = [{ key: "Id", sortable: false },
-                    { key: "Nome", sortable: false}];
+            { key: "Nome", sortable: false }];
 
         var data = d.d;
         pizzas = data;
@@ -38,22 +39,22 @@ var pizzaGrid = function (d) {
     });
 };
 
-var YUIGridFormat = function () {
+var YUIGridFormat = function() {
     var tr = $(".yui3-datatable-data tr");
     tr.css("cursor", "pointer");
 
-    tr.mouseover(function () {
+    tr.mouseover(function() {
         $(this).css("color", "red");
     });
-    tr.mouseout(function () {
+    tr.mouseout(function() {
         $(this).css("color", "gray");
     });
 
-    tr.click(function () {
+    tr.click(function() {
         var id = parseInt($(this).find("td:eq(0)").text());
         tr.css("font-weight", "normal");
         $(this).css("font-weight", "bold");
-        var pizza = _.find(pizzas, function (p) {
+        var pizza = _.find(pizzas, function(p) {
             return p.Id === id;
         });
 
@@ -66,7 +67,7 @@ var YUIGridFormat = function () {
     });
 };
 
-var limparDadosPizza = function () {
+var limparDadosPizza = function() {
     $("#txtId").val(0);
     $("#txtNome").val("");
     $("#txtIngrediente1").val("");
@@ -75,37 +76,37 @@ var limparDadosPizza = function () {
 };
 
 //Consulta pizzas
-$("#btPizzaAdd").click(function () {
+$("#btPizzaAdd").click(function() {
     limparDadosPizza();
 });
 
 
 //Consulta pizzas
-$("#btConsulta").click(function () {
+$("#btConsulta").click(function() {
     var request = $.ajax({
         type: "POST",
-        url: "/AJAX/Pizzas.aspx/PizzasLista",
+        url: "AJAX/Pizzas.aspx/PizzasLista",
         contentType: "application/json",
         data: JSON.stringify({ nome: $("#txtConsulta").val() })
     });
 
-    request.done(function (data) {
+    request.done(function(data) {
         pizzaGrid(data);
         limparDadosPizza();
     });
 
-    request.fail(function (jqXHR, textStatus) {
+    request.fail(function(jqXHR, textStatus) {
         exibirNoty("Request failed: " + textStatus, "error");
     });
 });
 
 
 //Inclui uma  nova pizza
-$("#btIncluir").click(function () {
+$("#btIncluir").click(function() {
     // http://encosia.com/using-complex-types-to-make-calling-services-less-complex/
     // Initialize the object, before adding data to it.
     //  { } is declarative shorthand for new Object().
-    var pizzaDto = {};
+    var pizzaDto = { };
 
     pizzaDto.Id = $("#txtId").val();
     pizzaDto.Nome = $("#txtNome").val();
@@ -119,17 +120,17 @@ $("#btIncluir").click(function () {
 
     var request = $.ajax({
         type: "POST",
-        url: "/AJAX/Pizzas.aspx/SavePizza",
+        url: "AJAX/Pizzas.aspx/SavePizza",
         contentType: "application/json",
         data: JSON.stringify(DTO)
     });
 
-    request.done(function (data) {
+    request.done(function(data) {
         exibirNoty(data.d, "success");
         $("#btConsulta").click();
     });
 
-    request.fail(function (jqXHR, textStatus) {
+    request.fail(function(jqXHR, textStatus) {
         exibirNoty("Request failed: " + textStatus, "error");
     });
 });
@@ -140,7 +141,7 @@ $("#btExcluir").click(function() {
 
     var request = $.ajax({
         type: "POST",
-        url: "/AJAX/Pizzas.aspx/ExcluirPizza",
+        url: "AJAX/Pizzas.aspx/ExcluirPizza",
         contentType: "application/json",
         data: dados
     });

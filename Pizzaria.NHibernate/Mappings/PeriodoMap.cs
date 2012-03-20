@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FluentNHibernate.Mapping;
+﻿using FluentNHibernate.Mapping;
 using Pizzaria.Dominio.Entidades;
 
 namespace Pizzaria.NHibernate.Mappings
@@ -14,8 +10,6 @@ namespace Pizzaria.NHibernate.Mappings
             Id(x => x.Id).GeneratedBy.Native();
 
             Map(x => x.Nome);
-
-            HasManyToMany(x => x.Garcoms);
         }
     }
 }

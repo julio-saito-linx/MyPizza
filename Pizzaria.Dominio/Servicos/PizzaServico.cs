@@ -12,7 +12,9 @@ namespace Pizzaria.Dominio.Servicos
         {
             _pizzaDAO = pizzaDAO;
         }
-        
+
+        #region IPizzaServico Members
+
         public Pizza PesquisarID(int id)
         {
             return _pizzaDAO.Get(id);
@@ -21,7 +23,7 @@ namespace Pizzaria.Dominio.Servicos
         public Pizza PesquisarNome(string nome)
         {
             //FIXME: Cria uma nova pizza só para retornar valor teste.
-            return new Pizza{Id = 0, Nome = nome};
+            return new Pizza {Id = 0, Nome = nome};
         }
 
         public IList<Pizza> PesquisarTodos()
@@ -38,5 +40,7 @@ namespace Pizzaria.Dominio.Servicos
         {
             _pizzaDAO.Delete(id);
         }
+
+        #endregion
     }
 }

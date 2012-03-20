@@ -7,14 +7,17 @@ namespace Pizzaria.NHibernate.Repositorios
 {
     public class IngredienteDAO : DAO<Ingrediente>, IIngredienteDAO
     {
-        public IngredienteDAO(SessionProvider sessionProvider)
-            : base (sessionProvider)
+        public IngredienteDAO(SessionProvider sessionProvider) : base(sessionProvider)
         {
         }
+
+        #region IIngredienteDAO Members
 
         public IList<Ingrediente> PesquisarApimentados()
         {
             return GetAll();
         }
+
+        #endregion
     }
 }

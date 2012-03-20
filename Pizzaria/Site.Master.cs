@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Web.UI;
 
 namespace Pizzaria
 {
-    public partial class SiteMaster : System.Web.UI.MasterPage
+    public partial class SiteMaster : MasterPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
         }
     }
 }

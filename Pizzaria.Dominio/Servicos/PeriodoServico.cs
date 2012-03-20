@@ -12,7 +12,9 @@ namespace Pizzaria.Dominio.Servicos
         {
             _periodoDAO = periodoDAO;
         }
-        
+
+        #region IPeriodoServico Members
+
         public Periodo PesquisarID(int id)
         {
             return _periodoDAO.Get(id);
@@ -27,5 +29,7 @@ namespace Pizzaria.Dominio.Servicos
         {
             _periodoDAO.Save(periodo);
         }
+
+        #endregion
     }
 }

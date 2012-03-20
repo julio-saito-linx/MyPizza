@@ -2,7 +2,7 @@
 
 namespace Pizzaria.Dominio.Repositorios
 {
-    public interface IRepositorio<T> 
+    public interface IRepositorio<T>
     {
         void Save(T entity);
         T Get(int id);

@@ -1,6 +1,4 @@
-﻿using System.Web.Script.Serialization;
-
-namespace Pizzaria.Dominio.Entidades
+﻿namespace Pizzaria.Dominio.Entidades
 {
     public class Ingrediente
     {

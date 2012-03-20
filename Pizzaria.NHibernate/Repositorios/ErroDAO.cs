@@ -6,8 +6,7 @@ namespace Pizzaria.NHibernate.Repositorios
 {
     public class ErroDAO : DAO<Erro>, IErroDAO
     {
-        public ErroDAO(SessionProvider sessionProvider)
-            : base(sessionProvider)
+        public ErroDAO(SessionProvider sessionProvider) : base(sessionProvider)
         {
         }
     }

@@ -6,8 +6,7 @@ namespace Pizzaria.NHibernate.Repositorios
 {
     public class PizzaDAO : DAO<Pizza>, IPizzaDAO
     {
-        public PizzaDAO(SessionProvider sessionProvider)
-            : base(sessionProvider)
+        public PizzaDAO(SessionProvider sessionProvider) : base(sessionProvider)
         {
         }
     }

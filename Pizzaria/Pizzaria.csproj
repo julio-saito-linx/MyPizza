@@ -73,9 +73,10 @@
     <Content Include="Account\ChangePasswordSuccess.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
-    <Content Include="AJAX\Default.js" />
+    <Content Include="Default.js" />
     <Content Include="AJAX\Pizzas.aspx" />
     <Content Include="CriarDados.aspx" />
+    <Content Include="Ingrediente_Lista.aspx" />
     <Content Include="needim-noty-2481627\.gitignore" />
     <Content Include="needim-noty-2481627\css\jquery.noty.css" />
     <Content Include="needim-noty-2481627\img\alert-lines.png" />
@@ -155,8 +156,16 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="FabricaContainer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Ingrediente_Lista.aspx.cs">
+      <DependentUpon>Ingrediente_Lista.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ingrediente_Lista.aspx.designer.cs">
+      <DependentUpon>Ingrediente_Lista.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">
@@ -194,12 +203,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>33686</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost/Pizzaria</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
