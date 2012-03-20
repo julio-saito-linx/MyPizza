@@ -5,7 +5,7 @@ Simples. Não, não é. É um saco.
 Seguem os passos:
 
 Fluent NHibernate Mapping
-```c#
+```javascript
     public static class NhCastle
     {
         public static ISessionFactory InitSessionFactory()
