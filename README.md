@@ -98,3 +98,8 @@ Seguem os passos:
     </modules>
   </system.webServer>
 ```
+
+### referenciar a DDD
+```
+	Castle.Facilities.NHibernateIntegration
+```	
