@@ -5,7 +5,7 @@ Simples. Não, não é. É um saco.
 Seguem os passos:
 
 Fluent NHibernate Mapping
-```
+<code>
     public static class NhCastle
     {
         public static ISessionFactory InitSessionFactory()
@@ -20,7 +20,8 @@ Fluent NHibernate Mapping
             return cfg.BuildSessionFactory();
         }
     }
-```
+</code>
+
 
 Castle Windsor Component Register
 ```
