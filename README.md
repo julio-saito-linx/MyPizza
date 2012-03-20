@@ -3,7 +3,12 @@
 
 Seguem os passos:
 
-### Fluent NHibernate Mapping
+### referenciar a DLL
+```
+	Castle.Facilities.NHibernateIntegration
+```	
+	
+### Repositório: Fluent NHibernate Mapping
 ```
     public static class NhCastle
     {
@@ -22,7 +27,7 @@ Seguem os passos:
 ```
 
 
-### Castle Windsor Component Register
+### Visualização/Aplicação: Castle Windsor Component Register
 ```
     public static class FabricaContainer
     {
@@ -63,7 +68,7 @@ Seguem os passos:
 ```
 
 
-### Global.asax
+### Visualização/Aplicação: Global.asax
 ```
     public class Global : HttpApplication, IContainerAccessor
     {
@@ -90,7 +95,7 @@ Seguem os passos:
         }
 ```
 
-### Colocar a aplicação no IIS 7 e no Web.Config
+### Visualização/Aplicação: Colocar a aplicação no IIS 7 e no Web.Config
 ```
   <system.webServer>
     <modules runAllManagedModulesForAllRequests="true" >
@@ -99,7 +104,3 @@ Seguem os passos:
   </system.webServer>
 ```
 
-### referenciar a DDD
-```
-	Castle.Facilities.NHibernateIntegration
-```	
