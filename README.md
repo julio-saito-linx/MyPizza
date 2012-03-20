@@ -5,7 +5,7 @@ Simples. Não, não é. É um saco.
 Seguem os passos:
 
 Fluent NHibernate Mapping
-```javascript
+```
     public static class NhCastle
     {
         public static ISessionFactory InitSessionFactory()
@@ -23,7 +23,7 @@ Fluent NHibernate Mapping
 ```
 
 Castle Windsor Component Register
-```c#
+```
     public static class FabricaContainer
     {
         public static WindsorContainer InicializarContainer()
@@ -64,7 +64,7 @@ Castle Windsor Component Register
 
 
 Global.asax
-```c#
+```
     public class Global : HttpApplication, IContainerAccessor
     {
         private static IWindsorContainer _container;
@@ -91,7 +91,7 @@ Global.asax
 ```
 
 Colocar a plicação no IIS 7 e no Web.Config
-```xml
+```
   <system.webServer>
     <modules runAllManagedModulesForAllRequests="true" >
       <add name="PerRequestLifestyle" type="Castle.MicroKernel.Lifestyle.PerWebRequestLifestyleModule, Castle.Windsor" />
