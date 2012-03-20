@@ -7,16 +7,16 @@ namespace Pizzaria.NHibernate
 {
     public class DAO<T> : IRepositorio<T>
     {
-        private readonly SessionProvider _sessionProvider;
+        private readonly ISession _session;
 
-        public DAO(SessionProvider sessionProvider)
+        public DAO(ISession session)
         {
-            _sessionProvider = sessionProvider;
+            _session = session;
         }
 
         protected ISession Session
         {
-            get { return _sessionProvider.GetCurrentSession(); }
+            get { return _session; }
         }
 
         #region IRepositorio<T> Members

@@ -57,8 +57,9 @@
   <ItemGroup>
     <Compile Include="DAO.cs" />
     <Compile Include="Helpers\BancoDadosCreator.cs" />
-    <Compile Include="Helpers\SessionFactoryProvider.cs" />
-    <Compile Include="Helpers\SessionProvider.cs" />
+    <Compile Include="Helpers\CascadeConvention.cs" />
+    <Compile Include="Helpers\NhCastle.cs" />
+    <Compile Include="Helpers\EnumConvention.cs" />
     <Compile Include="Mappings\ErroMap.cs" />
     <Compile Include="Mappings\IngredienteMap.cs" />
     <Compile Include="Mappings\PeriodoMap.cs" />

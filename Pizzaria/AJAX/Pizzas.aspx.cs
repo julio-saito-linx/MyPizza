@@ -47,9 +47,7 @@ namespace Pizzaria.AJAX
         [WebMethod]
         public static Pizza PizzaByName(string nome)
         {
-            var provider = new SessionFactoryProvider();
-            var sessionProvider = new SessionProvider(provider);
-            ISession sessaoAtual = sessionProvider.GetCurrentSession();
+            var sessaoAtual = _container.Resolve<ISession>();
 
             Pizza pizza = sessaoAtual.QueryOver<Pizza>().Where(Restrictions.On<Pizza>(p => p.Nome).IsLike(nome, MatchMode.Start)).OrderBy(p => p.Nome).Asc.List<Pizza>().FirstOrDefault<Pizza>() ?? new Pizza();
 
@@ -59,9 +57,7 @@ namespace Pizzaria.AJAX
         [WebMethod]
         public static PizzaDto PizzaById(int id)
         {
-            var provider = new SessionFactoryProvider();
-            var sessionProvider = new SessionProvider(provider);
-            ISession sessaoAtual = sessionProvider.GetCurrentSession();
+            var sessaoAtual = _container.Resolve<ISession>();
 
             Pizza pizza = sessaoAtual.QueryOver<Pizza>().Where(p => p.Id == id).List<Pizza>()[0];
 
@@ -71,9 +67,7 @@ namespace Pizzaria.AJAX
         [WebMethod]
         public static IList<IngredienteDto> Ingredientes(int id)
         {
-            var provider = new SessionFactoryProvider();
-            var sessionProvider = new SessionProvider(provider);
-            ISession sessaoAtual = sessionProvider.GetCurrentSession();
+            var sessaoAtual = _container.Resolve<ISession>();
 
             IList<Ingrediente> ingredientes = sessaoAtual.QueryOver<Ingrediente>().Where(i => i.Pizza.Id == id).List<Ingrediente>();
 
@@ -84,9 +78,7 @@ namespace Pizzaria.AJAX
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public static IList<PizzaDto> PizzasLista(string nome)
         {
-            var provider = new SessionFactoryProvider();
-            var sessionProvider = new SessionProvider(provider);
-            ISession sessaoAtual = sessionProvider.GetCurrentSession();
+            var sessaoAtual = _container.Resolve<ISession>();
 
             IList<Pizza> pizzas = sessaoAtual.QueryOver<Pizza>().Where(Restrictions.On<Pizza>(p => p.Nome).IsLike(nome, MatchMode.Start)).OrderBy(p => p.Id).Asc().List<Pizza>();
 
@@ -100,9 +92,7 @@ namespace Pizzaria.AJAX
         {
             Pizza pizzaIncluir;
 
-            var provider = new SessionFactoryProvider();
-            var sessionProvider = new SessionProvider(provider);
-            ISession sessaoAtual = sessionProvider.GetCurrentSession();
+            var sessaoAtual = _container.Resolve<ISession>();
 
             if (pizzaDto.Id == 0)
             {

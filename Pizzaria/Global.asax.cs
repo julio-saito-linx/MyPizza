@@ -1,10 +1,33 @@
 ﻿using System;
 using System.Web;
+using Castle.Windsor;
 
 namespace Pizzaria
 {
-    public class Global : HttpApplication
+    public class Global : HttpApplication, IContainerAccessor
     {
+        private static IWindsorContainer _container;
+        public IWindsorContainer Container
+        {
+            get { return _container; }
+            set { _container = value; }
+        }
+
+        public override void Init()
+        {
+            base.Init();
+            InitializeIoC();
+        }
+
+        private void InitializeIoC()
+        {
+            if (_container == null)
+            {
+                _container = new WindsorContainer();
+                FabricaContainer.Registrar(_container);
+            }
+        }
+
         private void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
@@ -32,5 +55,6 @@ namespace Pizzaria
             // is set to InProc in the Web.config file. If session mode is set to StateServer 
             // or SQLServer, the event is not raised.
         }
+
     }
 }
