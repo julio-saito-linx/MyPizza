@@ -94,12 +94,9 @@ Isso é muito importante, pois senão o NHibernate sempre vai voltar o mesmo obj
 
 ### Visualização/Aplicação: `Global.asax`
 Não queremos que o container seja carregado a todo momento e sim apenas uma 
-única vez.
-Para isso temos que colocá-lo no `Global.asax` que é o único lugar webforms que 
-isso é possível.
-Primeiro fazemos o `Global.asax.cs` implementar a interface 
-`IContainerAccessor`.
-Observe no exemplo anterior como o container é chamado no `WindsorContainer InicializarContainer()`
+única vez. Por isso temos que instanciar no **Global.asax.cs**.
+Primeiro fazemos o *Global.asax.cs* implementar a interface *IContainerAccessor*.
+Observe no exemplo anterior como o container é chamado pelo **WindsorContainer InicializarContainer()**
 
 ```
     public class Global : HttpApplication, IContainerAccessor
@@ -128,6 +125,8 @@ Observe no exemplo anterior como o container é chamado no `WindsorContainer Ini
 ```
 
 ### Visualização/Aplicação: Colocar a aplicação no IIS 7 e no Web.Config
+Para utilizar o **PerWebRequestLifestyleModule** é necessário colocar 
+o código abaixo no **web.config**.
 
 ```
   <system.webServer>
