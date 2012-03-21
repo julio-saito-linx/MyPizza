@@ -6,7 +6,7 @@ Seguem os passos:
 ### referenciar as DLLs
 Primeiro precisamos referenciar corretamente. 
 Essa parte é muito chata. Não se pode baixar a última versão do NHibernate. 
-Baixe o Fluent com suas dependências.
+Baixe o **FluentNHibernate** com suas dependências para *amenizar o sofrimento*.
 
 * Castle.Windsor                 2.5.3
 * FluentNHibernate               1.2.0.712
@@ -16,10 +16,10 @@ Baixe o Fluent com suas dependências.
 	
 	
 ### Repositório: FluentNHibernate Mapping
-O mapeamento utilizado no exemplo é o manual.
-Para começar é mais dificil, porém a longo prazo vai te salvar.
-O Automapping é bom pra criar o banco pela primeira vez.
-Manter o Automapping, porém, é algo complicado.
+O mapeamento utilizado no exemplo é o *manual*.
+Dica: O Automapping é bom pra criar o banco pela primeira vez. 
+A longo prazo deixar o banco só baseado em convenções é bem
+complicado. Recomendo mudar para o mapeamento manual.
 
 ```
     public static class NhCastle
@@ -40,11 +40,17 @@ Manter o Automapping, porém, é algo complicado.
 
 
 ### Visualização/Aplicação: Castle Windsor Component Register
+
+##### NHibernate + Windsor #####
 Coloque o registro dos componentes Castle Windsor numa fábrica na própria 
 visualização.
-Observe que o Mapeamento NHibernate, a parte mais pesada, fica como `Singleton`.
-Observe que estamos registrando o NHibernate com apenas uma sessão por request.
-Isso é muito importante, pois sanão o NHibernate sempre vai voltar o mesmo objeto na memória.
+Observe que o Mapeamento NHibernate, a parte mais pesada, fica como **Singleton**.
+`container.Register(Component.For<ISessionFactory>().LifeStyle.Singleton.UsingFactoryMethod(NhCastle.InitSessionFactory));`
+
+##### PerWebRequest #####
+Estamos registrando o NHibernate para que tenha apenas **uma sessão por request**.
+Isso é muito importante, pois senão o NHibernate sempre vai voltar o mesmo objeto da memória.
+
 
 ```
     public static class FabricaContainer
