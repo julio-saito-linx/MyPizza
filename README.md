@@ -1,4 +1,4 @@
-## 5 passos para configurar o FluentNhibernate com Castle Windsor e Asp.Net WebForms?
+## 5 passos para configurar um projeto Asp.Net Web Application com FluentNhibernate e Castle Windsor
 
 ### 1. referenciar as DLLs
 Primeiro precisamos referenciar corretamente. 
