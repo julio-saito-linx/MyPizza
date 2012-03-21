@@ -7,15 +7,15 @@ using Pizzaria.Dominio.Repositorios;
 
 namespace Pizzaria
 {
-    public partial class Ingrediente_Lista : Page
+    public partial class Ingrediente_Listar : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
             WindsorContainer container = FabricaContainer.InicializarContainer();
             var ingredienteServico = container.Resolve<IIngredienteServico>();
             IList<Ingrediente> ingredientes = ingredienteServico.PesquisarTodos();
-            GridViewIngredientes.DataSource = ingredientes;
-            GridViewIngredientes.DataBind();
+            RepeaterIngredientes.DataSource = ingredientes;
+            RepeaterIngredientes.DataBind();
         }
     }
 }

@@ -144,7 +144,7 @@ div.noty_modal {
     width: 100%;
 }
 
-.noty_bar.topCenter.alert { background-color: none; }
+.noty_bar.topCenter.alert { background-color: transparent; }
 
 .noty_bar.topCenter .noty_message {
     -moz-border-radius: 4px;

@@ -77,10 +77,11 @@
     <Content Include="Account\ChangePasswordSuccess.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
+    <Content Include="Ingrediente_Editar.aspx" />
     <Content Include="Default.js" />
     <Content Include="AJAX\Pizzas.aspx" />
     <Content Include="CriarDados.aspx" />
-    <Content Include="Ingrediente_Lista.aspx" />
+    <Content Include="Ingrediente_Listar.aspx" />
     <Content Include="needim-noty-2481627\.gitignore" />
     <Content Include="needim-noty-2481627\css\jquery.noty.css" />
     <Content Include="needim-noty-2481627\img\alert-lines.png" />
@@ -146,6 +147,13 @@
     <Compile Include="AJAX\Pizzas.aspx.designer.cs">
       <DependentUpon>Pizzas.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Ingrediente_Editar.aspx.cs">
+      <DependentUpon>Ingrediente_Editar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ingrediente_Editar.aspx.designer.cs">
+      <DependentUpon>Ingrediente_Editar.aspx</DependentUpon>
+    </Compile>
     <Compile Include="CriarDados.aspx.cs">
       <DependentUpon>CriarDados.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -164,12 +172,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Ingrediente_Lista.aspx.cs">
-      <DependentUpon>Ingrediente_Lista.aspx</DependentUpon>
+    <Compile Include="Ingrediente_Listar.aspx.cs">
+      <DependentUpon>Ingrediente_Listar.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Ingrediente_Lista.aspx.designer.cs">
-      <DependentUpon>Ingrediente_Lista.aspx</DependentUpon>
+    <Compile Include="Ingrediente_Listar.aspx.designer.cs">
+      <DependentUpon>Ingrediente_Listar.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">

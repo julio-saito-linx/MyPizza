@@ -10,7 +10,16 @@
 namespace Pizzaria {
     
     
-    public partial class Ingrediente_Lista {
+    public partial class Ingrediente_Listar {
+        
+        /// <summary>
+        /// RepeaterIngredientes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater RepeaterIngredientes;
         
         /// <summary>
         /// GridViewIngredientes control.

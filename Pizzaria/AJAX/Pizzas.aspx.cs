@@ -98,6 +98,10 @@ namespace Pizzaria.AJAX
             {
                 // nova pizza
                 pizzaIncluir = new Pizza();
+                pizzaIncluir.Ingredientes = new List<Ingrediente>();
+                pizzaIncluir.AcrescentarIngrediente(new Ingrediente());
+                pizzaIncluir.AcrescentarIngrediente(new Ingrediente());
+                pizzaIncluir.AcrescentarIngrediente(new Ingrediente());
             }
             else
             {

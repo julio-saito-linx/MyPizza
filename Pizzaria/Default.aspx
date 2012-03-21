@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"
-         CodeBehind="Default.aspx.cs" Inherits="Pizzaria._Default" ViewStateMode="Disabled" ClientIDMode="Static" %>
+    CodeBehind="Default.aspx.cs" Inherits="Pizzaria._Default" ViewStateMode="Disabled" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.4.1/build/cssgrids/grids-min.css">
@@ -19,20 +19,24 @@
             </div>
         </div>
         <div style="float: left; width: 460px">
-            <p>
-                <p>
-                    <b>Detalhe da Pizza:</b></p>
-                <input type="hidden" id="txtId" value="0" />
-                <asp:TextBox ID="txtNome" runat="server"></asp:TextBox>
-            </p>
-            <p>
-                Ingredientes:</p>
-            <p>
-                <asp:TextBox ID="txtIngrediente1" runat="server"></asp:TextBox></p>
-            <p>
-                <asp:TextBox ID="txtIngrediente2" runat="server"></asp:TextBox></p>
-            <p>
-                <asp:TextBox ID="txtIngrediente3" runat="server"></asp:TextBox></p>
+            <b>Detalhe da Pizza:</b>
+            <br />
+            txtId :
+            <input type="text" id="txtId" value="0" />
+            <br />
+            txtNome:
+            <input type="text" id="txtNome" />
+            <br />
+            txtIngrediente1 :
+            <input type="text" id="txtIngrediente1" />
+            <br />
+            txtIngrediente2:
+            <input type="text" id="txtIngrediente2" />
+            <br />
+            txtIngrediente3:
+            <input type="text" id="txtIngrediente3" />
+            <br />
+            <br />
             <div>
                 <input id="btIncluir" type="button" value="Salvar AJAX" />
                 <input id="btExcluir" type="button" value="Excluir AJAX" />
