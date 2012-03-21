@@ -8,10 +8,7 @@ namespace Pizzaria.NHibernate.Mappings
         public IngredienteMap()
         {
             Id(x => x.Id).Column("Id").GeneratedBy.Native();
-
             Map(x => x.Nome);
-
-            References(x => x.Pizza);
         }
     }
 }

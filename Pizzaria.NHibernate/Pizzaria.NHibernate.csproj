@@ -60,14 +60,10 @@
     <Compile Include="Helpers\CascadeConvention.cs" />
     <Compile Include="Helpers\NhCastle.cs" />
     <Compile Include="Helpers\EnumConvention.cs" />
-    <Compile Include="Mappings\ErroMap.cs" />
     <Compile Include="Mappings\IngredienteMap.cs" />
-    <Compile Include="Mappings\PeriodoMap.cs" />
     <Compile Include="Mappings\PizzaMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositorios\ErroDAO.cs" />
     <Compile Include="Repositorios\IngredienteDAO.cs" />
-    <Compile Include="Repositorios\PeriodoDAO.cs" />
     <Compile Include="Repositorios\PizzaDAO.cs" />
   </ItemGroup>
   <ItemGroup>

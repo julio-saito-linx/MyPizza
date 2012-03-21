@@ -23,7 +23,7 @@ namespace Pizzaria
         {
             // REGISTRA O FLUENT NHIBERNATE
             container.AddFacility<FactorySupportFacility>();
-            container.Register(Component.For<ISessionFactory>().LifeStyle.Singleton.UsingFactoryMethod(NhCastle.InitSessionFactory));
+            container.Register(Component.For<ISessionFactory>().LifeStyle.Singleton.UsingFactoryMethod(new NhCastle().InitSessionFactory));
 
             // REGISTRA TODOS OS COMPONENTES COMO PERWEBREQUEST
             container.Kernel.ComponentModelCreated += Kernel_ComponentModelCreated_PerWebRequest;
@@ -34,8 +34,6 @@ namespace Pizzaria
             container.Register(Component.For<IIngredienteServico>().ImplementedBy<IngredienteServico>());
             container.Register(Component.For<IPizzaDAO>().ImplementedBy<PizzaDAO>());
             container.Register(Component.For<IIngredienteDAO>().ImplementedBy<IngredienteDAO>());
-            container.Register(Component.For<IPeriodoDAO>().ImplementedBy<PeriodoDAO>());
-            container.Register(Component.For<IPeriodoServico>().ImplementedBy<PeriodoServico>());
         }
 
         public static void Kernel_ComponentModelCreated_PerWebRequest(ComponentModel model)

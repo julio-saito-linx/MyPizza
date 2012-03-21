@@ -56,7 +56,6 @@
     <Compile Include="Repositorios\IPizzaServico.cs" />
     <Compile Include="Repositorios\IRepositorio.cs" />
     <Compile Include="Servicos\IngredienteServico.cs" />
-    <Compile Include="Servicos\PeriodoServico.cs" />
     <Compile Include="Servicos\PizzaServico.cs" />
   </ItemGroup>
   <ItemGroup>

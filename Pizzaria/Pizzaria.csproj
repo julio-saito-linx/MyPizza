@@ -77,6 +77,7 @@
     <Content Include="Account\ChangePasswordSuccess.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
+    <Content Include="AutoCriarBancoDados.aspx" />
     <Content Include="Ingrediente_Editar.aspx" />
     <Content Include="Default.js" />
     <Content Include="AJAX\Pizzas.aspx" />
@@ -146,6 +147,13 @@
     </Compile>
     <Compile Include="AJAX\Pizzas.aspx.designer.cs">
       <DependentUpon>Pizzas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AutoCriarBancoDados.aspx.cs">
+      <DependentUpon>AutoCriarBancoDados.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AutoCriarBancoDados.aspx.designer.cs">
+      <DependentUpon>AutoCriarBancoDados.aspx</DependentUpon>
     </Compile>
     <Compile Include="Ingrediente_Editar.aspx.cs">
       <DependentUpon>Ingrediente_Editar.aspx</DependentUpon>
