@@ -6,6 +6,7 @@ Seguem os passos:
 ### referenciar as DLLs
 Primeiro você precisa das referencias corretas. Essa parte é muito dificil. 
 Não se pode baixar a última versão do NHibernate. Baixe o Fluent com suas dependências.
+
 * Castle.Windsor                 2.5.3
 * FluentNHibernate               1.2.0.712
 * Iesi.Collections               3.1.0.4000
@@ -18,6 +19,7 @@ O mapeamento utilizado no exemplo é o manual.
 Para começar é mais dificil, porém a longo prazo vai te salvar.
 O Automapping é bom pra criar o banco pela primeira vez.
 Manter o Automapping, porém, é algo complicado.
+
 ```
     public static class NhCastle
     {
@@ -41,6 +43,7 @@ Coloque o registro dos componentes Castle Windsor numa fábrica na própria visu
 Observe que o Mapeamento NHibernate, a parte mais pesada, fica como `Singleton`.
 Observe que estamos registrando o NHibernate com apenas uma sessão por request.
 Isso é muito importante, pois sanão o NHibernate sempre vai voltar o mesmo objeto na memória.
+
 ```
     public static class FabricaContainer
     {
@@ -86,6 +89,7 @@ Não queremos que o container seja carregado a todo momento e sim apenas uma ún
 Para isso temos que colocá-lo no `Global.asax` que é o único lugar webforms que isso é possível.
 Primeiro fazemos o `Global.asax.cs` implementar a interface `IContainerAccessor`.
 Observe no exemplo anterior como o container é chamado no `WindsorContainer InicializarContainer()`
+
 ```
     public class Global : HttpApplication, IContainerAccessor
     {
@@ -113,6 +117,7 @@ Observe no exemplo anterior como o container é chamado no `WindsorContainer Ini
 ```
 
 ### Visualização/Aplicação: Colocar a aplicação no IIS 7 e no Web.Config
+
 ```
   <system.webServer>
     <modules runAllManagedModulesForAllRequests="true" >
