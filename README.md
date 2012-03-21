@@ -1,9 +1,6 @@
-## Como configurar o NHibernate, FluentNhibernate e Castle para funcionar com o Asp.Net WebForms?
-### Simples. Não, não é. É um saco.
+## 5 passos para configurar o FluentNhibernate com Castle Windsor e Asp.Net WebForms?
 
-Seguem os passos:
-
-### referenciar as DLLs
+### 1. referenciar as DLLs
 Primeiro precisamos referenciar corretamente. 
 Essa parte é muito chata. Não se pode baixar a última versão do NHibernate. 
 Baixe o **FluentNHibernate** com suas dependências para *amenizar o sofrimento*.
@@ -15,7 +12,7 @@ Baixe o **FluentNHibernate** com suas dependências para *amenizar o sofrimento*
 * NHibernate.Castle              3.1.0.4000
 	
 	
-### Repositório: FluentNHibernate Mapping
+### 2. Repositório: FluentNHibernate Mapping
 O mapeamento utilizado no exemplo é o *manual*.
 Dica: O Automapping é bom pra criar o banco pela primeira vez. 
 A longo prazo deixar o banco só baseado em convenções é bem
@@ -39,7 +36,7 @@ complicado. Recomendo mudar para o mapeamento manual.
 ```
 
 
-### Visualização/Aplicação: Castle Windsor Component Register
+### 3. Visualização/Aplicação: Castle Windsor Component Register
 
 ##### NHibernate + Windsor #####
 Coloque o registro dos componentes Castle Windsor numa fábrica na própria 
@@ -92,7 +89,7 @@ Isso é muito importante, pois senão o NHibernate sempre vai voltar o mesmo obj
 ```
 
 
-### Visualização/Aplicação: `Global.asax`
+### 4. Visualização/Aplicação: `Global.asax`
 Não queremos que o container seja carregado a todo momento e sim apenas uma 
 única vez. Por isso temos que instanciar no **Global.asax.cs**.
 Primeiro fazemos o *Global.asax.cs* implementar a interface *IContainerAccessor*.
@@ -124,7 +121,7 @@ Observe no exemplo anterior como o container é chamado pelo **WindsorContainer 
         }
 ```
 
-### Visualização/Aplicação: Colocar a aplicação no IIS 7 e no Web.Config
+### 5. Visualização/Aplicação: Colocar a aplicação no IIS 7 e no Web.Config
 Para utilizar o **PerWebRequestLifestyleModule** é necessário colocar 
 o código abaixo no **web.config**.
 
