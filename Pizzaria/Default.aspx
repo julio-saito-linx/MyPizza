@@ -27,14 +27,9 @@
             txtNome:
             <input type="text" id="txtNome" />
             <br />
-            txtIngrediente1 :
-            <input type="text" id="txtIngrediente1" />
-            <br />
-            txtIngrediente2:
-            <input type="text" id="txtIngrediente2" />
-            <br />
-            txtIngrediente3:
-            <input type="text" id="txtIngrediente3" />
+            Ingredientes :
+            <div id="divIngredientes">
+            </div>
             <br />
             <br />
             <div>

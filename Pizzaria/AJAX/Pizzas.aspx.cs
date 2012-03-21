@@ -65,11 +65,11 @@ namespace Pizzaria.AJAX
         }
 
         [WebMethod]
-        public static IList<IngredienteDto> Ingredientes(int id)
+        public static IList<IngredienteDto> Ingredientes()
         {
             var sessaoAtual = _container.Resolve<ISession>();
 
-            IList<Ingrediente> ingredientes = sessaoAtual.QueryOver<Ingrediente>().Where(i => i.Pizza.Id == id).List<Ingrediente>();
+            IList<Ingrediente> ingredientes = sessaoAtual.QueryOver<Ingrediente>().List<Ingrediente>();
 
             return Mapper.Map<IList<Ingrediente>, IList<IngredienteDto>>(ingredientes);
         }

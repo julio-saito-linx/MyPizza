@@ -39,40 +39,94 @@ var pizzaGrid = function(d) {
     });
 };
 
-var YUIGridFormat = function() {
+var YUIGridFormat = function () {
     var tr = $(".yui3-datatable-data tr");
     tr.css("cursor", "pointer");
 
-    tr.mouseover(function() {
+    tr.mouseover(function () {
         $(this).css("color", "red");
     });
-    tr.mouseout(function() {
+    tr.mouseout(function () {
         $(this).css("color", "gray");
     });
 
-    tr.click(function() {
+    tr.click(function () {
         var id = parseInt($(this).find("td:eq(0)").text());
         tr.css("font-weight", "normal");
         $(this).css("font-weight", "bold");
-        var pizza = _.find(pizzas, function(p) {
+        var pizza = _.find(pizzas, function (p) {
             return p.Id === id;
         });
 
         $("#txtId").val(pizza.Id);
         $("#txtNome").val(pizza.Nome);
 
-        $("#txtIngrediente1").val(pizza.Ingredientes[0].Nome);
-        $("#txtIngrediente2").val(pizza.Ingredientes[1].Nome);
-        $("#txtIngrediente3").val(pizza.Ingredientes[2].Nome);
+        preencherSelectsIngredientes(pizza.Ingredientes);
     });
 };
+
+var ingredientesDoBanco = null;
+
+var preencherSelectsIngredientes = function (ingredientes) {
+    // se ainda a lista não está preenchida busca lista de ingredientes
+    if (ingredientesDoBanco === null) {
+        pesquisarIngredientes();
+    }
+
+    $("#divIngredientes").html("");
+
+    if (ingredientes.length === 0) {
+        criarSelectIngrediente();
+    }
+    else {
+        for (var i = 0; i < ingredientes.length; i++) {
+            criarSelectIngrediente(ingredientes[i]);
+        }
+    }
+};
+
+var criarSelectIngrediente = function (ingrediente) {
+    $("#divIngredientes").append("<select></select>");
+    for (var i = 0; i < ingredientesDoBanco.length; i++) {
+        var ing = ingredientesDoBanco[i];
+        $("#divIngredientes select").append("<option value='" + ing.Id + "'>" + ing.Nome + "</option>");
+    }
+
+    if (!_.isUndefined(ingrediente)) {
+        var lista = $("#divIngredientes select option");
+        var itemEncontrado = _.find(lista, function (l) {
+            return (l.value === ingrediente.Id.toString());
+        });
+
+        $("#divIngredientes select option[value='" + ingrediente.Id.toString() + "']").select();
+    }
+};
+
+var recuperarSelectsIngredientesDto = function (ingredientesDto) {
+};
+
+var pesquisarIngredientes = function () {
+    var request = $.ajax({
+        type: "POST",
+        url: "AJAX/Pizzas.aspx/Ingredientes",
+        contentType: "application/json",
+        async: false
+    });
+
+    request.done(function (data) {
+        ingredientesDoBanco = data.d;
+    });
+
+    request.fail(function (jqXHR, textStatus) {
+        exibirNoty("Request failed: " + textStatus, "error");
+    });
+};
+
 
 var limparDadosPizza = function() {
     $("#txtId").val(0);
     $("#txtNome").val("");
-    $("#txtIngrediente1").val("");
-    $("#txtIngrediente2").val("");
-    $("#txtIngrediente3").val("");
+    preencherSelectsIngredientes();
 };
 
 //Consulta pizzas
@@ -102,18 +156,15 @@ $("#btConsulta").click(function() {
 
 
 //Inclui uma  nova pizza
-$("#btIncluir").click(function() {
+$("#btIncluir").click(function () {
     // http://encosia.com/using-complex-types-to-make-calling-services-less-complex/
     // Initialize the object, before adding data to it.
     //  { } is declarative shorthand for new Object().
-    var pizzaDto = { };
-
+    var pizzaDto = {};
     pizzaDto.Id = $("#txtId").val();
     pizzaDto.Nome = $("#txtNome").val();
     pizzaDto.Ingredientes = [];
-    pizzaDto.Ingredientes.push({ Nome: $("#txtIngrediente1").val() });
-    pizzaDto.Ingredientes.push({ Nome: $("#txtIngrediente2").val() });
-    pizzaDto.Ingredientes.push({ Nome: $("#txtIngrediente3").val() });
+    recuperarSelectsIngredientesDto(pizzaDto.Ingredientes);
 
     // Create a data transfer object (DTO) with the proper structure.
     var DTO = { 'pizzaDto': pizzaDto };
@@ -125,12 +176,12 @@ $("#btIncluir").click(function() {
         data: JSON.stringify(DTO)
     });
 
-    request.done(function(data) {
+    request.done(function (data) {
         exibirNoty(data.d, "success");
         $("#btConsulta").click();
     });
 
-    request.fail(function(jqXHR, textStatus) {
+    request.fail(function (jqXHR, textStatus) {
         exibirNoty("Request failed: " + textStatus, "error");
     });
 });
