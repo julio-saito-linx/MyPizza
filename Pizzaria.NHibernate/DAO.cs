@@ -7,7 +7,7 @@ namespace Pizzaria.NHibernate
 {
     public class DAO<T> : IRepositorio<T>
     {
-        private readonly ISession _session;
+        protected readonly ISession _session;
 
         public DAO(ISession session)
         {

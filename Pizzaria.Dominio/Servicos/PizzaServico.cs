@@ -7,10 +7,12 @@ namespace Pizzaria.Dominio.Servicos
     public class PizzaServico : IPizzaServico
     {
         private readonly IPizzaDAO _pizzaDAO;
+        private readonly IIngredienteDAO _ingredienteDAO;
 
-        public PizzaServico(IPizzaDAO pizzaDAO)
+        public PizzaServico(IPizzaDAO pizzaDAO, IIngredienteDAO ingredienteDAO)
         {
             _pizzaDAO = pizzaDAO;
+            _ingredienteDAO = ingredienteDAO;
         }
 
         #region IPizzaServico Members
@@ -20,10 +22,15 @@ namespace Pizzaria.Dominio.Servicos
             return _pizzaDAO.Get(id);
         }
 
-        public Pizza PesquisarNome(string nome)
+        public IList<Pizza> PesquisarPorNome(string nome)
         {
-            //FIXME: Cria uma nova pizza só para retornar valor teste.
-            return new Pizza {Id = 0, Nome = nome};
+            return _pizzaDAO.PesquisarPorNome(nome);
+        }
+
+        public IList<Pizza> PesquisarPorIngrediente(int ingredienteId)
+        {
+            var ingrediente = _ingredienteDAO.Get(ingredienteId);
+            return ingrediente.ContidoEmPizzas;
         }
 
         public IList<Pizza> PesquisarTodos()

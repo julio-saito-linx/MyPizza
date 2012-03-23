@@ -14,7 +14,13 @@ namespace Pizzaria.Dominio.Entidades
             {
                 Ingredientes = new List<Ingrediente>();
             }
-            ingrediente.Pizza = this;
+
+            if (ingrediente.ContidoEmPizzas == null)
+            {
+                ingrediente.ContidoEmPizzas = new List<Pizza>();
+            }
+
+            ingrediente.ContidoEmPizzas.Add(this);
             Ingredientes.Add(ingrediente);
         }
     };

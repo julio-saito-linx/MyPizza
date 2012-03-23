@@ -26,6 +26,17 @@ namespace Pizzaria
             _id = Convert.ToInt32(queryString);
             litId.Text = _id.ToString();
 
+            if (Request["excluir"] != null && Request["excluir"] == "1")
+            {
+                ExcluirIngrediente();
+                return;
+            }
+
+            TratarPost();
+        }
+
+        private void TratarPost()
+        {
             // Trata POST
             if (!IsPostBack)
             {
@@ -43,6 +54,12 @@ namespace Pizzaria
                 // Redireciona para Lista
                 Response.Redirect("Ingrediente_Listar.aspx");
             }
+        }
+
+        private void ExcluirIngrediente()
+        {
+            _ingredienteServico.Delete(_id);
+            Response.Redirect("Ingrediente_Listar.aspx");
         }
 
         private Ingrediente PesquisarIngrediente()

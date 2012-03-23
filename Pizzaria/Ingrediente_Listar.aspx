@@ -11,7 +11,10 @@
         <asp:Repeater runat="server" ID="RepeaterIngredientes">
             <ItemTemplate>
                 <li><a href="Ingrediente_Editar.aspx?id=<%#DataBinder.Eval(Container.DataItem, "id")%>">
-                    <%#DataBinder.Eval(Container.DataItem, "nome")%></a></li>
+                    [<%#DataBinder.Eval(Container.DataItem, "Id")%>]
+                    
+                    <%#DataBinder.Eval(Container.DataItem, "Nome")%>
+                </a></li>
             </ItemTemplate>
         </asp:Repeater>
     </ul>

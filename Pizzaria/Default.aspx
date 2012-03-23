@@ -11,12 +11,18 @@
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <div style="width: 980px">
         <div style="float: left; width: 460px">
-            <b>Consulta:</b>
-            <asp:TextBox ID="txtConsulta" runat="server"></asp:TextBox>
-            &nbsp;<input id="btConsulta" type="button" value="Buscar" />
-            &nbsp;<input id="btPizzaAdd" type="button" value="+Pizza" />
-            <div id="pizzaview" class="yui3-skin-sam dt-example">
-            </div>
+            <table id="tablePizzas" border="1" cellpadding="2" cellspacing="2">
+                <tr>
+                    <th>
+                        Id
+                    </th>
+                    <th>
+                        Nome
+                    </th>
+                </tr>
+            </table>
+            <br />
+            <input id="btPizzaAdd" type="button" value="+ Pizza" />
         </div>
         <div style="float: left; width: 460px">
             <b>Detalhe da Pizza:</b>

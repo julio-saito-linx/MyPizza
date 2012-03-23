@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Web;
+using System.Web.Http;
+using System.Web.Routing;
 using Castle.Windsor;
 
 namespace Pizzaria
@@ -30,7 +32,11 @@ namespace Pizzaria
 
         private void Application_Start(object sender, EventArgs e)
         {
-            // Code that runs on application startup
+            RouteTable.Routes.MapHttpRoute(
+                name: "ValuesController1",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
         }
 
         private void Application_End(object sender, EventArgs e)

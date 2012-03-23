@@ -1,55 +1,60 @@
 ﻿var pizzas = [];
+var _ingredientesDoBanco = null;
 
-var exibirNoty = function(mensagem, tipoAlert) {
-    noty({
-        "text": mensagem,
-        "layout": "top",
-        "type": tipoAlert,
-        "textAlign": "center",
-        "easing": "swing",
-        "animateOpen": { "height": "toggle" },
-        "animateClose": { "height": "toggle" },
-        "speed": "500",
-        "timeout": "500",
-        "closable": true,
-        "closeOnSelfClick": true
+$().ready(function () {
+    getAllPizza();
+});
+
+var getAllPizza = function () {
+    var request = $.ajax({
+        type: "GET",
+        url: "api/pizza1",
+        contentType: "application/json"
+    });
+
+    request.done(function (data) {
+        pizzas = data;
+        preencharGrid(data);
+    });
+
+    request.fail(function (jqXHR, textStatus) {
+        exibirNoty("Request failed: " + textStatus, "error");
     });
 };
 
 //Monta e carrega o grid
-var pizzaGrid = function(d) {
-    $("#pizzaview").html("");
+var preencharGrid = function (dados) {
+    if (_.isUndefined(dados))
+        return;
 
-    YUI().use('datatable', function(Y) {
-        var cols = [{ key: "Id", sortable: false },
-            { key: "Nome", sortable: false }];
+    var linhas = "";
+    for (var i = 0; i < dados.length; i++) {
+        var pizza = dados[i];
+        linhas += "<tr>";
+        linhas += "<td>";
+        linhas += pizza.Id;
+        linhas += "</td>";
+        linhas += "<td>";
+        linhas += pizza.Nome;
+        linhas += "</td>";
+        linhas += "</tr>";
+    }
 
-        var data = d.d;
-        pizzas = data;
+    $("#tablePizzas").append(linhas);
 
-        // Creates a DataTable with 3 columns and 3 rows
-        new Y.DataTable.Base({
-            columnset: cols,
-            recordset: data,
-            caption: "Pizzas",
-            plugins: Y.Plugin.DataTableSort
-        }).render("#pizzaview");
+    prepararTabela();
 
-        YUIGridFormat();
-    });
 };
 
-var YUIGridFormat = function () {
-    var tr = $(".yui3-datatable-data tr");
+var prepararTabela = function () {
+    var tr = $("#tablePizzas tr:gt(0)");
     tr.css("cursor", "pointer");
-
     tr.mouseover(function () {
         $(this).css("color", "red");
     });
     tr.mouseout(function () {
         $(this).css("color", "gray");
     });
-
     tr.click(function () {
         var id = parseInt($(this).find("td:eq(0)").text());
         tr.css("font-weight", "normal");
@@ -65,17 +70,16 @@ var YUIGridFormat = function () {
     });
 };
 
-var ingredientesDoBanco = null;
 
 var preencherSelectsIngredientes = function (ingredientes) {
     // se ainda a lista não está preenchida busca lista de ingredientes
-    if (ingredientesDoBanco === null) {
+    if (_ingredientesDoBanco === null) {
         pesquisarIngredientes();
     }
 
     $("#divIngredientes").html("");
 
-    if (ingredientes.length === 0) {
+    if (_.isUndefined(ingredientes)) {
         criarSelectIngrediente();
     }
     else {
@@ -87,8 +91,8 @@ var preencherSelectsIngredientes = function (ingredientes) {
 
 var criarSelectIngrediente = function (ingrediente) {
     $("#divIngredientes").append("<select></select>");
-    for (var i = 0; i < ingredientesDoBanco.length; i++) {
-        var ing = ingredientesDoBanco[i];
+    for (var i = 0; i < _ingredientesDoBanco.length; i++) {
+        var ing = _ingredientesDoBanco[i];
         $("#divIngredientes select").append("<option value='" + ing.Id + "'>" + ing.Nome + "</option>");
     }
 
@@ -102,7 +106,13 @@ var criarSelectIngrediente = function (ingrediente) {
     }
 };
 
-var recuperarSelectsIngredientesDto = function (ingredientesDto) {
+var recuperarSelectsIngredientesDto = function () {
+    var ingredientes = [];
+    $("#divIngredientes option:selected").each(function () {
+        var ing = { Id: $(this).val() };
+        ingredientes.push(ing);
+    });
+    return ingredientes;
 };
 
 var pesquisarIngredientes = function () {
@@ -114,7 +124,7 @@ var pesquisarIngredientes = function () {
     });
 
     request.done(function (data) {
-        ingredientesDoBanco = data.d;
+        _ingredientesDoBanco = data.d;
     });
 
     request.fail(function (jqXHR, textStatus) {
@@ -129,33 +139,15 @@ var limparDadosPizza = function() {
     preencherSelectsIngredientes();
 };
 
-//Consulta pizzas
+// Preparar para nova pizza1
 $("#btPizzaAdd").click(function() {
     limparDadosPizza();
 });
 
 
-//Consulta pizzas
-$("#btConsulta").click(function() {
-    var request = $.ajax({
-        type: "POST",
-        url: "AJAX/Pizzas.aspx/PizzasLista",
-        contentType: "application/json",
-        data: JSON.stringify({ nome: $("#txtConsulta").val() })
-    });
-
-    request.done(function(data) {
-        pizzaGrid(data);
-        limparDadosPizza();
-    });
-
-    request.fail(function(jqXHR, textStatus) {
-        exibirNoty("Request failed: " + textStatus, "error");
-    });
-});
 
 
-//Inclui uma  nova pizza
+//Inclui uma  nova pizza1
 $("#btIncluir").click(function () {
     // http://encosia.com/using-complex-types-to-make-calling-services-less-complex/
     // Initialize the object, before adding data to it.
@@ -163,8 +155,7 @@ $("#btIncluir").click(function () {
     var pizzaDto = {};
     pizzaDto.Id = $("#txtId").val();
     pizzaDto.Nome = $("#txtNome").val();
-    pizzaDto.Ingredientes = [];
-    recuperarSelectsIngredientesDto(pizzaDto.Ingredientes);
+    pizzaDto.Ingredientes = recuperarSelectsIngredientesDto();
 
     // Create a data transfer object (DTO) with the proper structure.
     var DTO = { 'pizzaDto': pizzaDto };
@@ -178,7 +169,7 @@ $("#btIncluir").click(function () {
 
     request.done(function (data) {
         exibirNoty(data.d, "success");
-        $("#btConsulta").click();
+        getAllPizza();
     });
 
     request.fail(function (jqXHR, textStatus) {
@@ -186,8 +177,8 @@ $("#btIncluir").click(function () {
     });
 });
 
-//Excluir pizza
-$("#btExcluir").click(function() {
+//Excluir pizza1
+$("#btExcluir").click(function () {
     var dados = "{ id:" + $("#txtId").val() + "}";
 
     var request = $.ajax({
@@ -197,12 +188,29 @@ $("#btExcluir").click(function() {
         data: dados
     });
 
-    request.done(function(data) {
+    request.done(function (data) {
         exibirNoty(data.d, "success");
-        $("#btConsulta").click();
+        getAllPizza();
     });
 
-    request.fail(function(jqXHR, textStatus) {
+    request.fail(function (jqXHR, textStatus) {
         exibirNoty("Request failed: " + textStatus, "error");
     });
 });
+
+
+var exibirNoty = function (mensagem, tipoAlert) {
+    noty({
+        "text": mensagem,
+        "layout": "top",
+        "type": tipoAlert,
+        "textAlign": "center",
+        "easing": "swing",
+        "animateOpen": { "height": "toggle" },
+        "animateClose": { "height": "toggle" },
+        "speed": "500",
+        "timeout": "500",
+        "closable": true,
+        "closeOnSelfClick": true
+    });
+};
