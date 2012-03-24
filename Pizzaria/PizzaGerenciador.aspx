@@ -61,13 +61,16 @@
             </div>
         </div>
         <div id="divDebug">
-            <h3>degub</h3>
-            <div class="itemDebug">
+            <button id="buttonDebug">debug</button>
+            <h3>debug</h3>
                 JSON.stringify(ko.toJS($data), null, 2)
-                <pre data-bind="text: JSON.stringify(ko.toJS($data), null, 2)"></pre>
+            <div class="itemDebug">
+                <pre class="prettyprint" id="preDebug"></pre>
             </div>
         </div>
     </body>
+    <link href="Scripts/prettify.css" rel="stylesheet" type="text/css" />
+    <script src="Scripts/prettify.js" type="text/javascript"></script>
     <script src="Scripts/jquery-1.6.4.min.js" type="text/javascript"> </script>
     <script src="Scripts/json2.js" type="text/javascript"> </script>
     <script src="needim-noty-2481627/js/jquery.noty.js" type="text/javascript"> </script>
