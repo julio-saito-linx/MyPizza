@@ -1,14 +1,18 @@
-﻿////////////////////////////
+﻿/// <reference path="~/Scripts/knockout.debug.js" />
+/// <reference path="~/Scripts/jquery-1.6.4.min.js" />
+/// <reference path="~/Scripts/underscore/underscore-min.js" />
+
+/// /////////////////////
 /// Banco de dados local
-////////////////////////////
+/// /////////////////////
 var pizzasDto;
 var ingredientesDto;
 
 
 
-////////////
+/// ///////
 /// READY!
-////////////
+/// ///////
 $().ready(function () {
     getAllPizza();
     getAllIngredientes();
@@ -32,15 +36,30 @@ $().ready(function () {
 /// //////////////////////////////////////////////////////////////////////////////
 var MainViewModel = function () {
     var self = this;
-    
+
     // somente o id da pizza que estiver selecionada
     self.pizzaIdSelecionada = ko.observable();
-    
+
     // a pizza selecionada
     self.pizzaSelecionada = ko.observable();
-    
+
     // todos ingredientes disponíveis
     self.todosIngredientes = ko.observableArray(ingredientesDto);
+
+    self.ingredientesAindaNaoInseridos = ko.computed(function () {
+        var novaLista = null;
+        if (!(_.isUndefined(self.pizzaSelecionada()))) {
+            novaLista = _.filter(self.todosIngredientes(), function (item) {
+
+                var ids = _.map(self.pizzaSelecionada().Ingredientes(), function (ingPizza) {
+                    return ingPizza.Id();
+                });
+
+                return ids.indexOf(item.Id) === -1;
+            });
+        }
+        return novaLista;
+    }, self);
 
     // selecionar pizza
     self.selecionarPizza = function (pizza) {
@@ -56,11 +75,15 @@ var MainViewModel = function () {
     self.Pizzas = ko.observableArray(pizzasVm);
 
     // inserir novo ingrediente
-    self.ingredienteToAdd = ko.observable("");
-    self.addItem = function () {
-        if ((self.ingredienteToAdd() != "") && (self.todosIngredientes.indexOf(self.ingredienteToAdd()) < 0)) // Prevent blanks and duplicates
-            self.pizzaSelecionada().Ingredientes().push(self.ingredienteToAdd());
-        this.ingredienteToAdd(""); // Clear the text box
+    self.ingredienteToAdd = ko.observable();
+    self.addIngrediente = function () {
+        if (self.ingredienteToAdd() != "") // Prevent blanks
+        {
+            //self.pizzaSelecionada().Ingredientes.push(self.ingredienteToAdd());   
+            self.pizzaSelecionada().Ingredientes.push(new IngredienteVM(self.ingredienteToAdd()));
+            //self.pizzaSelecionada().Ingredientes.push(new IngredienteVM({Id:1, Nome:"ingQualquer"}));
+
+        }
     };
 
     // remover ingredientes
@@ -69,7 +92,7 @@ var MainViewModel = function () {
         self.pizzaSelecionada().Ingredientes.removeAll(self.ingredientesSelecionados());
         self.ingredientesSelecionados([]); // Clear selection
     };
-    
+
 };
 
 /// ////////////////////////

@@ -43,23 +43,46 @@
     background: #FFF;
     color: #555;
     font-family: Consolas;
-    font-size: 0.80em;
-    margin: 10px;
-    padding: 10px;
+    font-size: 1.00em;
+    margin: 5px;
+    padding: 20px;
+    float: right;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+#divDebug h3{
+    margin: 2px;
+    padding: 1px;
+    font-family: Consolas;
+    font-size: 1.30em;
+}
+
+
+.itemDebug 
+{
+    border: solid 2px;
+    border-color: #888;
+    display: block;
     width: 500px;
-    float: right
+    height: 500px;
+    overflow: auto
 }
 
 .campo {
+    width: 50%;
     color: #555;
-    font-family: Arial;
     font-size: 1.0em;
-    padding: 10px;
+    padding: 3px;
+    display: inline;
 }
 
 .dado {
+    width: 50%;
     color: #333;
-    font-family: Arial;
+    font-weight: bold;
     font-size: 0.90em;
-    padding: 10px;
+    padding: 3px;
+    display: inline;
 }
