@@ -1,7 +1,14 @@
-﻿// busca do banco de dados
+﻿////////////////////////////
+/// Banco de dados local
+////////////////////////////
 var pizzasDto;
 var ingredientesDto;
 
+
+
+////////////
+/// READY!
+////////////
 $().ready(function () {
     getAllPizza();
     getAllIngredientes();
@@ -15,31 +22,59 @@ $().ready(function () {
     var a = 1;
 });
 
-
-var MainViewModel = function (pizzas) {
+/// //////////////////////////////////////////////////////////////////////////////
+///  MAIN :: VIEWMODEL
+///  Define os itens que serão observáveis, ou seja, sicronizados via MVVM
+///  
+///  esta classe depende das seguintes variáveis 'globais':
+///   - pizzasDto;
+///   - ingredientesDto;
+/// //////////////////////////////////////////////////////////////////////////////
+var MainViewModel = function () {
     var self = this;
+    
+    // somente o id da pizza que estiver selecionada
     self.pizzaIdSelecionada = ko.observable();
+    
+    // a pizza selecionada
     self.pizzaSelecionada = ko.observable();
-    self.todosIngredientes = ko.observableArray();
+    
+    // todos ingredientes disponíveis
+    self.todosIngredientes = ko.observableArray(ingredientesDto);
 
-    // Behaviours
+    // selecionar pizza
     self.selecionarPizza = function (pizza) {
         self.pizzaIdSelecionada(pizza.Id);
         self.pizzaSelecionada(pizza);
     };
 
-    // Carregar todosIngredientes
-    self.todosIngredientes = ko.observableArray(ingredientesDto);
-
-    // Carregar as Pizzas
+    // inicializar as Pizzas
     var pizzasVm = [];
     for (var i = 0; i < pizzasDto.length; i++) {
         pizzasVm.push(new PizzaVM(pizzasDto[i]));
     }
     self.Pizzas = ko.observableArray(pizzasVm);
 
+    // inserir novo ingrediente
+    self.ingredienteToAdd = ko.observable("");
+    self.addItem = function () {
+        if ((self.ingredienteToAdd() != "") && (self.todosIngredientes.indexOf(self.ingredienteToAdd()) < 0)) // Prevent blanks and duplicates
+            self.pizzaSelecionada().Ingredientes().push(self.ingredienteToAdd());
+        this.ingredienteToAdd(""); // Clear the text box
+    };
+
+    // remover ingredientes
+    self.ingredientesSelecionados = ko.observableArray([]);
+    self.removeSelected = function () {
+        self.pizzaSelecionada().Ingredientes.removeAll(self.ingredientesSelecionados());
+        self.ingredientesSelecionados([]); // Clear selection
+    };
+    
 };
 
+/// ////////////////////////
+///  PizzaVM :: VIEWMODEL
+/// ////////////////////////
 var PizzaVM = function (pizza) {
     var self = this;
     self.Id = ko.observable(pizza.Id);
@@ -55,12 +90,20 @@ var PizzaVM = function (pizza) {
     };
 };
 
+/// ////////////////////////
+///  IngredienteVM :: VIEWMODEL
+/// ////////////////////////
 var IngredienteVM = function (ingrediente) {
     var self = this;
     self.Id = ko.observable(ingrediente.Id);
     self.Nome = ko.observable(ingrediente.Nome);
 };
 
+
+
+/// ////////////////////////
+///  AJAX :: todas pizzas
+/// ////////////////////////
 var getAllPizza = function () {
     var request = $.ajax({
         type: "GET",
@@ -78,6 +121,9 @@ var getAllPizza = function () {
     });
 };
 
+/// /////////////////////////////
+///  AJAX :: todos ingredientes
+/// /////////////////////////////
 var getAllIngredientes = function () {
     var request = $.ajax({
         type: "GET",

@@ -26,24 +26,20 @@
         <div class="campo"><span>Nome da Pizza:</span></div>
         <div class="dado"><input data-bind="value: Nome"></input></div>
         <div id="divIngredientesDetalhe">
+            
             <span>Ingrediente:</span>
             <div class="dado">
-                <select multiple="multiple" height="5" data-bind="options:Ingredientes, optionsText:'Nome'"> </select>
+                <select multiple="multiple" height="5" data-bind="options:Ingredientes, optionsText:'Nome', selectedOptions:$root.ingredientesSelecionados"> </select>
                 <div>
-                    <%--<button data-bind="click: removeSelected, enable: selectedItems().length > 0">Remove</button>--%>
+                    <button data-bind="click: $root.removeSelected, enable: $root.ingredientesSelecionados().length > 0">Remove</button>
                 </div>
             </div>
 
-            <div id="div1" data-bind="foreach: Ingredientes">
-                <div style="display: block">
-                    [<span data-bind="text: Id" class="dado"></span>]
-                    <span data-bind="text: Nome" class="dado"></span>
-                </div>
-            </div>
+            <span>Adicionar novo:</span>
             <div class="dado">
                 <select data-bind="options: $root.todosIngredientes, optionsText: 'Nome'"></select>
             </div>
-            <div class="dado"><button>Adicionar Novo Ingrediente</button></div>
+            <div class="dado"><button>adic.</button></div>
         </div>
     </div>
     <div id="divDebug">
