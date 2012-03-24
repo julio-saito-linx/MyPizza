@@ -15,7 +15,7 @@ namespace Pizzaria.NHibernate.Mappings
                 .Table("Pizza_Ingredientes")
                 .ParentKeyColumn("Pizza_id")
                 .ChildKeyColumn("Ingredientes_id")
-                .Cascade.All();
+                .Cascade.All().Inverse();
         }
     }
 }

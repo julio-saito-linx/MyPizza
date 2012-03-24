@@ -1,41 +1,58 @@
-﻿//HELPERS
-var primeiroMaiusculo = function (texto) {
-    texto = texto.toLowerCase();
-    var primeiraLetra = texto.substring(0, 1).toUpperCase();
-    return primeiraLetra + texto.substring(1);
-};
-var exibirNoty = function (mensagem, tipoAlert) {
-    noty({
-        "text": mensagem,
-        "layout": "top",
-        "type": tipoAlert,
-        "textAlign": "center",
-        "easing": "swing",
-        "animateOpen": { "height": "toggle" },
-        "animateClose": { "height": "toggle" },
-        "speed": "500",
-        "timeout": "500",
-        "closable": true,
-        "closeOnSelfClick": true
-    });
-};
+﻿// busca do banco de dados
+var pizzasDto;
+var ingredientesDto;
 
-// Here's my data model
-var PizzasViewModel = function (pizzas) {
+$().ready(function () {
+    getAllPizza();
+    getAllIngredientes();
+
+    // inicializa o viewModel
+    var pizzasViewModel = new MainViewModel(pizzasDto);
+
+    // This makes Knockout get to work
+    ko.applyBindings(pizzasViewModel);
+
+    var a = 1;
+});
+
+
+var MainViewModel = function (pizzas) {
     var self = this;
-    self.Pizzas = ko.observableArray(pizzas.Pizzas);
+    self.pizzaIdSelecionada = ko.observable();
+    self.pizzaSelecionada = ko.observable();
+    self.todosIngredientes = ko.observableArray();
+
+    // Behaviours
+    self.selecionarPizza = function (pizza) {
+        self.pizzaIdSelecionada(pizza.Id);
+        self.pizzaSelecionada(pizza);
+    };
+
+    // Carregar todosIngredientes
+    self.todosIngredientes = ko.observableArray(ingredientesDto);
+
+    // Carregar as Pizzas
+    var pizzasVm = [];
+    for (var i = 0; i < pizzasDto.length; i++) {
+        pizzasVm.push(new PizzaVM(pizzasDto[i]));
+    }
+    self.Pizzas = ko.observableArray(pizzasVm);
+
 };
 
 var PizzaVM = function (pizza) {
     var self = this;
     self.Id = ko.observable(pizza.Id);
     self.Nome = ko.observable(pizza.Nome);
-
     self.Ingredientes = ko.observableArray();
     _.each(pizza.Ingredientes, function (ing) {
-        self.Ingredientes().push(IngredienteVM(ing));
+        self.Ingredientes().push(new IngredienteVM(ing));
     });
 
+    self.exibirDetalhe = function () {
+        exibirNoty(self.Nome());
+        
+    };
 };
 
 var IngredienteVM = function (ingrediente) {
@@ -53,7 +70,7 @@ var getAllPizza = function () {
     });
 
     request.done(function (data) {
-        pizzas = { Pizzas: data };
+        pizzasDto = data;
     });
 
     request.fail(function (jqXHR, textStatus) {
@@ -61,12 +78,21 @@ var getAllPizza = function () {
     });
 };
 
-// busca do banco de dados
-var pizzas;
-getAllPizza();
+var getAllIngredientes = function () {
+    var request = $.ajax({
+        type: "GET",
+        url: "api/ingrediente",
+        contentType: "application/json",
+        async: false
+    });
 
-// inicializa o viewModel
-var pizzasViewModel = new PizzasViewModel(pizzas);
+    request.done(function (data) {
+        ingredientesDto = data;
+    });
 
-// This makes Knockout get to work
-ko.applyBindings(pizzasViewModel);
+    request.fail(function (jqXHR, textStatus) {
+        exibirNoty("Request failed: " + textStatus, "error");
+    });
+};
+
+

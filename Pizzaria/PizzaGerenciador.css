@@ -2,23 +2,33 @@
 {
     background: #FFE8FF;
     color: #333;
-    font-family: Consolas;
-    font-size: 1.20em;
+    font-family: Verdana;
+    font-size: 1.1em;
     margin: 10px;
     padding: 10px;
 }
 
 #divPizzas {
     padding: 10px;
-    width: 200px;
+    width: 300px;
+    float: left;
 }
 
-#divPizza {
+#divDetalhe div {
+    padding: 3px;
+    width: 600px;
+}
+
+.pizzaEstilo {
     border: solid 2px;
     border-color: #666;
     padding: 10px;
     margin: 10px;
     width: 200px;
+    cursor: pointer;
+}
+
+.pizzaSelecionada {
     background-color: #fff;
 }
 
@@ -27,4 +37,29 @@
     border-color: #888;
     padding: 6px;
     margin: 6px;
+}
+
+#divDebug {
+    background: #FFF;
+    color: #555;
+    font-family: Consolas;
+    font-size: 0.80em;
+    margin: 10px;
+    padding: 10px;
+    width: 500px;
+    float: right
+}
+
+.campo {
+    color: #555;
+    font-family: Arial;
+    font-size: 1.0em;
+    padding: 10px;
+}
+
+.dado {
+    color: #333;
+    font-family: Arial;
+    font-size: 0.90em;
+    padding: 10px;
 }

@@ -12,8 +12,7 @@ namespace Pizzaria.NHibernate.Mappings
             HasManyToMany(x => x.ContidoEmPizzas)
                 .Table("Pizza_Ingredientes")
                 .ParentKeyColumn("Ingredientes_id")
-                .ChildKeyColumn("Pizza_id")
-                .Cascade.All();
+                .ChildKeyColumn("Pizza_id");
         }
     }
 }

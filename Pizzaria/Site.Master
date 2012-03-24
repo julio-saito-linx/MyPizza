@@ -39,6 +39,7 @@
                             <Items>
                                 <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Pizza Ajax jQuery" />
                                 <asp:MenuItem NavigateUrl="~/Ingrediente_Listar.aspx" Text="Ingredientes Submit" />
+                                <asp:MenuItem NavigateUrl="~/PizzaGerenciador.aspx" Text="PizzaGerenciador" />
                             </Items>
                         </asp:Menu>
                     </div>

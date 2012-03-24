@@ -111,7 +111,6 @@
     <Content Include="Ingrediente_Editar.aspx" />
     <Content Include="Default.js" />
     <Content Include="AJAX\Pizzas.aspx" />
-    <Content Include="CriarDados.aspx" />
     <Content Include="Ingrediente_Listar.aspx" />
     <Content Include="needim-noty-2481627\.gitignore" />
     <Content Include="needim-noty-2481627\css\jquery.noty.css" />
@@ -124,6 +123,7 @@
     <Content Include="needim-noty-2481627\img\mitgux\error.png" />
     <Content Include="needim-noty-2481627\js\jquery.noty.js" />
     <Content Include="PizzaGerenciador.aspx" />
+    <Content Include="Scripts\helpers.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\knockout.debug.js" />
@@ -182,6 +182,7 @@
       <DependentUpon>Pizzas.aspx</DependentUpon>
     </Compile>
     <Content Include="App_Code\PizzaController.cs" />
+    <Content Include="App_Code\IngredienteController.cs" />
     <Compile Include="AutoCriarBancoDados.aspx.cs">
       <DependentUpon>AutoCriarBancoDados.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -195,13 +196,6 @@
     </Compile>
     <Compile Include="Ingrediente_Editar.aspx.designer.cs">
       <DependentUpon>Ingrediente_Editar.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="CriarDados.aspx.cs">
-      <DependentUpon>CriarDados.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="CriarDados.aspx.designer.cs">
-      <DependentUpon>CriarDados.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

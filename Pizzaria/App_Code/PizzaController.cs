@@ -54,11 +54,14 @@ namespace Pizzaria
             pizzaIncluir.Nome = pizzaDto.Nome;
             pizzaIncluir.Ingredientes = new List<Ingrediente>();
 
-            foreach (var ingredienteDto in pizzaDto.Ingredientes)
+            if (pizzaDto.Ingredientes != null)
             {
-                var ingrediente = new Ingrediente();
-                ingrediente.Nome = ingredienteDto.Nome;
-                pizzaIncluir.AcrescentarIngrediente(ingrediente);
+                foreach (var ingredienteDto in pizzaDto.Ingredientes)
+                {
+                    var ingrediente = new Ingrediente();
+                    ingrediente.Nome = ingredienteDto.Nome;
+                    pizzaIncluir.AcrescentarIngrediente(ingrediente);
+                }
             }
 
             _pizzaServico.Save(pizzaIncluir);

@@ -8,7 +8,7 @@ $().ready(function () {
 var getAllPizza = function () {
     var request = $.ajax({
         type: "GET",
-        url: "api/pizza1",
+        url: "api/pizza",
         contentType: "application/json"
     });
 
@@ -79,14 +79,15 @@ var preencherSelectsIngredientes = function (ingredientes) {
 
     $("#divIngredientes").html("");
 
-    if (_.isUndefined(ingredientes)) {
-        criarSelectIngrediente();
-    }
-    else {
-        for (var i = 0; i < ingredientes.length; i++) {
-            criarSelectIngrediente(ingredientes[i]);
-        }
-    }
+    criarSelectIngrediente();
+    //    if (_.isUndefined(ingredientes)) {
+//        criarSelectIngrediente();
+//    }
+//    else {
+//        for (var i = 0; i < ingredientes.length; i++) {
+//            criarSelectIngrediente(ingredientes[i]);
+//        }
+//    }
 };
 
 var criarSelectIngrediente = function (ingrediente) {
@@ -117,14 +118,14 @@ var recuperarSelectsIngredientesDto = function () {
 
 var pesquisarIngredientes = function () {
     var request = $.ajax({
-        type: "POST",
-        url: "AJAX/Pizzas.aspx/Ingredientes",
+        type: "GET",
+        url: "api/ingrediente",
         contentType: "application/json",
         async: false
     });
 
     request.done(function (data) {
-        _ingredientesDoBanco = data.d;
+        _ingredientesDoBanco = data;
     });
 
     request.fail(function (jqXHR, textStatus) {
@@ -139,7 +140,7 @@ var limparDadosPizza = function() {
     preencherSelectsIngredientes();
 };
 
-// Preparar para nova pizza1
+// Preparar para nova pizza
 $("#btPizzaAdd").click(function() {
     limparDadosPizza();
 });
@@ -147,7 +148,7 @@ $("#btPizzaAdd").click(function() {
 
 
 
-//Inclui uma  nova pizza1
+//Inclui uma  nova pizza
 $("#btIncluir").click(function () {
     // http://encosia.com/using-complex-types-to-make-calling-services-less-complex/
     // Initialize the object, before adding data to it.
@@ -158,13 +159,13 @@ $("#btIncluir").click(function () {
     pizzaDto.Ingredientes = recuperarSelectsIngredientesDto();
 
     // Create a data transfer object (DTO) with the proper structure.
-    var DTO = { 'pizzaDto': pizzaDto };
+    //var DTO = { 'pizzaDto': pizzaDto };
 
     var request = $.ajax({
         type: "POST",
-        url: "AJAX/Pizzas.aspx/SavePizza",
+        url: "api/pizza",
         contentType: "application/json",
-        data: JSON.stringify(DTO)
+        data: JSON.stringify(pizzaDto)
     });
 
     request.done(function (data) {
@@ -177,15 +178,12 @@ $("#btIncluir").click(function () {
     });
 });
 
-//Excluir pizza1
+//Excluir pizza
 $("#btExcluir").click(function () {
-    var dados = "{ id:" + $("#txtId").val() + "}";
-
     var request = $.ajax({
-        type: "POST",
-        url: "AJAX/Pizzas.aspx/ExcluirPizza",
-        contentType: "application/json",
-        data: dados
+        type: "DELETE",
+        url: "api/pizza/" + $("#txtId").val(),
+        contentType: "application/json"
     });
 
     request.done(function (data) {
