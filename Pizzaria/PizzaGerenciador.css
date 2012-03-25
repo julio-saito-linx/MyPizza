@@ -1,6 +1,6 @@
 ﻿body
 {
-    background: #FFE8FF;
+    background: #FFFaFF;
     color: #333;
     font-family: Verdana;
     font-size: 1.1em;
@@ -8,15 +8,42 @@
     padding: 10px;
 }
 
-#divPizzas {
-    padding: 10px;
-    width: 300px;
-    float: left;
+option, input{
+    font-family: Verdana;
+    font-size: 1.1em;
 }
 
-#divDetalhe div {
-    padding: 3px;
-    width: 600px;
+#divPizzas {
+    padding: 10px;
+    width: 250px;
+    float: left;
+    border: solid 2px;
+    border-color: #aaa;
+}
+
+#divDetalhe {
+    padding: 10px;
+    width: 250px;
+    border: solid 2px;
+    border-color: #aaa;
+    display: inline-block;
+}
+
+#divDetalhe span{
+    font-family: Verdana;
+    font-size: 0.9em;
+    line-height: 40px;
+}
+
+.subTitulo {
+    padding: 10px;
+    font-family: Arial;
+    font-size: 1.3em;
+}
+
+.bloco {
+    float: left;
+    width: 300px;
 }
 
 .pizzaEstilo {
@@ -37,6 +64,11 @@
     border-color: #888;
     padding: 6px;
     margin: 6px;
+}
+
+#divIngredientes div{
+    font-family: Verdana;
+    font-size: 0.9em;
 }
 
 #divDebug {
@@ -85,4 +117,13 @@
     font-size: 0.90em;
     padding: 3px;
     display: inline;
+}
+
+.info {
+    font-family: Tahoma;
+    font-size: 1.00em;
+    background-color: #ffffc0;
+    padding: 5px;
+    margin: 10px;
+    float: left;
 }

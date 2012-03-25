@@ -128,8 +128,6 @@
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\knockout.debug.js" />
     <Content Include="Scripts\knockout.js" />
-    <Content Include="Scripts\prettify.css" />
-    <Content Include="Scripts\prettify.js" />
     <Content Include="Scripts\underscore\underscore-min.js" />
     <Content Include="Styles\Site.css" />
     <Content Include="Default.aspx" />
