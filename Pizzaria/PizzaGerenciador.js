@@ -22,20 +22,7 @@ $().ready(function () {
 
     // This makes Knockout get to work
     ko.applyBindings(pizzasViewModel);
-
-    $("#buttonDebug").click(function () {
-        preencherDebugOutside(this);
-    });
-
-    var preencherDebugOutside = function (self) {
-        var selData = ko.dataFor(self);
-        var selContext = ko.contextFor(self);
-        $("#preDebug").html(JSON.stringify(ko.toJS(selData), null, 2));
-        prettyPrint();
-    };
 });
-
-
 
 /// //////////////////////////////////////////////////////////////////////////////
 ///  MAIN :: VIEWMODEL
@@ -56,9 +43,6 @@ var MainViewModel = function () {
 
     // todos ingredientes disponíveis
     self.todosIngredientes = ko.observableArray(ingredientesDto);
-
-//    // debug
-//    self.preencherDebug = ko.computed(preencherDebugOutside, this);
 
     self.ingredientesAindaNaoInseridos = ko.computed(function () {
         var novaLista = null;

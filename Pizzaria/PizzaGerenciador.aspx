@@ -61,11 +61,9 @@
             </div>
         </div>
         <div id="divDebug">
-            <button id="buttonDebug">debug</button>
             <h3>debug</h3>
-                JSON.stringify(ko.toJS($data), null, 2)
             <div class="itemDebug">
-                <pre class="prettyprint" id="preDebug"></pre>
+                <pre data-bind="text: JSON.stringify(ko.toJS($data), null, 2)" id="preDebug"></pre>
             </div>
         </div>
     </body>
@@ -75,7 +73,7 @@
     <script src="Scripts/json2.js" type="text/javascript"> </script>
     <script src="needim-noty-2481627/js/jquery.noty.js" type="text/javascript"> </script>
     <script src="Scripts/underscore/underscore-min.js" type="text/javascript"> </script>
-    <script src="Scripts/knockout.js" type="text/javascript"> </script>
+    <script src="Scripts/knockout.debug.js" type="text/javascript"> </script>
     <script src="Scripts/helpers.js" type="text/javascript"> </script>
     <script src="PizzaGerenciador.js" type="text/javascript"> </script>
 </html>
