@@ -83,7 +83,7 @@ var MainViewModel = function () {
     self.selecionarPizza = function (pizza) {
         self.pizzaIdSelecionada(pizza.Id);
         self.pizzaSelecionada(pizza);
-        
+
         // limpa as seleções dos ingredientes
         self.removerCancelar();
         self.adicionarCancelar();
@@ -93,6 +93,27 @@ var MainViewModel = function () {
     self.Pizzas = ko.observableArray(_.map(pizzasDto, function (pd) {
         return new PizzaVM(pd);
     }));
+
+    self.save = function () {
+        var dados = ko.toJSON(self.pizzaSelecionada());
+
+        var request = $.ajax({
+            type: "PUT",
+            url: "api/pizza/" + self.pizzaSelecionada().Id(),
+            contentType: "application/json",
+            data: dados
+        });
+
+        request.done(function (data) {
+            exibirNoty("salvo");
+            self.removerCancelar();
+            self.adicionarCancelar();
+        });
+
+        request.fail(function (jqXHR, textStatus) {
+            exibirNoty("Request failed: " + textStatus, "error");
+        });
+    };
 
     // remover ingredientes
     self.ingredientesToRemove = ko.observableArray();

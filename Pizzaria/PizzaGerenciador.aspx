@@ -86,6 +86,7 @@
                     </form>
                 </div>
             </div>
+            <button data-bind="click : save">Salvar</button>
         </div>
         <div id="divDebug">
             <h3>

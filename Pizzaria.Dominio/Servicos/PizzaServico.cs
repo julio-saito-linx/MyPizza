@@ -29,8 +29,9 @@ namespace Pizzaria.Dominio.Servicos
 
         public IList<Pizza> PesquisarPorIngrediente(int ingredienteId)
         {
+            //fixme: não serve pra nada
             var ingrediente = _ingredienteDAO.Get(ingredienteId);
-            return ingrediente.ContidoEmPizzas;
+            return new List<Pizza>();
         }
 
         public IList<Pizza> PesquisarTodos()
