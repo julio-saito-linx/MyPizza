@@ -173,6 +173,10 @@ var MainViewModel = function () {
     self.adicionarCancelar = function () {
         self.ingredientesToAdd([]); // Clear selection
     };
+
+    self.exibirDebug = function () {
+        $("#divDebug").toggle();
+    };
 };
 
 // ////////////////////////

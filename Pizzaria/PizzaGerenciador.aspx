@@ -79,6 +79,7 @@
                 </div>
             </div>
         </div>
+        <button data-bind="click : exibirDebug">debug</button>
         <div id="divDebug">
             <h3>
                 debug</h3>
