@@ -9,8 +9,6 @@
 var pizzasDto;
 var ingredientesDto;
 
-
-
 // ///////
 // READY!
 // ///////
@@ -43,6 +41,7 @@ $().ready(function () {
 
     // This makes Knockout get to work
     ko.applyBindings(pizzasViewModel);
+
 });
 
 // //////////////////////////////////////////////////////////////////////////////
@@ -238,5 +237,6 @@ var getAllIngredientes = function () {
         exibirNoty("Request failed: " + textStatus, "error");
     });
 };
+
 
 

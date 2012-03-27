@@ -129,6 +129,9 @@
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\knockout.debug.js" />
     <Content Include="Scripts\knockout.js" />
+    <Content Include="Scripts\terminal\jquery.mousewheel-min.js" />
+    <Content Include="Scripts\terminal\jquery.terminal-0.4.11.min.js" />
+    <Content Include="Scripts\terminal\jquery.terminal.css" />
     <Content Include="Scripts\underscore\underscore-min.js" />
     <Content Include="Styles\Site.css" />
     <Content Include="Default.aspx" />

@@ -6,6 +6,7 @@
         <title>Pizza Gerenciador</title>
         <link href="PizzaGerenciador.css" rel="stylesheet" type="text/css" />
         <link href="needim-noty-2481627/css/jquery.noty.css" rel="stylesheet" type="text/css" />
+        <link href="Scripts/terminal/jquery.terminal.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <%--Todas as pizzas--%>
@@ -27,18 +28,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="info">
-                <span data-bind="fadeVisible: $root.ingredientesToRemove().length > 0">
-                    [remover] retira os ingredientes selecionados.
-                    Multi seleção ativada.
-                </span>
-            </div>
-            <div class="info">
-                <span data-bind="fadeVisible: $root.ingredientesToAdd().length > 0">
-                    [adicionar] inclui um novo ingrediente na pizza.
-                    Quando você troca de pizza, os itens são desselecionados.
-                </span>
             </div>
         </div>
         <%--Pizza selecionada--%>
@@ -104,5 +93,7 @@
     <script src="Scripts/underscore/underscore-min.js" type="text/javascript"> </script>
     <script src="Scripts/knockout.debug.js" type="text/javascript"> </script>
     <script src="Scripts/helpers.js" type="text/javascript"> </script>
-    <script src="PizzaGerenciador.js" type="text/javascript"> </script>
+<script src="Scripts/terminal/jquery.mousewheel-min.js" type="text/javascript"></script>
+<script src="Scripts/terminal/jquery.terminal-0.4.11.min.js" type="text/javascript"></script>
+<script src="PizzaGerenciador.js" type="text/javascript"> </script>
 </html>
