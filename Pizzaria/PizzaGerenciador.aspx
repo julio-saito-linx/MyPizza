@@ -14,7 +14,7 @@
             <div class="subTitulo">
                 Lista de Pizzas
                 <div id="divImagemAjax">&nbsp;
-                    <img data-bind="visible : IsUpdating" src="IMG/icon_loading.gif" />
+                    <img data-bind="visible : IsUpdating" src="IMG/main_black.gif" />
                 </div>
             </div>
             <div id="divPizzas" data-bind="foreach: Pizzas">
@@ -29,6 +29,7 @@
                     </div>
                 </div>
             </div>
+            <button data-bind="click : salvar">Salvar</button>
         </div>
         <%--Pizza selecionada--%>
         <div class="bloco">
@@ -77,7 +78,6 @@
                     </form>
                 </div>
             </div>
-            <button data-bind="click : save">Salvar</button>
         </div>
         <div id="divDebug">
             <h3>
@@ -87,13 +87,13 @@
             </div>
         </div>
     </body>
-    <script src="Scripts/jquery-1.6.4.min.js" type="text/javascript"> </script>
+    <script src="Scripts/jquery-1.7.1.min.js" type="text/javascript"> </script>
     <script src="Scripts/json2.js" type="text/javascript"> </script>
     <script src="needim-noty-2481627/js/jquery.noty.js" type="text/javascript"> </script>
     <script src="Scripts/underscore/underscore-min.js" type="text/javascript"> </script>
     <script src="Scripts/knockout.debug.js" type="text/javascript"> </script>
+
     <script src="Scripts/helpers.js" type="text/javascript"> </script>
-<script src="Scripts/terminal/jquery.mousewheel-min.js" type="text/javascript"></script>
-<script src="Scripts/terminal/jquery.terminal-0.4.11.min.js" type="text/javascript"></script>
-<script src="PizzaGerenciador.js" type="text/javascript"> </script>
+    <script src="Scripts/ajaxRestHelper/ajaxRestHelper.js" type="text/javascript"> </script>
+    <script src="PizzaGerenciador.js" type="text/javascript"> </script>
 </html>

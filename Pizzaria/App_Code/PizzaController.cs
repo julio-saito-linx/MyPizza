@@ -71,7 +71,7 @@ namespace Pizzaria
         }
 
         // PUT /api/pizza/5
-        public void Put(int id, PizzaDto pizzaDto)
+        public string Put(int id, PizzaDto pizzaDto)
         {
             // pesquisa a pizza no banco de dados
             // limpa seus filhos
@@ -94,6 +94,8 @@ namespace Pizzaria
             }
 
             _pizzaServico.Save(pizzaAlterar);
+
+            return "A pizza " + pizzaAlterar.Id + " foi salva com sucesso!";
         }
 
         // DELETE /api/pizza/5

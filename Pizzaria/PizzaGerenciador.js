@@ -2,12 +2,14 @@
 /// <reference path="~/Scripts/jquery-1.6.4.min.js" />
 /// <reference path="~/Scripts/underscore/underscore-min.js" />
 /// <reference path="~/Scripts/helpers.js" />
+/// <reference path="Scripts/ajaxRestHelper/ajaxRestHelper.js" />
 
 // /////////////////////
 // Banco de dados local
 // /////////////////////
 var pizzasDto;
 var ingredientesDto;
+var configuradorAjax = new ConfiguradorAjax();
 
 // ///////
 // READY!
@@ -22,7 +24,7 @@ $().ready(function () {
 
     // seleciona a primeira pizza logo de cara
     if (pizzasViewModel.Pizzas().length > 0) {
-        //pizzasViewModel.selecionarPizza(pizzasViewModel.Pizzas()[0]);
+        pizzasViewModel.selecionarPizza(pizzasViewModel.Pizzas()[0]);
     }
 
     // extendendo os bindings
@@ -86,7 +88,7 @@ var MainViewModel = function () {
     // Verifica se o JSON da Pizza foi alterado
     // ////////////////////////////////////////
     var pizzaSelecionadaEstadoInicialJSON = undefined;
-    
+
     self.foiAlterada = function () {
         if (!_.isUndefined(pizzaSelecionadaEstadoInicialJSON)) {
             var jsonPizzaAtual = ko.toJSON(self.pizzaSelecionada);
@@ -97,11 +99,10 @@ var MainViewModel = function () {
 
     // selecionar pizza
     self.selecionarPizza = function (pizza) {
+        // salva pizza anterior
+        self.salvar();
 
-        if (self.foiAlterada()) {
-            self.save();
-        }
-
+        // define a nova pizza selecionada
         self.pizzaIdSelecionada(pizza.Id);
         self.pizzaSelecionada(pizza);
 
@@ -120,31 +121,31 @@ var MainViewModel = function () {
 
     self.IsUpdating = ko.observable(false);
 
-    self.save = function () {
+    self.salvar = function () {
         if (_.isUndefined(self.pizzaSelecionada())) {
             // não existe pizza selecionada
             return;
         }
+
+        // somente salva se o JSON foi alterado
+        if (!self.foiAlterada()) {
+            return;
+        }
+
         self.IsUpdating(true);
 
         var pizzaSerializada = ko.toJSON(self.pizzaSelecionada());
 
-        var request = $.ajax({
-            type: "PUT",
-            url: "api/pizza/" + self.pizzaSelecionada().Id(),
-            contentType: "application/json",
-            data: pizzaSerializada
-        });
-
-        request.done(function (data) {
-            self.IsUpdating(false);
-            self.removerCancelar();
-            self.adicionarCancelar();
-        });
-
-        request.fail(function (jqXHR, textStatus) {
-            exibirNoty("Request failed: " + textStatus, "error");
-        });
+        chamarAjaxAsync(
+            "pizza",
+            configuradorAjax.METHOD_PUT,
+            self.pizzaSelecionada().Id(),
+            pizzaSerializada,
+            function (data) {
+                self.IsUpdating(false);
+                self.removerCancelar();
+                self.adicionarCancelar();
+            });
     };
 
     // remover ingredientes
@@ -202,40 +203,28 @@ var IngredienteVM = function (ingrediente) {
 //  AJAX :: todas pizzas
 // ////////////////////////
 var getAllPizza = function () {
-    var request = $.ajax({
-        type: "GET",
-        url: "api/pizza",
-        contentType: "application/json",
-        async: false
-    });
-
-    request.done(function (data) {
-        pizzasDto = data;
-    });
-
-    request.fail(function (jqXHR, textStatus) {
-        exibirNoty("Request failed: " + textStatus, "error");
-    });
+    chamarAjaxSync(
+        "pizza",
+        configuradorAjax.METHOD_LIST,
+        undefined,
+        undefined,
+        function (data) {
+            pizzasDto = data;
+        });
 };
 
 // /////////////////////////////
 //  AJAX :: todos ingredientes
 // /////////////////////////////
 var getAllIngredientes = function () {
-    var request = $.ajax({
-        type: "GET",
-        url: "api/ingrediente",
-        contentType: "application/json",
-        async: false
-    });
-
-    request.done(function (data) {
-        ingredientesDto = data;
-    });
-
-    request.fail(function (jqXHR, textStatus) {
-        exibirNoty("Request failed: " + textStatus, "error");
-    });
+    chamarAjaxSync(
+        "ingrediente",
+        configuradorAjax.METHOD_LIST,
+        undefined,
+        undefined,
+        function (data) {
+            ingredientesDto = data;
+        });
 };
 
 
