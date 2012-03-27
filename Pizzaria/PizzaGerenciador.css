@@ -91,6 +91,12 @@ option, input{
     font-size: 1.30em;
 }
 
+#divImagemAjax 
+{
+    position: absolute;
+    top: 20px;
+    left: 170px;
+}
 
 .itemDebug 
 {

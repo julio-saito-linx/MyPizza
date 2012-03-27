@@ -1,5 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PizzaGerenciador.aspx.cs"
-         Inherits="Pizzaria.PizzaGerenciador" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -13,6 +12,9 @@
         <div class="bloco">
             <div class="subTitulo">
                 Lista de Pizzas
+                <div id="divImagemAjax">&nbsp;
+                    <img data-bind="visible : IsUpdating" src="IMG/icon_loading.gif" />
+                </div>
             </div>
             <div id="divPizzas" data-bind="foreach: Pizzas">
                 <div id="divPizza" class="pizzaEstilo" data-bind="

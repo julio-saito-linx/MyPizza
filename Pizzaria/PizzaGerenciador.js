@@ -15,15 +15,16 @@ var ingredientesDto;
 // READY!
 // ///////
 $().ready(function () {
+    // busca do banco de dados
     getAllPizza();
     getAllIngredientes();
 
     // inicializa o viewModel
-    var pizzasViewModel = new MainViewModel(pizzasDto);
+    var pizzasViewModel = new MainViewModel();
 
     // seleciona a primeira pizza logo de cara
     if (pizzasViewModel.Pizzas().length > 0) {
-        pizzasViewModel.selecionarPizza(pizzasViewModel.Pizzas()[0]);
+        //pizzasViewModel.selecionarPizza(pizzasViewModel.Pizzas()[0]);
     }
 
     // extendendo os bindings
@@ -60,6 +61,7 @@ var MainViewModel = function () {
 
     // a pizza selecionada
     self.pizzaSelecionada = ko.observable();
+    self.pizzaSelecionadaEstadoInicialJSON = undefined;
 
     // todos ingredientes disponíveis
     self.todosIngredientes = ko.observableArray(ingredientesDto);
@@ -79,10 +81,33 @@ var MainViewModel = function () {
         return novaLista;
     }, self);
 
+
+
+    // ////////////////////////////////////////
+    // Verifica se o JSON da Pizza foi alterado
+    // ////////////////////////////////////////
+    var pizzaSelecionadaEstadoInicialJSON = undefined;
+    
+    self.foiAlterada = function () {
+        if (!_.isUndefined(pizzaSelecionadaEstadoInicialJSON)) {
+            var jsonPizzaAtual = ko.toJSON(self.pizzaSelecionada);
+            return (pizzaSelecionadaEstadoInicialJSON !== jsonPizzaAtual);
+        }
+        return false;
+    };
+
     // selecionar pizza
     self.selecionarPizza = function (pizza) {
+
+        if (self.foiAlterada()) {
+            self.save();
+        }
+
         self.pizzaIdSelecionada(pizza.Id);
         self.pizzaSelecionada(pizza);
+
+        // guarda o estado inicial da pizza nova
+        pizzaSelecionadaEstadoInicialJSON = ko.toJSON(self.pizzaSelecionada);
 
         // limpa as seleções dos ingredientes
         self.removerCancelar();
@@ -90,22 +115,30 @@ var MainViewModel = function () {
     };
 
     // inicializar as Pizzas
-    self.Pizzas = ko.observableArray(_.map(pizzasDto, function (pd) {
-        return new PizzaVM(pd);
+    self.Pizzas = ko.observableArray(_.map(pizzasDto, function (pizzaDto) {
+        return new PizzaVM(pizzaDto);
     }));
 
+    self.IsUpdating = ko.observable(false);
+
     self.save = function () {
-        var dados = ko.toJSON(self.pizzaSelecionada());
+        if (_.isUndefined(self.pizzaSelecionada())) {
+            // não existe pizza selecionada
+            return;
+        }
+        self.IsUpdating(true);
+
+        var pizzaSerializada = ko.toJSON(self.pizzaSelecionada());
 
         var request = $.ajax({
             type: "PUT",
             url: "api/pizza/" + self.pizzaSelecionada().Id(),
             contentType: "application/json",
-            data: dados
+            data: pizzaSerializada
         });
 
         request.done(function (data) {
-            exibirNoty("salvo");
+            self.IsUpdating(false);
             self.removerCancelar();
             self.adicionarCancelar();
         });

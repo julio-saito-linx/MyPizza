@@ -29,7 +29,7 @@ namespace Pizzaria
         }
 
 
-        // GET /api/<controller>
+        // GET /api/pizza
         public IList<PizzaDto> Get()
         {
             var pizzas = _pizzaServico.PesquisarTodos();
@@ -39,7 +39,7 @@ namespace Pizzaria
             return pizzaDtos;
         }
 
-        // GET /api/<controller>/5
+        // GET /api/pizza/5
         public PizzaDto Get(int id)
         {
             var pizza = _pizzaServico.PesquisarID(id);
@@ -49,7 +49,7 @@ namespace Pizzaria
             return pizzaDto;
         }
 
-        // POST /api/<controller>
+        // POST /api/pizza
         public void Post(PizzaDto pizzaDto)
         {
             var pizzaIncluir = new Pizza();
@@ -70,7 +70,7 @@ namespace Pizzaria
             _pizzaServico.Save(pizzaIncluir);
         }
 
-        // PUT /api/<controller>/5
+        // PUT /api/pizza/5
         public void Put(int id, PizzaDto pizzaDto)
         {
             // pesquisa a pizza no banco de dados
@@ -78,6 +78,7 @@ namespace Pizzaria
             // e salva...
             var pizzaAlterar = _pizzaServico.PesquisarID(id);
             pizzaAlterar.Ingredientes.Clear();
+            pizzaAlterar.Nome = pizzaDto.Nome;
             _pizzaServico.Save(pizzaAlterar);
 
             // pesquisa cada um dos ingredientes no banco
@@ -95,7 +96,7 @@ namespace Pizzaria
             _pizzaServico.Save(pizzaAlterar);
         }
 
-        // DELETE /api/<controller>/5
+        // DELETE /api/pizza/5
         public void Delete(int id)
         {
             _pizzaServico.Delete(id);
