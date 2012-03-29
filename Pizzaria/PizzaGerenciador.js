@@ -73,19 +73,19 @@ var MainViewModel = function () {
         return new IngredienteVM(ingredienteDto);
     }));
 
+    // Ingredientes não inseridos da pizza selecionada
     self.ingredientesAindaNaoInseridos = ko.computed(function () {
-        var novaLista = null;
+        var ingNaoInseridosLista = [];
         if (!(_.isUndefined(self.pizzaSelecionada()))) {
-            novaLista = _.filter(self.todosIngredientes(), function (item) {
+            var ids = _.map(self.pizzaSelecionada().Ingredientes(), function (ingPizza) {
+                return ingPizza.Id();
+            });
 
-                var ids = _.map(self.pizzaSelecionada().Ingredientes(), function (ingPizza) {
-                    return ingPizza.Id();
-                });
-
-                return (ids.indexOf(item.Id) === -1);
+            ingNaoInseridosLista = _.filter(self.todosIngredientes(), function (item) {
+                return (ids.indexOf(item.Id()) === -1);
             });
         }
-        return novaLista;
+        return ingNaoInseridosLista;
     }, self);
 
 
@@ -176,7 +176,7 @@ var MainViewModel = function () {
         {
             var ingredientes = self.pizzaSelecionada().Ingredientes;
             _.each(self.ingredientesToAdd(), function (ing) {
-                ingredientes.push(new IngredienteVM(ing));
+                ingredientes.push(ing);
             });
         }
     };
