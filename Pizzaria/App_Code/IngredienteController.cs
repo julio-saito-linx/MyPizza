@@ -48,24 +48,29 @@ namespace Pizzaria
         }
 
         // POST /api/<controller>
-        public void Post(IngredienteDto IngredienteDto)
+        public int Post(IngredienteDto IngredienteDto)
         {
             var IngredienteIncluir = new Ingrediente();
             IngredienteIncluir.Nome = IngredienteDto.Nome;
             _IngredienteServico.Save(IngredienteIncluir);
+            return IngredienteIncluir.Id;
+
         }
 
         // PUT /api/<controller>/5
-        public void Put(int id, IngredienteDto IngredienteDto)
+        public string Put(int id, IngredienteDto IngredienteDto)
         {
-            var IngredienteAlterar = _IngredienteServico.PesquisarID(id);
-            _IngredienteServico.Save(IngredienteAlterar);
+            var ingredienteAlterar = _IngredienteServico.PesquisarID(id);
+            ingredienteAlterar.Nome = IngredienteDto.Nome;
+            _IngredienteServico.Save(ingredienteAlterar);
+            return "Ingrediente [" + ingredienteAlterar.Id + "] alterado com sucesso!";
         }
 
         // DELETE /api/<controller>/5
-        public void Delete(int id)
+        public string Delete(int id)
         {
             _IngredienteServico.Delete(id);
+            return "Ingrediente [" + id + "] apagado com sucesso!";
         }
     }
 }

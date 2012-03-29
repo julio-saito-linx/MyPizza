@@ -2,10 +2,14 @@
     CodeBehind="Default.aspx.cs" Inherits="Pizzaria._Default" ViewStateMode="Disabled" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
-    <link rel="stylesheet" href="http://yui.yahooapis.com/3.4.1/build/cssgrids/grids-min.css">
     <link href="needim-noty-2481627/css/jquery.noty.css" rel="stylesheet" type="text/css" />
 </asp:Content>
 <asp:Content runat="server" ContentPlaceHolderID="JavascriptAqui">
+    <script src="Scripts/jquery-1.7.1.min.js" type="text/javascript"> </script>
+    <script src="Scripts/json2.js" type="text/javascript"> </script>
+    <script src="needim-noty-2481627/js/jquery.noty.js" type="text/javascript"> </script>
+    <script src="Scripts/underscore/underscore-min.js" type="text/javascript"> </script>
+    <script src="Scripts/knockout.js" type="text/javascript"></script>
     <script src="Default.js" type="text/javascript"> </script>
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">

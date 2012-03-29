@@ -14,7 +14,7 @@ var configuradorAjax = new ConfiguradorAjax();
 // ///////
 // READY!
 // ///////
-$().ready(function () {
+$().ready(function() {
     // busca do banco de dados
     getAllPizza();
     getAllIngredientes();
@@ -26,15 +26,19 @@ $().ready(function () {
     if (pizzasViewModel.Pizzas().length > 0) {
         pizzasViewModel.selecionarPizza(pizzasViewModel.Pizzas()[0]);
     }
+    // seleciona a primeira pizza logo de cara
+    if (pizzasViewModel.todosIngredientes().length > 0) {
+        pizzasViewModel.selecionarIngrediente(pizzasViewModel.todosIngredientes()[0]);
+    }
 
     // extendendo os bindings
     ko.bindingHandlers.fadeVisible = {
-        init: function (element, valueAccessor) {
+        init: function(element, valueAccessor) {
             // Start visible/invisible according to initial value
             var shouldDisplay = valueAccessor();
             $(element).toggle(shouldDisplay);
         },
-        update: function (element, valueAccessor) {
+        update: function(element, valueAccessor) {
             // On update, fade in/out
             var shouldDisplay = valueAccessor();
             shouldDisplay ? $(element).fadeIn() : $(element).fadeOut();
@@ -65,7 +69,9 @@ var MainViewModel = function () {
     self.pizzaSelecionadaEstadoInicialJSON = undefined;
 
     // todos ingredientes disponíveis
-    self.todosIngredientes = ko.observableArray(ingredientesDto);
+    self.todosIngredientes = ko.observableArray(_.map(ingredientesDto, function (ingredienteDto) {
+        return new IngredienteVM(ingredienteDto);
+    }));
 
     self.ingredientesAindaNaoInseridos = ko.computed(function () {
         var novaLista = null;
@@ -76,12 +82,11 @@ var MainViewModel = function () {
                     return ingPizza.Id();
                 });
 
-                return ids.indexOf(item.Id) === -1;
+                return (ids.indexOf(item.Id) === -1);
             });
         }
         return novaLista;
     }, self);
-
 
 
     // ////////////////////////////////////////
@@ -136,9 +141,14 @@ var MainViewModel = function () {
 
         var pizzaSerializada = ko.toJSON(self.pizzaSelecionada());
 
+        var metodoHttp = configuradorAjax.METHOD_PUT;
+        if (self.pizzaIdSelecionada()() === 0) {
+            metodoHttp = configuradorAjax.METHOD_POST;
+        }
+
         chamarAjaxAsync(
             "pizza",
-            configuradorAjax.METHOD_PUT,
+            metodoHttp,
             self.pizzaSelecionada().Id(),
             pizzaSerializada,
             function (data) {
@@ -161,7 +171,7 @@ var MainViewModel = function () {
 
     // inserir novo ingrediente
     self.ingredientesToAdd = ko.observableArray();
-    self.adicionarIngredientes = function () {
+    self.incluirIngredientesPizza = function () {
         if (self.ingredientesToAdd() != "") // Prevent blanks
         {
             var ingredientes = self.pizzaSelecionada().Ingredientes;
@@ -177,42 +187,134 @@ var MainViewModel = function () {
     self.exibirDebug = function () {
         $("#divDebug").toggle();
     };
+
+    self.novaPizza = function () {
+        self.Pizzas.push(new PizzaVM());
+    };
+
+    self.excluirPizza = function () {
+        var novaListaPizzas = _.reject(self.Pizzas(), function (pizza) {
+            return pizza.Id() === self.pizzaIdSelecionada()();
+        });
+        self.Pizzas(novaListaPizzas);
+
+        self.IsUpdating(true);
+        chamarAjaxAsync(
+            "pizza",
+            configuradorAjax.METHOD_DELETE,
+            self.pizzaSelecionada().Id(),
+            undefined,
+            function (data) {
+                self.IsUpdating(false);
+                self.removerCancelar();
+                self.adicionarCancelar();
+            });
+
+    };
+
+    self.ingredienteNome = ko.observable("");
+    self.ingredienteId = ko.observable(0);
+    self.ingredienteSelecionado = ko.observable();
+    self.selecionarIngrediente = function (ingrediente) {
+        self.ingredienteSelecionado(ingrediente);
+        self.ingredienteNome(ingrediente.Nome());
+        self.ingredienteId(ingrediente.Id());
+    };
+
+    self.novoIngrediente = function () {
+        self.todosIngredientes.push(new IngredienteVM());
+    };
+
+    self.salvarIngrediente = function () {
+        self.IsUpdating(true);
+
+        var metodoAjax;
+        if (self.ingredienteId() === 0) {
+            metodoAjax = configuradorAjax.METHOD_POST;
+        }
+        else {
+            metodoAjax = configuradorAjax.METHOD_PUT;
+        }
+        chamarAjaxAsync(
+            "ingrediente",
+            metodoAjax,
+            undefined,
+            ko.toJSON(self.ingredienteSelecionado),
+            function (data) {
+                self.IsUpdating(false);
+                if (metodoAjax === configuradorAjax.METHOD_POST) {
+                    self.ingredienteSelecionado().Id(data);
+                }
+                self.selecionarIngrediente(self.ingredienteSelecionado());
+            });
+
+    };
+
+    self.deletarIngrediente = function () {
+        var novaListaIngredientes = _.reject(self.todosIngredientes(), function (ingrediente) {
+            return ingrediente.Id() === self.ingredienteId()();
+        });
+        self.todosIngredientes(novaListaIngredientes);
+
+        self.IsUpdating(true);
+        chamarAjaxAsync(
+            "ingrediente",
+            configuradorAjax.METHOD_DELETE,
+            undefined,
+            ko.toJSON(self.ingredienteSelecionado),
+            function (data) {
+                self.IsUpdating(false);
+            });
+
+    };
+
+
 };
 
 // ////////////////////////
 //  PizzaVM :: VIEWMODEL
 // ////////////////////////
-var PizzaVM = function (pizza) {
+var PizzaVM = function(pizza) {
     var self = this;
-    self.Id = ko.observable(pizza.Id);
-    self.Nome = ko.observable(pizza.Nome);
-    self.Ingredientes = ko.observableArray();
-    _.each(pizza.Ingredientes, function (ing) {
-        self.Ingredientes().push(new IngredienteVM(ing));
-    });
+    self.Id = ko.observable(0);
+    self.Nome = ko.observable("");
+    self.Ingredientes = ko.observableArray([]);
+
+    if (!_.isUndefined(pizza)) {
+        self.Id = ko.observable(pizza.Id);
+        self.Nome = ko.observable(pizza.Nome);
+        self.Ingredientes = ko.observableArray();
+        _.each(pizza.Ingredientes, function(ing) {
+            self.Ingredientes().push(new IngredienteVM(ing));
+        });
+    }
 };
 
 // ////////////////////////
 //  IngredienteVM :: VIEWMODEL
 // ////////////////////////
-var IngredienteVM = function (ingrediente) {
+var IngredienteVM = function(ingrediente) {
     var self = this;
-    self.Id = ko.observable(ingrediente.Id);
-    self.Nome = ko.observable(ingrediente.Nome);
-};
+    self.Id = ko.observable(0);
+    self.Nome = ko.observable("");
 
+    if (!_.isUndefined(ingrediente)) {
+        self.Id = ko.observable(ingrediente.Id);
+        self.Nome = ko.observable(ingrediente.Nome);
+    }
+};
 
 
 // ////////////////////////
 //  AJAX :: todas pizzas
 // ////////////////////////
-var getAllPizza = function () {
+var getAllPizza = function() {
     chamarAjaxSync(
         "pizza",
         configuradorAjax.METHOD_LIST,
         undefined,
         undefined,
-        function (data) {
+        function(data) {
             pizzasDto = data;
         });
 };
@@ -220,16 +322,13 @@ var getAllPizza = function () {
 // /////////////////////////////
 //  AJAX :: todos ingredientes
 // /////////////////////////////
-var getAllIngredientes = function () {
+var getAllIngredientes = function() {
     chamarAjaxSync(
         "ingrediente",
         configuradorAjax.METHOD_LIST,
         undefined,
         undefined,
-        function (data) {
+        function(data) {
             ingredientesDto = data;
         });
 };
-
-
-

@@ -27,6 +27,8 @@ var preencharGrid = function (dados) {
     if (_.isUndefined(dados))
         return;
 
+    $("#tablePizzas tr:gt(0)").html("");
+
     var linhas = "";
     for (var i = 0; i < dados.length; i++) {
         var pizza = dados[i];
@@ -80,14 +82,6 @@ var preencherSelectsIngredientes = function (ingredientes) {
     $("#divIngredientes").html("");
 
     criarSelectIngrediente();
-    //    if (_.isUndefined(ingredientes)) {
-//        criarSelectIngrediente();
-//    }
-//    else {
-//        for (var i = 0; i < ingredientes.length; i++) {
-//            criarSelectIngrediente(ingredientes[i]);
-//        }
-//    }
 };
 
 var criarSelectIngrediente = function (ingrediente) {

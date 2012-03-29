@@ -23,6 +23,15 @@ option, input{
     background-color: #ddd;
 }
 
+#divIngredientesEditor {
+    padding: 10px;
+    width: 250px;
+    float: left;
+    border: solid 2px;
+    border-color: #aaa;
+    background-color: #ddd;
+}
+
 #divDetalhe {
     padding: 10px;
     width: 250px;
@@ -147,4 +156,9 @@ option, input{
     position: absolute;
     bottom: 20px;
     left: 20px;
+}
+
+.liLink {
+    cursor: pointer;
+    text-decoration: underline;
 }

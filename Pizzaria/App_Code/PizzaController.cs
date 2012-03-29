@@ -21,7 +21,6 @@ namespace Pizzaria
             _ingredienteServico = _container.Resolve<IIngredienteServico>();
             _pizzaServico = _container.Resolve<IPizzaServico>();
         }
-
         private static void CriarMapeamentosDto()
         {
             Mapper.CreateMap<Pizza, PizzaDto>();
@@ -50,7 +49,7 @@ namespace Pizzaria
         }
 
         // POST /api/pizza
-        public void Post(PizzaDto pizzaDto)
+        public string Post(PizzaDto pizzaDto)
         {
             var pizzaIncluir = new Pizza();
             pizzaIncluir.Nome = pizzaDto.Nome;
@@ -61,13 +60,13 @@ namespace Pizzaria
             {
                 foreach (var ingredienteDto in pizzaDto.Ingredientes)
                 {
-                    var ingrediente = new Ingrediente();
-                    ingrediente.Nome = ingredienteDto.Nome;
+                    var ingrediente = _ingredienteServico.PesquisarID(ingredienteDto.Id);
                     pizzaIncluir.AcrescentarIngrediente(ingrediente);
                 }
             }
 
             _pizzaServico.Save(pizzaIncluir);
+            return "Pizza [" + pizzaIncluir.Id + "] incluída com sucesso!";
         }
 
         // PUT /api/pizza/5
@@ -95,13 +94,18 @@ namespace Pizzaria
 
             _pizzaServico.Save(pizzaAlterar);
 
-            return "A pizza " + pizzaAlterar.Id + " foi salva com sucesso!";
+            return "Pizza [" + pizzaAlterar.Id + "] salva com sucesso!";
         }
 
         // DELETE /api/pizza/5
-        public void Delete(int id)
+        public string Delete(int id)
         {
+            var pizzaExcluir = _pizzaServico.PesquisarID(id);
+            pizzaExcluir.Ingredientes.Clear();
+            _pizzaServico.Save(pizzaExcluir);
+
             _pizzaServico.Delete(id);
+            return "Pizza [" + id + "] apagada com sucesso!";
         }
     }
 }

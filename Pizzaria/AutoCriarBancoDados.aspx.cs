@@ -10,16 +10,20 @@ namespace Pizzaria
 {
     public partial class AutoCriarBancoDados : Page
     {
+        private IPizzaServico _pizzaServico;
+        private IIngredienteServico _ingredienteServico;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             WindsorContainer container = FabricaContainer.InicializarContainer();
-            var pizzaServico = container.Resolve<IPizzaServico>();
+            _pizzaServico = container.Resolve<IPizzaServico>();
+            _ingredienteServico = container.Resolve<IIngredienteServico>();
 
             if (Request.QueryString["senha"] != null &&
                 Request.QueryString["senha"] == "eu sei o que estou fazendo")
             {
                 CriarBancoDeDados(container);
-                InserirDadosParaTeste(pizzaServico);
+                InserirDadosParaTeste(_pizzaServico);
             }
             else
             {
@@ -34,23 +38,36 @@ namespace Pizzaria
             litMensagem.Text = "banco de dados recriado com sucesso";
         }
 
-        private static void InserirDadosParaTeste(IPizzaServico pizzaServico)
+        private void InserirDadosParaTeste(IPizzaServico pizzaServico)
         {
-            var pizza = new Pizza {Nome = "Portuguesa"};
-            
-            var cebola = new Ingrediente {Nome = "Cebola"};
+            // Insere cada um dos ingredientes
+            var cebola = new Ingrediente { Nome = "Cebola" };
+            _ingredienteServico.Save(cebola);
+
             var muçarela = new Ingrediente { Nome = "Muçarela" };
+            _ingredienteServico.Save(muçarela);
+
             var molhoDeTomate = new Ingrediente { Nome = "Molho de Tomate" };
+            _ingredienteServico.Save(molhoDeTomate);
+
+            var ovo = new Ingrediente { Nome = "Ovo" };
+            _ingredienteServico.Save(ovo);
+
+            var calabreza = new Ingrediente { Nome = "Calabresa" };
+            _ingredienteServico.Save(calabreza);
+
+
+            var pizza = new Pizza { Nome = "Portuguesa" };
 
             pizza.AcrescentarIngrediente(molhoDeTomate);
             pizza.AcrescentarIngrediente(cebola);
-            pizza.AcrescentarIngrediente(new Ingrediente { Nome = "Ovo" });
+            pizza.AcrescentarIngrediente(ovo);
             pizzaServico.Save(pizza);
 
             pizza = new Pizza { Nome = "Calabresa" };
             pizza.AcrescentarIngrediente(molhoDeTomate);
             pizza.AcrescentarIngrediente(cebola);
-            pizza.AcrescentarIngrediente(new Ingrediente { Nome = "Calabresa" });
+            pizza.AcrescentarIngrediente(calabreza);
             pizzaServico.Save(pizza);
 
             pizza = new Pizza { Nome = "Muçarela" };

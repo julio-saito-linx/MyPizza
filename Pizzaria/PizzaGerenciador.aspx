@@ -29,6 +29,8 @@
                     </div>
                 </div>
             </div>
+            <button data-bind="click : novaPizza">Nova</button>
+            <button data-bind="click : excluirPizza">Excluir</button>
             <button data-bind="click : salvar">Salvar</button>
         </div>
         <%--Pizza selecionada--%>
@@ -40,13 +42,13 @@
                 <%--
                 Aqui dentro o contexto muda para pizzaSelecionada.
                 --%>
-                <span>Pizza:</span>
+                <span>Pizza.Nome:</span>
                 <br />
                 <div class="dado">
                     <input data-bind="value: Nome"></input></div>
                 <div id="divIngredientesDetalhe">
                     <br />
-                    <span>Ingredientes da Pizza:</span>
+                    <span>Pizza.Ingredientes:</span>
                     <br />
                     <select multiple="multiple" height="5" data-bind="
                         options:Ingredientes, 
@@ -59,7 +61,7 @@
                         enable: $root.ingredientesToRemove().length > 0">
                             remover</button>
                     </div>
-                    <form data-bind="submit:$root.adicionarIngredientes">
+                    <form data-bind="submit:$root.incluirIngredientesPizza">
                         <br />
                         <span>Ingredientes disponíveis:</span>
                         <br />
@@ -80,6 +82,36 @@
             </div>
         </div>
         <button data-bind="click : exibirDebug">debug</button>
+
+        <div class="bloco">
+            <div class="subTitulo">
+                Ingredientes
+            </div>
+            <div id="divIngredientesEditor">
+                <span>Ingredientes:</span>
+                <div class="dado">
+                    <ul data-bind="foreach : todosIngredientes">
+                        <li class="liLink" data-bind="text : Nome, click : $root.selecionarIngrediente"></li>
+                    </ul>
+                </div>
+                <span>Ingrediente.Nome:</span>
+                <br />
+                <div class="dado">
+                    <span data-bind="text: ingredienteId()"></span>
+                    <input data-bind="value: ingredienteNome()"></input>
+                </div>
+            </div>
+            <button data-bind="click: novoIngrediente">
+                adicionar
+            </button>
+            <button data-bind="click: salvarIngrediente">
+                salvar
+            </button>
+            <button data-bind="click: deletarIngrediente">
+                deletar
+            </button>
+        </div>
+
         <div id="divDebug">
             <h3>
                 debug</h3>
