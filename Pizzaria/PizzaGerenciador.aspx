@@ -45,7 +45,7 @@
                 <span>Pizza.Nome:</span>
                 <br />
                 <div class="dado">
-                    <input data-bind="value: Nome"></input></div>
+                    <input id="txtPizzaNome" data-bind="value: Nome"></input></div>
                 <div id="divIngredientesDetalhe">
                     <br />
                     <span>Pizza.Ingredientes:</span>
@@ -98,7 +98,7 @@
                 <br />
                 <div class="dado">
                     <span data-bind="text: ingredienteId()"></span>
-                    <input data-bind="value: ingredienteSelecionado().Nome"></input>
+                    <input id="txtIngredienteNome" data-bind="value: ingredienteSelecionado().Nome"></input>
                 </div>
             </div>
             <button data-bind="click: novoIngrediente">

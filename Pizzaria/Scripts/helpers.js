@@ -19,6 +19,23 @@ var exibirNoty = function (mensagem, tipoAlert) {
     });
 };
 
+var exibirNotyBaixo = function (mensagem) {
+    noty({
+        "text": mensagem,
+        "layout": "bottom",
+        "type": "alert",
+        "textAlign": "right",
+        "easing": "swing",
+        "animateOpen": { "height": "toggle" },
+        "animateClose": { "height": "toggle" },
+        "speed": "500",
+        "timeout": "500",
+        "closable": true,
+        "closeOnSelfClick": true
+    });
+};
+
+
 var exibirNotyErro = function (mensagem) {
     noty({
         "text": mensagem,

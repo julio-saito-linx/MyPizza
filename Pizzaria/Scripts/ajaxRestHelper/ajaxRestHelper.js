@@ -1,15 +1,12 @@
-﻿var ConfiguradorAjax = function (callBackErrorsTo) {
+﻿var ConfiguradorAjax = function (configuracaoParametro, viewModelParametro) {
     var self = this;
 
-    self.toString = function () {
-        return "[object Foo]";
-    };
-
-    self.CallBackErrorsTo = callBackErrorsTo;
-
+    self.CallBackErrorsTo = configuracaoParametro.callBackErrorsTo;
+    self.configuracao = configuracaoParametro;
+    self.viewModel = viewModelParametro;
 
     // Lista
-    self.METHOD_LIST = { type: "GET", url: "api/__controller__", configuradorAjax : self };
+    self.METHOD_LIST = { type: "GET", url: "api/__controller__", configuradorAjax: self };
 
     // Detalhe
     self.METHOD_SHOW = { type: "GET", url: "api/__controller__/__id__", configuradorAjax: self };
@@ -64,18 +61,23 @@ var chamarAjax = function (nomeController, metodo, id, dados, callback_done, cal
 
     request.done(function (data) {
         callback_done.call(this, data);
+        if (metodo.configuradorAjax.configuracao.exibirNoty) {
+            if (metodo.type !== "GET") {
+                exibirNotyBaixo(data);
+            }
+        }
     });
 
     request.fail(function (jqXHR, textStatus) {
-        //console.debug(textStatus);
-        //console.error(jqXHR.statusText);
-        //exibirNoty("Request failed: " + textStatus, "error");
-
         if (!_.isUndefined(callback_error)) {
             callback_error.call(this, jqXHR);
         }
-        if(!_.isUndefined(metodo.configuradorAjax.CallBackErrorsTo)) {
+        if (!_.isUndefined(metodo.configuradorAjax.CallBackErrorsTo)) {
             metodo.configuradorAjax.CallBackErrorsTo.call(this, jqXHR);
         }
+        if (!_.isUndefined(metodo.configuradorAjax.viewModel)) {
+            metodo.configuradorAjax.viewModel.IsUpdating(false);
+        }
+
     });
 };

@@ -2,7 +2,7 @@
 using System.Web.Http;
 using AutoMapper;
 using Castle.Windsor;
-using Pizzaria.AJAX.DTO;
+using Pizzaria.DTOs;
 using Pizzaria.Dominio.Entidades;
 using Pizzaria.Dominio.Repositorios;
 

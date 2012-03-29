@@ -1,4 +1,4 @@
-namespace Pizzaria.AJAX.DTO
+﻿namespace Pizzaria.DTOs
 {
     public class IngredienteDto
     {

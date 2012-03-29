@@ -1,1 +1,0 @@
-﻿<%@ Page Title="Home Page" Language="C#" AutoEventWireup="true" CodeBehind="Pizzas.aspx.cs" Inherits="Pizzaria.AJAX.Pizzas" ViewStateMode="Disabled" ClientIDMode="Static" %>

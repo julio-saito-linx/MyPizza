@@ -9,43 +9,23 @@
 // /////////////////////
 var pizzasDto;
 var ingredientesDto;
+var configuradorAjax;
 
-var tratarErrorCSharp = function (jqXHR) {
-    var erroCSharp = JSON.parse(jqXHR.responseText, undefined);
-    console.info(erroCSharp);
-
-    if (erroCSharp.ExceptionType === "NHibernate.Exceptions.GenericADOException") {
-        if (!_.isUndefined(erroCSharp.InnerException)) {
-            var inner = erroCSharp.InnerException;
-            if (inner.ExceptionType === "System.Data.SqlClient.SqlException") {
-                //pau do SQL
-                exibirNotyErro(":: ERRO DE SQL ::" + "<br /><br />"
-                    + "> " + erroCSharp.ExceptionType + "<br />"
-                    + "> " + inner.ExceptionType + "<br /><br />"
-                    + inner.Message);
-            }
-        }
-    }
-    else {
-        //pau genérico
-        exibirNotyErro(":: ERRO C# GENERICO ::" + "<br /><br />"
-                    + "> " + erroCSharp.ExceptionType + "<br />"
-                    + erroCSharp.Message);
-    }
-};
-
-var configuradorAjax = new ConfiguradorAjax(tratarErrorCSharp);
 
 // ///////
 // READY!
 // ///////
 $().ready(function() {
+
+    configuradorAjax = new ConfiguradorAjax(configuracoesAjax, undefined);
+
     // busca do banco de dados
     getAllIngredientes();
     getAllPizza();
 
     // inicializa o viewModel
     var pizzasViewModel = new MainViewModel();
+    configuradorAjax = new ConfiguradorAjax(configuracoesAjax, pizzasViewModel);
 
     // seleciona a primeira pizza logo de cara
     if (pizzasViewModel.Pizzas().length > 0) {
@@ -74,6 +54,36 @@ $().ready(function() {
     ko.applyBindings(pizzasViewModel);
 
 });
+
+var tratarErrorCSharp = function (jqXHR) {
+    var erroCSharp = JSON.parse(jqXHR.responseText, undefined);
+    console.info(erroCSharp);
+
+    if (erroCSharp.ExceptionType === "NHibernate.Exceptions.GenericADOException") {
+        if (!_.isUndefined(erroCSharp.InnerException)) {
+            var inner = erroCSharp.InnerException;
+            if (inner.ExceptionType === "System.Data.SqlClient.SqlException") {
+                //pau do SQL
+                exibirNotyErro(":: ERRO DE SQL ::" + "<br /><br />"
+                    + "> " + erroCSharp.ExceptionType + "<br />"
+                    + "> " + inner.ExceptionType + "<br /><br />"
+                    + inner.Message);
+            }
+        }
+    }
+    else {
+        //pau genérico
+        exibirNotyErro(":: ERRO C# GENERICO ::" + "<br /><br />"
+                    + "> " + erroCSharp.ExceptionType + "<br />"
+                    + erroCSharp.Message);
+    }
+};
+
+var configuracoesAjax = {
+    callBackErrorsTo: tratarErrorCSharp,
+    exibirNoty: true
+};
+
 
 // //////////////////////////////////////////////////////////////////////////////
 //  MAIN :: VIEWMODEL
@@ -214,7 +224,10 @@ var MainViewModel = function () {
     };
 
     self.novaPizza = function () {
-        self.Pizzas.push(new PizzaVM());
+        var novaPizza = new PizzaVM();
+        self.Pizzas.push(novaPizza);
+        self.selecionarPizza(novaPizza);
+        $("#txtPizzaNome").focus();
     };
 
     self.excluirPizza = function () {
@@ -245,7 +258,10 @@ var MainViewModel = function () {
     };
 
     self.novoIngrediente = function () {
-        self.todosIngredientes.push(new IngredienteVM());
+        var novoIngrediente = new IngredienteVM();
+        self.todosIngredientes.push(novoIngrediente);
+        self.selecionarIngrediente(novoIngrediente);
+        $("#txtIngredienteNome").focus();
     };
 
     self.salvarIngrediente = function () {
@@ -274,11 +290,6 @@ var MainViewModel = function () {
     };
 
     self.deletarIngrediente = function () {
-        var novaListaIngredientes = _.reject(self.todosIngredientes(), function (ingrediente) {
-            return ingrediente.Id() === self.ingredienteId();
-        });
-        self.todosIngredientes(novaListaIngredientes);
-
         self.IsUpdating(true);
         chamarAjaxAsync(
             "ingrediente",
@@ -287,6 +298,11 @@ var MainViewModel = function () {
             undefined,
             function (data) {
                 self.IsUpdating(false);
+
+                var novaListaIngredientes = _.reject(self.todosIngredientes(), function (ingrediente) {
+                    return ingrediente.Id() === self.ingredienteId();
+                });
+                self.todosIngredientes(novaListaIngredientes);
             });
 
     };

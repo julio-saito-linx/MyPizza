@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzaria.Dominio", "Pizzari
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzaria.NHibernate", "Pizzaria.NHibernate\Pizzaria.NHibernate.csproj", "{29D45F95-6946-4368-B063-7F520C8AA9F5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{47B1946E-B870-4F80-A4D2-16667E4D907C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernateTeste", "NHibernateTeste\NHibernateTeste.csproj", "{19740022-5BE6-4BEE-B33F-9875D2168A34}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,15 +25,8 @@ Global
 		{29D45F95-6946-4368-B063-7F520C8AA9F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29D45F95-6946-4368-B063-7F520C8AA9F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29D45F95-6946-4368-B063-7F520C8AA9F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{19740022-5BE6-4BEE-B33F-9875D2168A34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{19740022-5BE6-4BEE-B33F-9875D2168A34}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{19740022-5BE6-4BEE-B33F-9875D2168A34}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{19740022-5BE6-4BEE-B33F-9875D2168A34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{19740022-5BE6-4BEE-B33F-9875D2168A34} = {47B1946E-B870-4F80-A4D2-16667E4D907C}
 	EndGlobalSection
 EndGlobal

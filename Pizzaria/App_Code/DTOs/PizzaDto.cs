@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Pizzaria.AJAX.DTO
+namespace Pizzaria.DTOs
 {
     public class PizzaDto
     {
