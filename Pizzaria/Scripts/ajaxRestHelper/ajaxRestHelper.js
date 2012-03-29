@@ -1,24 +1,28 @@
-﻿var ConfiguradorAjax = function () {
+﻿var ConfiguradorAjax = function (callBackErrorsTo) {
     var self = this;
-    
-    // Lista
-    self.METHOD_LIST = { type: "GET", url: "api/__controller__" };
-
-    // Detalhe
-    self.METHOD_SHOW = { type: "GET", url: "api/__controller__/__id__" };
-
-    // Update
-    self.METHOD_PUT = { type: "PUT", url: "api/__controller__/__id__" };
-
-    // Insert
-    self.METHOD_POST = { type: "POST", url: "api/__controller__" };
-
-    // Delete
-    self.METHOD_DELETE = { type: "DELETE", url: "api/__controller__/__id__" };
 
     self.toString = function () {
         return "[object Foo]";
     };
+
+    self.CallBackErrorsTo = callBackErrorsTo;
+
+
+    // Lista
+    self.METHOD_LIST = { type: "GET", url: "api/__controller__", configuradorAjax : self };
+
+    // Detalhe
+    self.METHOD_SHOW = { type: "GET", url: "api/__controller__/__id__", configuradorAjax: self };
+
+    // Update
+    self.METHOD_PUT = { type: "PUT", url: "api/__controller__/__id__", configuradorAjax: self };
+
+    // Insert
+    self.METHOD_POST = { type: "POST", url: "api/__controller__", configuradorAjax: self };
+
+    // Delete
+    self.METHOD_DELETE = { type: "DELETE", url: "api/__controller__/__id__", configuradorAjax: self };
+
 };
 
 var chamarAjaxSync = function(nomeController, metodo, id, dados, callback_done, callback_error) {
@@ -63,8 +67,15 @@ var chamarAjax = function (nomeController, metodo, id, dados, callback_done, cal
     });
 
     request.fail(function (jqXHR, textStatus) {
-        console.debug(textStatus);
-        console.error(jqXHR.statusText);
-        exibirNoty("Request failed: " + textStatus, "error");
+        //console.debug(textStatus);
+        //console.error(jqXHR.statusText);
+        //exibirNoty("Request failed: " + textStatus, "error");
+
+        if (!_.isUndefined(callback_error)) {
+            callback_error.call(this, jqXHR);
+        }
+        if(!_.isUndefined(metodo.configuradorAjax.CallBackErrorsTo)) {
+            metodo.configuradorAjax.CallBackErrorsTo.call(this, jqXHR);
+        }
     });
 };

@@ -9,15 +9,40 @@
 // /////////////////////
 var pizzasDto;
 var ingredientesDto;
-var configuradorAjax = new ConfiguradorAjax();
+
+var tratarErrorCSharp = function (jqXHR) {
+    var erroCSharp = JSON.parse(jqXHR.responseText, undefined);
+    console.info(erroCSharp);
+
+    if (erroCSharp.ExceptionType === "NHibernate.Exceptions.GenericADOException") {
+        if (!_.isUndefined(erroCSharp.InnerException)) {
+            var inner = erroCSharp.InnerException;
+            if (inner.ExceptionType === "System.Data.SqlClient.SqlException") {
+                //pau do SQL
+                exibirNotyErro(":: ERRO DE SQL ::" + "<br /><br />"
+                    + "> " + erroCSharp.ExceptionType + "<br />"
+                    + "> " + inner.ExceptionType + "<br /><br />"
+                    + inner.Message);
+            }
+        }
+    }
+    else {
+        //pau genérico
+        exibirNotyErro(":: ERRO C# GENERICO ::" + "<br /><br />"
+                    + "> " + erroCSharp.ExceptionType + "<br />"
+                    + erroCSharp.Message);
+    }
+};
+
+var configuradorAjax = new ConfiguradorAjax(tratarErrorCSharp);
 
 // ///////
 // READY!
 // ///////
 $().ready(function() {
     // busca do banco de dados
-    getAllPizza();
     getAllIngredientes();
+    getAllPizza();
 
     // inicializa o viewModel
     var pizzasViewModel = new MainViewModel();
@@ -212,12 +237,10 @@ var MainViewModel = function () {
 
     };
 
-    //self.ingredienteNome = ko.observable("");
     self.ingredienteId = ko.observable(0);
     self.ingredienteSelecionado = ko.observable();
     self.selecionarIngrediente = function (ingrediente) {
         self.ingredienteSelecionado(ingrediente);
-        //self.ingredienteNome(ingrediente.Nome());
         self.ingredienteId(ingrediente.Id());
     };
 
@@ -252,7 +275,7 @@ var MainViewModel = function () {
 
     self.deletarIngrediente = function () {
         var novaListaIngredientes = _.reject(self.todosIngredientes(), function (ingrediente) {
-            return ingrediente.Id() === self.ingredienteId()();
+            return ingrediente.Id() === self.ingredienteId();
         });
         self.todosIngredientes(novaListaIngredientes);
 
@@ -260,8 +283,8 @@ var MainViewModel = function () {
         chamarAjaxAsync(
             "ingrediente",
             configuradorAjax.METHOD_DELETE,
+            self.ingredienteSelecionado().Id(),
             undefined,
-            ko.toJSON(self.ingredienteSelecionado),
             function (data) {
                 self.IsUpdating(false);
             });

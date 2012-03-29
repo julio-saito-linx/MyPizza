@@ -18,3 +18,20 @@ var exibirNoty = function (mensagem, tipoAlert) {
         "closeOnSelfClick": true
     });
 };
+
+var exibirNotyErro = function (mensagem) {
+    noty({
+        "text": mensagem,
+        "layout": "center",
+        "type": "error",
+        "textAlign": "left",
+        "easing": "swing",
+        "animateOpen": { "height": "toggle" },
+        "animateClose": { "height": "toggle" },
+        "speed": "500",
+        "timeout": "20000",
+        "closable": true,
+        "closeOnSelfClick": true,
+        "modal" : true
+    });
+};
