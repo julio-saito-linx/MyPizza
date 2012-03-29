@@ -212,12 +212,12 @@ var MainViewModel = function () {
 
     };
 
-    self.ingredienteNome = ko.observable("");
+    //self.ingredienteNome = ko.observable("");
     self.ingredienteId = ko.observable(0);
     self.ingredienteSelecionado = ko.observable();
     self.selecionarIngrediente = function (ingrediente) {
         self.ingredienteSelecionado(ingrediente);
-        self.ingredienteNome(ingrediente.Nome());
+        //self.ingredienteNome(ingrediente.Nome());
         self.ingredienteId(ingrediente.Id());
     };
 

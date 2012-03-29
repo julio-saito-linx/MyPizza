@@ -98,7 +98,7 @@
                 <br />
                 <div class="dado">
                     <span data-bind="text: ingredienteId()"></span>
-                    <input data-bind="value: ingredienteNome()"></input>
+                    <input data-bind="value: ingredienteSelecionado().Nome"></input>
                 </div>
             </div>
             <button data-bind="click: novoIngrediente">
