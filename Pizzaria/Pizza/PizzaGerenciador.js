@@ -74,14 +74,18 @@ var inicializar = function () {
     };
 };
 
+
+// ///////////////////////////////////////
+// cria o view model e aplica no knockout
+// ///////////////////////////////////////
 var inicializarViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
 // inicializa o viewModel
     var pizzasViewModel = new MainViewModel(configuradorAjax, pizzasDto, ingredientesDto);
     configuradorAjax.viewModel = pizzasViewModel;
 
 // seleciona a primeira pizza logo de cara
-    if (pizzasViewModel.Pizzas().length > 0) {
-        pizzasViewModel.selecionarPizza(pizzasViewModel.Pizzas()[0]);
+    if (pizzasViewModel.pizzaLista().length > 0) {
+        pizzasViewModel.selecionarPizza(pizzasViewModel.pizzaLista()[0]);
     }
 // seleciona a primeira pizza logo de cara
     if (pizzasViewModel.todosIngredientes().length > 0) {
@@ -92,32 +96,11 @@ var inicializarViewModel = function (configuradorAjax, pizzasDto, ingredientesDt
     ko.applyBindings(pizzasViewModel);
 };
 
-
-
-var tratarErrorCSharp = function(jqXHR) {
-    var erroCSharp = JSON.parse(jqXHR.responseText, undefined);
-    console.info(erroCSharp);
-
-    if (erroCSharp.ExceptionType === "NHibernate.Exceptions.GenericADOException") {
-        if (!_.isUndefined(erroCSharp.InnerException)) {
-            var inner = erroCSharp.InnerException;
-            if (inner.ExceptionType === "System.Data.SqlClient.SqlException") {
-// trata pau de SQL
-                exibirNotyErro(":: ERRO DE SQL ::" + "<br /><br />"
-                    + "> " + erroCSharp.ExceptionType + "<br />"
-                    + "> " + inner.ExceptionType + "<br /><br />"
-                    + inner.Message);
-            }
-        }
-    } else {
-//pau genérico
-        exibirNotyErro(":: ERRO C# GENERICO ::" + "<br /><br />"
-            + "> " + erroCSharp.ExceptionType + "<br />"
-            + erroCSharp.Message);
-    }
+var controler = function(pizzasDto) {
+    return ko.observableArray(_.map(pizzasDto, function(pizzaDto) {
+        return new PizzaVM(pizzaDto);
+    }));
 };
-
-
 
 // //////////////////////////////////////////////////////////////////////////////
 //  MAIN :: VIEWMODEL
@@ -130,6 +113,70 @@ var tratarErrorCSharp = function(jqXHR) {
 var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
     var self = this;
 
+// [GET] 
+    self.pizzaLista = controler(pizzasDto);
+
+// [POST/PUT] 
+    self.pizzaSalvar = function () {
+        if (_.isUndefined(self.pizzaSelecionada())) {
+            // não existe pizza selecionada
+            return;
+        }
+
+        // somente salva se o JSON foi alterado
+        if (!self.foiAlterada()) {
+            return;
+        }
+
+        self.IsUpdating(true);
+
+        var pizzaSerializada = ko.toJSON(self.pizzaSelecionada());
+
+        var metodoHttp = configuradorAjax.METHOD_PUT;
+        if (self.pizzaIdSelecionada()() === 0) {
+            metodoHttp = configuradorAjax.METHOD_POST;
+        }
+
+        chamarAjaxAsync(
+            "pizza",
+            metodoHttp,
+            self.pizzaSelecionada().Id(),
+            pizzaSerializada,
+            function (data) {
+                self.IsUpdating(false);
+                self.removerCancelar();
+                self.adicionarCancelar();
+            });
+        };
+
+// [POST] 
+    self.novaPizza = function () {
+        var novaPizza = new PizzaVM();
+        self.pizzaLista.push(novaPizza);
+        self.selecionarPizza(novaPizza);
+        $("#txtPizzaNome").focus();
+    };
+
+// [DELETE] 
+    self.excluirPizza = function () {
+        var novaListaPizzas = _.reject(self.pizzaLista(), function (pizza) {
+            return pizza.Id() === self.pizzaIdSelecionada()();
+        });
+        self.pizzaLista(novaListaPizzas);
+
+        self.IsUpdating(true);
+        chamarAjaxAsync(
+            "pizza",
+            configuradorAjax.METHOD_DELETE,
+            self.pizzaSelecionada().Id(),
+            undefined,
+            function (data) {
+                self.IsUpdating(false);
+                self.removerCancelar();
+                self.adicionarCancelar();
+            });
+
+    };
 // somente o id da pizza que estiver selecionada
     self.pizzaIdSelecionada = ko.observable();
 
@@ -174,7 +221,7 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
 // selecionar pizza
     self.selecionarPizza = function(pizza) {
 // salva pizza anterior
-        self.salvar();
+        self.pizzaSalvar();
 
 // define a nova pizza selecionada
         self.pizzaIdSelecionada(pizza.Id);
@@ -188,44 +235,10 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
         self.adicionarCancelar();
     };
 
-// inicializar as Pizzas
-    self.Pizzas = ko.observableArray(_.map(pizzasDto, function(pizzaDto) {
-        return new PizzaVM(pizzaDto);
-    }));
 
     self.IsUpdating = ko.observable(false);
 
-    self.salvar = function() {
-        if (_.isUndefined(self.pizzaSelecionada())) {
-// não existe pizza selecionada
-            return;
-        }
 
-// somente salva se o JSON foi alterado
-        if (!self.foiAlterada()) {
-            return;
-        }
-
-        self.IsUpdating(true);
-
-        var pizzaSerializada = ko.toJSON(self.pizzaSelecionada());
-
-        var metodoHttp = configuradorAjax.METHOD_PUT;
-        if (self.pizzaIdSelecionada()() === 0) {
-            metodoHttp = configuradorAjax.METHOD_POST;
-        }
-
-        chamarAjaxAsync(
-            "pizza",
-            metodoHttp,
-            self.pizzaSelecionada().Id(),
-            pizzaSerializada,
-            function(data) {
-                self.IsUpdating(false);
-                self.removerCancelar();
-                self.adicionarCancelar();
-            });
-    };
 
 // remover ingredientes
     self.ingredientesToRemove = ko.observableArray();
@@ -257,32 +270,7 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
         $("#divDebug").toggle();
     };
 
-    self.novaPizza = function() {
-        var novaPizza = new PizzaVM();
-        self.Pizzas.push(novaPizza);
-        self.selecionarPizza(novaPizza);
-        $("#txtPizzaNome").focus();
-    };
 
-    self.excluirPizza = function() {
-        var novaListaPizzas = _.reject(self.Pizzas(), function(pizza) {
-            return pizza.Id() === self.pizzaIdSelecionada()();
-        });
-        self.Pizzas(novaListaPizzas);
-
-        self.IsUpdating(true);
-        chamarAjaxAsync(
-            "pizza",
-            configuradorAjax.METHOD_DELETE,
-            self.pizzaSelecionada().Id(),
-            undefined,
-            function(data) {
-                self.IsUpdating(false);
-                self.removerCancelar();
-                self.adicionarCancelar();
-            });
-
-    };
 
     self.ingredienteId = ko.observable(0);
     self.ingredienteSelecionado = ko.observable();
@@ -376,15 +364,28 @@ var IngredienteVM = function(ingrediente) {
     }
 };
 
+// ///////////////////////////////////////////////
+// tratamento de erros especifico para NHibernate
+// ///////////////////////////////////////////////
+var tratarErrorCSharp = function (jqXHR) {
+    var erroCSharp = JSON.parse(jqXHR.responseText, undefined);
+    console.info(erroCSharp);
 
-// ////////////////////////
-//  AJAX :: todas pizzas
-// ////////////////////////
-var getAllPizza = function() {
-};
-
-// /////////////////////////////
-//  AJAX :: todos ingredientes
-// /////////////////////////////
-var getAllIngredientes = function() {
+    if (erroCSharp.ExceptionType === "NHibernate.Exceptions.GenericADOException") {
+        if (!_.isUndefined(erroCSharp.InnerException)) {
+            var inner = erroCSharp.InnerException;
+            if (inner.ExceptionType === "System.Data.SqlClient.SqlException") {
+                // trata pau de SQL
+                exibirNotyErro(":: ERRO DE SQL ::" + "<br /><br />"
+                    + "> " + erroCSharp.ExceptionType + "<br />"
+                    + "> " + inner.ExceptionType + "<br /><br />"
+                    + inner.Message);
+            }
+        }
+    } else {
+        //pau genérico
+        exibirNotyErro(":: ERRO C# GENERICO ::" + "<br /><br />"
+            + "> " + erroCSharp.ExceptionType + "<br />"
+            + erroCSharp.Message);
+    }
 };

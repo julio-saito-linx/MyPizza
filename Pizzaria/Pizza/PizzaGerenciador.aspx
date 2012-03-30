@@ -16,7 +16,7 @@
                     <img data-bind="visible : IsUpdating" src="../IMG/main_black.gif" />
                 </div>
             </div>
-            <div id="divPizzas" data-bind="foreach: Pizzas">
+            <div id="divPizzas" data-bind="foreach: pizzaLista">
                 <div id="divPizza" class="pizzaEstilo" data-bind="
                     css: {pizzaSelecionada: Id === $root.pizzaIdSelecionada() },
                     click: $root.selecionarPizza">
@@ -30,7 +30,7 @@
             </div>
             <button data-bind="click : novaPizza">Nova</button>
             <button data-bind="click : excluirPizza">Excluir</button>
-            <button data-bind="click : salvar">Salvar</button>
+            <button data-bind="click : pizzaSalvar">Salvar</button>
         </div>
         <%--Pizza selecionada--%>
         <div class="bloco">
