@@ -5,7 +5,7 @@
     font-size: 1.1em;
     margin: 10px;
     padding: 10px;
-    background-image: url('IMG/Dark_Metal_Wallpaper_by_IMdotMS.jpg')
+    background-image: url('../IMG/Dark_Metal_Wallpaper_by_IMdotMS.jpg')
     
 }
 
@@ -158,7 +158,20 @@ option, input{
     left: 20px;
 }
 
-.liLink {
+#listaIngrediente {
+    margin: 5px;
+    padding: 10px;
+}
+
+#itemIngredienteId {
+    padding: 3px;
     cursor: pointer;
     text-decoration: underline;
+    display: inline;
+}
+#itemIngredienteNome {
+    padding: 3px;
+    cursor: pointer;
+    text-decoration: underline;
+    display: inline;
 }

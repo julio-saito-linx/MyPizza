@@ -5,8 +5,7 @@
     <head runat="server">
         <title>Pizza Gerenciador</title>
         <link href="PizzaGerenciador.css" rel="stylesheet" type="text/css" />
-        <link href="needim-noty-2481627/css/jquery.noty.css" rel="stylesheet" type="text/css" />
-        <link href="Scripts/terminal/jquery.terminal.css" rel="stylesheet" type="text/css" />
+        <link href="../needim-noty-2481627/css/jquery.noty.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <%--Todas as pizzas--%>
@@ -14,7 +13,7 @@
             <div class="subTitulo">
                 Lista de Pizzas
                 <div id="divImagemAjax">&nbsp;
-                    <img data-bind="visible : IsUpdating" src="IMG/main_black.gif" />
+                    <img data-bind="visible : IsUpdating" src="../IMG/main_black.gif" />
                 </div>
             </div>
             <div id="divPizzas" data-bind="foreach: Pizzas">
@@ -90,9 +89,12 @@
             <div id="divIngredientesEditor">
                 <span>Ingredientes:</span>
                 <div class="dado">
-                    <ul data-bind="foreach : todosIngredientes">
-                        <li class="liLink" data-bind="text : Nome, click : $root.selecionarIngrediente"></li>
-                    </ul>
+                    <div id="listaIngrediente" data-bind="foreach : todosIngredientes">
+                        <div data-bind="css: {pizzaSelecionada: Id() === $root.ingredienteId() }">
+                            <div id="itemIngredienteId" data-bind="text : Id, click : $root.selecionarIngrediente"></div>
+                            <div id="itemIngredienteNome" data-bind="text : Nome, click : $root.selecionarIngrediente"></div>
+                        </div>
+                    </div>
                 </div>
                 <span>Ingrediente.Nome:</span>
                 <br />
@@ -102,7 +104,7 @@
                 </div>
             </div>
             <button data-bind="click: novoIngrediente">
-                adicionar
+                novo
             </button>
             <button data-bind="click: salvarIngrediente">
                 salvar
@@ -120,13 +122,12 @@
             </div>
         </div>
     </body>
-    <script src="Scripts/jquery-1.7.1.min.js" type="text/javascript"> </script>
-    <script src="Scripts/json2.js" type="text/javascript"> </script>
-    <script src="needim-noty-2481627/js/jquery.noty.js" type="text/javascript"> </script>
-    <script src="Scripts/underscore/underscore-min.js" type="text/javascript"> </script>
-    <script src="Scripts/knockout.debug.js" type="text/javascript"> </script>
-
-    <script src="Scripts/helpers.js" type="text/javascript"> </script>
-    <script src="Scripts/ajaxRestHelper/ajaxRestHelper.js" type="text/javascript"> </script>
+    <script src="../Scripts/jquery-1.7.1.min.js" type="text/javascript"> </script>
+    <script src="../Scripts/json2.js" type="text/javascript"> </script>
+    <script src="../needim-noty-2481627/js/jquery.noty.js" type="text/javascript"> </script>
+    <script src="../Scripts/underscore/underscore-min.js" type="text/javascript"> </script>
+    <script src="../Scripts/knockout.debug.js" type="text/javascript"> </script>
+    <script src="../Scripts/helpers.js" type="text/javascript"> </script>
+    <script src="../Scripts/ajaxRestHelper/ajaxRestHelper.js" type="text/javascript"> </script>
     <script src="PizzaGerenciador.js" type="text/javascript"> </script>
 </html>

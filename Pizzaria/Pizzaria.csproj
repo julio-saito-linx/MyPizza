@@ -105,8 +105,8 @@
     <Content Include="IMG\Dark_Metal_Wallpaper_by_IMdotMS.jpg" />
     <Content Include="IMG\icon_loading.gif" />
     <Content Include="IMG\main_black.gif" />
-    <Content Include="PizzaGerenciador.js" />
-    <Content Include="PizzaGerenciador.css" />
+    <Content Include="Pizza\PizzaGerenciador.js" />
+    <Content Include="Pizza\PizzaGerenciador.css" />
     <Content Include="needim-noty-2481627\.gitignore" />
     <Content Include="needim-noty-2481627\css\jquery.noty.css" />
     <Content Include="needim-noty-2481627\img\alert-lines.png" />
@@ -117,7 +117,8 @@
     <Content Include="needim-noty-2481627\img\mitgux\done.png" />
     <Content Include="needim-noty-2481627\img\mitgux\error.png" />
     <Content Include="needim-noty-2481627\js\jquery.noty.js" />
-    <Content Include="PizzaGerenciador.aspx" />
+    <Content Include="Pizza\PizzaGerenciador.aspx" />
+    <Content Include="Pizza\README.TXT" />
     <Content Include="Scripts\ajaxRestHelper\ajaxRestHelper.js" />
     <Content Include="Scripts\helpers.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />

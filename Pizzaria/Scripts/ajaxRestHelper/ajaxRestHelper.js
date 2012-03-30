@@ -6,19 +6,19 @@
     self.viewModel = viewModelParametro;
 
     // Lista
-    self.METHOD_LIST = { type: "GET", url: "api/__controller__", configuradorAjax: self };
+    self.METHOD_LIST = { type: "GET", url: "../api/__controller__", configuradorAjax: self };
 
     // Detalhe
-    self.METHOD_SHOW = { type: "GET", url: "api/__controller__/__id__", configuradorAjax: self };
+    self.METHOD_SHOW = { type: "GET", url: "../api/__controller__/__id__", configuradorAjax: self };
 
     // Update
-    self.METHOD_PUT = { type: "PUT", url: "api/__controller__/__id__", configuradorAjax: self };
+    self.METHOD_PUT = { type: "PUT", url: "../api/__controller__/__id__", configuradorAjax: self };
 
     // Insert
-    self.METHOD_POST = { type: "POST", url: "api/__controller__", configuradorAjax: self };
+    self.METHOD_POST = { type: "POST", url: "../api/__controller__", configuradorAjax: self };
 
     // Delete
-    self.METHOD_DELETE = { type: "DELETE", url: "api/__controller__/__id__", configuradorAjax: self };
+    self.METHOD_DELETE = { type: "DELETE", url: "../api/__controller__/__id__", configuradorAjax: self };
 
 };
 
