@@ -2,7 +2,7 @@
 self.IsUpdating
 self.exibirDebug
 
-//CONTROLLER PIZZA
+//PIZZA
 [GET] self.Pizzas
 [POST] self.novaPizza
 [POST/PUT] self.salvar
@@ -14,16 +14,18 @@ self.selecionarPizza
 self.pizzaSelecionadaEstadoInicialJSON
 self.foiAlterada
 
-//PIZZA.INGREDIENTE
-self.incluirIngredientesPizza
-self.adicionarCancelar
-self.ingredientesToAdd
-self.ingredientesAindaNaoInseridos
-self.removerIngredientes
-self.ingredientesToRemove
-self.removerCancelar
+	//PIZZA.INGREDIENTES
+	self.pizzaSelecionada().Ingredientes
+		self.ingredientesToAdd
+		self.adicionarCancelar
+		self.incluirIngredientesPizza
 
-//CONTROLLER INGREDIENTE
+	self.ingredientesAindaNaoInseridos
+		self.ingredientesToRemove
+		self.removerCancelar
+		self.removerIngredientes
+
+//INGREDIENTE
 [GET] self.todosIngredientes
 [POST] self.novoIngrediente
 [POST/PUT] self.salvarIngrediente
