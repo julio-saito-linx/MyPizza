@@ -28,8 +28,8 @@
                     </div>
                 </div>
             </div>
-            <button data-bind="click : novaPizza">Nova</button>
-            <button data-bind="click : excluirPizza">Excluir</button>
+            <button data-bind="click : pizzaNova">Nova</button>
+            <button data-bind="click : pizzaExcluir">Excluir</button>
             <button data-bind="click : pizzaSalvar">Salvar</button>
         </div>
         <%--Pizza selecionada--%>

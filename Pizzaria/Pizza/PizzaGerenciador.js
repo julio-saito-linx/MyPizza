@@ -4,27 +4,14 @@
 /// <reference path="~/Scripts/helpers.js" />
 /// <reference path="~/Scripts/ajaxRestHelper/ajaxRestHelper.js" />
 
-$().ready(function () {
-
-    // extendendo os bindings
-    ko.bindingHandlers.fadeVisible = {
-        init: function (element, valueAccessor) {
-            // start visible/invisible according to initial value
-            var shouldDisplay = valueAccessor();
-            $(element).toggle(shouldDisplay);
-        },
-        update: function (element, valueAccessor) {
-            // on update, fade in/out
-            var shouldDisplay = valueAccessor();
-            shouldDisplay ? $(element).fadeIn() : $(element).fadeOut();
-        }
-    };
+$().ready(function() {
+    criarFadeVisible();
 
     // busca do banco de dados
     inicializar();
 });
 
-var inicializar = function () {
+var inicializar = function() {
 // configura o caminho das APIs
 //  e ainda possui "enums" para definir
 //  qual método será chamado
@@ -78,7 +65,7 @@ var inicializar = function () {
 // ///////////////////////////////////////
 // cria o view model e aplica no knockout
 // ///////////////////////////////////////
-var inicializarViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
+var inicializarViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
 // inicializa o viewModel
     var pizzasViewModel = new MainViewModel(configuradorAjax, pizzasDto, ingredientesDto);
     configuradorAjax.viewModel = pizzasViewModel;
@@ -96,10 +83,73 @@ var inicializarViewModel = function (configuradorAjax, pizzasDto, ingredientesDt
     ko.applyBindings(pizzasViewModel);
 };
 
-var controler = function(pizzasDto) {
-    return ko.observableArray(_.map(pizzasDto, function(pizzaDto) {
-        return new PizzaVM(pizzaDto);
-    }));
+var Controler = function(dadosDto, ViewModelClass, configuradorAjax) {
+    var self = this;
+
+    self.listar = function() {
+        var viewModelLista = _.map(dadosDto, function(itemDto) {
+            return new ViewModelClass(itemDto);
+        });
+        return ko.observableArray(viewModelLista);
+    };
+
+    self.salvar = function(viewModel) {
+        if (_.isUndefined(viewModel.pizzaSelecionada())) {
+            // não existe pizza selecionada
+            return;
+        }
+
+        // somente salva se o JSON foi alterado
+        if (!viewModel.foiAlterada()) {
+            return;
+        }
+
+        viewModel.IsUpdating(true);
+
+        var pizzaSerializada = ko.toJSON(viewModel.pizzaSelecionada);
+
+        var metodoHttp = configuradorAjax.METHOD_PUT;
+        if (viewModel.pizzaIdSelecionada()() === 0) {
+            metodoHttp = configuradorAjax.METHOD_POST;
+        }
+
+        chamarAjaxAsync(
+            "pizza",
+            metodoHttp,
+            viewModel.pizzaSelecionada().Id(),
+            pizzaSerializada,
+            function(data) {
+                viewModel.IsUpdating(false);
+                viewModel.removerCancelar();
+                viewModel.adicionarCancelar();
+            });
+    };
+
+    self.novo = function(viewModel) {
+        var novaPizza = new PizzaVM();
+        viewModel.pizzaLista.push(novaPizza);
+        viewModel.selecionarPizza(novaPizza);
+    };
+
+    self.excluir = function(viewModel) {
+
+        var novaListaPizzas = _.reject(viewModel.pizzaLista(), function (pizza) {
+            return pizza.Id() === viewModel.pizzaIdSelecionada()();
+        });
+        viewModel.pizzaLista(novaListaPizzas);
+
+        viewModel.IsUpdating(true);
+        chamarAjaxAsync(
+            "pizza",
+            configuradorAjax.METHOD_DELETE,
+            viewModel.pizzaSelecionada().Id(),
+            undefined,
+            function(data) {
+                viewModel.IsUpdating(false);
+                viewModel.removerCancelar();
+                viewModel.adicionarCancelar();
+            });
+    };
 };
 
 // //////////////////////////////////////////////////////////////////////////////
@@ -110,86 +160,81 @@ var controler = function(pizzasDto) {
 //  - pizzasDto;
 //  - ingredientesDto;
 // //////////////////////////////////////////////////////////////////////////////
-var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
+var MainViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
     var self = this;
 
-// [GET] 
-    self.pizzaLista = controler(pizzasDto);
+    var controlerPizza = new Controler(pizzasDto, PizzaVM, configuradorAjax);
 
-// [POST/PUT] 
-    self.pizzaSalvar = function () {
-        if (_.isUndefined(self.pizzaSelecionada())) {
-            // não existe pizza selecionada
-            return;
-        }
+    self.IsUpdating = ko.observable(false);
 
-        // somente salva se o JSON foi alterado
-        if (!self.foiAlterada()) {
-            return;
-        }
-
-        self.IsUpdating(true);
-
-        var pizzaSerializada = ko.toJSON(self.pizzaSelecionada());
-
-        var metodoHttp = configuradorAjax.METHOD_PUT;
-        if (self.pizzaIdSelecionada()() === 0) {
-            metodoHttp = configuradorAjax.METHOD_POST;
-        }
-
-        chamarAjaxAsync(
-            "pizza",
-            metodoHttp,
-            self.pizzaSelecionada().Id(),
-            pizzaSerializada,
-            function (data) {
-                self.IsUpdating(false);
-                self.removerCancelar();
-                self.adicionarCancelar();
-            });
-        };
-
-// [POST] 
-    self.novaPizza = function () {
-        var novaPizza = new PizzaVM();
-        self.pizzaLista.push(novaPizza);
-        self.selecionarPizza(novaPizza);
+    // TODO ------------------------------------------------
+    // TODO PASSAR TODOS ESSES SELFs PARA UM METODO GENERICO
+    // TODO Usar herança de prototype?
+    // TODO ------------------------------------------------
+    
+    // [GET] 
+    self.pizzaLista = controlerPizza.listar();
+    // [POST/PUT] 
+    self.pizzaSalvar = function() {
+        controlerPizza.salvar(self);
+    };
+    // [POST] 
+    self.pizzaNova = function() {
+        controlerPizza.novo(self);
         $("#txtPizzaNome").focus();
     };
-
-// [DELETE] 
-    self.excluirPizza = function () {
-        var novaListaPizzas = _.reject(self.pizzaLista(), function (pizza) {
-            return pizza.Id() === self.pizzaIdSelecionada()();
-        });
-        self.pizzaLista(novaListaPizzas);
-
-        self.IsUpdating(true);
-        chamarAjaxAsync(
-            "pizza",
-            configuradorAjax.METHOD_DELETE,
-            self.pizzaSelecionada().Id(),
-            undefined,
-            function (data) {
-                self.IsUpdating(false);
-                self.removerCancelar();
-                self.adicionarCancelar();
-            });
-
+    // [DELETE] 
+    self.pizzaExcluir = function() {
+        controlerPizza.excluir(self);
     };
-// somente o id da pizza que estiver selecionada
-    self.pizzaIdSelecionada = ko.observable();
 
-// a pizza selecionada
+    // a pizza selecionada
     self.pizzaSelecionada = ko.observable();
-    self.pizzaSelecionadaEstadoInicialJSON = undefined;
+    // somente o id da pizza que estiver selecionada
+    self.pizzaIdSelecionada = ko.observable();
+    self.selecionarPizza = function (pizza) {
+        // salva pizza anterior
+        self.pizzaSalvar();
 
-// todos ingredientes disponíveis
+        // define a nova pizza selecionada
+        self.pizzaIdSelecionada(pizza.Id);
+        self.pizzaSelecionada(pizza);
+
+        // guarda o estado inicial da pizza nova
+        pizzaSelecionadaEstadoInicialJSON = ko.toJSON(self.pizzaSelecionada);
+
+        // limpa as seleções dos ingredientes
+        self.removerCancelar();
+        self.adicionarCancelar();
+    };
+
+    // ////////////////////////////////////////
+    // Verifica se o JSON da Pizza foi alterado
+    // ////////////////////////////////////////
+    var pizzaSelecionadaEstadoInicialJSON = undefined;
+    // selecionar pizza
+    self.foiAlterada = function () {
+        if (!_.isUndefined(pizzaSelecionadaEstadoInicialJSON)) {
+            var jsonPizzaAtual = ko.toJSON(self.pizzaSelecionada);
+            return (pizzaSelecionadaEstadoInicialJSON !== jsonPizzaAtual);
+        }
+        return false;
+    };
+
+
+
+
+
+
+
+
+
+    // todos ingredientes disponíveis
     self.todosIngredientes = ko.observableArray(_.map(ingredientesDto, function(ingredienteDto) {
         return new IngredienteVM(ingredienteDto);
     }));
 
-// Ingredientes não inseridos da pizza selecionada
+    // Ingredientes não inseridos da pizza selecionada
     self.ingredientesAindaNaoInseridos = ko.computed(function() {
         var ingNaoInseridosLista = [];
         if (!(_.isUndefined(self.pizzaSelecionada()))) {
@@ -205,42 +250,12 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
     }, self);
 
 
-    // ////////////////////////////////////////
-    // Verifica se o JSON da Pizza foi alterado
-    // ////////////////////////////////////////
-    var pizzaSelecionadaEstadoInicialJSON = undefined;
-
-    self.foiAlterada = function() {
-        if (!_.isUndefined(pizzaSelecionadaEstadoInicialJSON)) {
-            var jsonPizzaAtual = ko.toJSON(self.pizzaSelecionada);
-            return (pizzaSelecionadaEstadoInicialJSON !== jsonPizzaAtual);
-        }
-        return false;
-    };
-
-// selecionar pizza
-    self.selecionarPizza = function(pizza) {
-// salva pizza anterior
-        self.pizzaSalvar();
-
-// define a nova pizza selecionada
-        self.pizzaIdSelecionada(pizza.Id);
-        self.pizzaSelecionada(pizza);
-
-// guarda o estado inicial da pizza nova
-        pizzaSelecionadaEstadoInicialJSON = ko.toJSON(self.pizzaSelecionada);
-
-// limpa as seleções dos ingredientes
-        self.removerCancelar();
-        self.adicionarCancelar();
-    };
-
-
-    self.IsUpdating = ko.observable(false);
 
 
 
-// remover ingredientes
+
+
+    // remover ingredientes
     self.ingredientesToRemove = ko.observableArray();
     self.removerIngredientes = function() {
         self.pizzaSelecionada().Ingredientes.removeAll(self.ingredientesToRemove());
@@ -251,7 +266,7 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
     };
 
 
-// inserir novo ingrediente
+    // inserir novo ingrediente
     self.ingredientesToAdd = ko.observableArray();
     self.incluirIngredientesPizza = function() {
         if (self.ingredientesToAdd() != "") // Prevent blanks
@@ -269,7 +284,6 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
     self.exibirDebug = function() {
         $("#divDebug").toggle();
     };
-
 
 
     self.ingredienteId = ko.observable(0);
@@ -367,7 +381,7 @@ var IngredienteVM = function(ingrediente) {
 // ///////////////////////////////////////////////
 // tratamento de erros especifico para NHibernate
 // ///////////////////////////////////////////////
-var tratarErrorCSharp = function (jqXHR) {
+var tratarErrorCSharp = function(jqXHR) {
     var erroCSharp = JSON.parse(jqXHR.responseText, undefined);
     console.info(erroCSharp);
 
@@ -388,4 +402,20 @@ var tratarErrorCSharp = function (jqXHR) {
             + "> " + erroCSharp.ExceptionType + "<br />"
             + erroCSharp.Message);
     }
+};
+
+var criarFadeVisible = function() {
+    // extendendo os bindings
+    ko.bindingHandlers.fadeVisible = {
+        init: function(element, valueAccessor) {
+            // start visible/invisible according to initial value
+            var shouldDisplay = valueAccessor();
+            $(element).toggle(shouldDisplay);
+        },
+        update: function(element, valueAccessor) {
+            // on update, fade in/out
+            var shouldDisplay = valueAccessor();
+            shouldDisplay ? $(element).fadeIn() : $(element).fadeOut();
+        }
+    };
 };
