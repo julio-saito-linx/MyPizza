@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AutoCriarBancoDados.aspx" />
+    <Content Include="Default.aspx" />
     <Content Include="IMG\Dark_Metal_Wallpaper_by_IMdotMS.jpg" />
     <Content Include="IMG\icon_loading.gif" />
     <Content Include="IMG\main_black.gif" />
@@ -149,6 +150,13 @@
     </Compile>
     <Compile Include="AutoCriarBancoDados.aspx.designer.cs">
       <DependentUpon>AutoCriarBancoDados.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="FabricaContainer.cs" />
     <Compile Include="Global.asax.cs">

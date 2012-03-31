@@ -19,15 +19,25 @@ namespace Pizzaria
             _pizzaServico = container.Resolve<IPizzaServico>();
             _ingredienteServico = container.Resolve<IIngredienteServico>();
 
-            if (Request.QueryString["senha"] != null &&
-                Request.QueryString["senha"] == "eu sei o que estou fazendo")
+            var autenticado = false;
+
+            if (Request.QueryString["senha"] != null && Request.QueryString["senha"] == "eu sei o que estou fazendo")
             {
-                CriarBancoDeDados(container);
-                InserirDadosParaTeste(_pizzaServico);
+                autenticado = true;
+            }
+            if (Request["txtSenha"] == "eu sei o que estou fazendo")
+            {
+                autenticado = true;
+            }
+
+            if(!autenticado)
+            {
+                litMensagem.Text = "senha incorreta!";
             }
             else
             {
-                litMensagem.Text = "senha incorreta!";
+                CriarBancoDeDados(container);
+                InserirDadosParaTeste(_pizzaServico);
             }
         }
 
