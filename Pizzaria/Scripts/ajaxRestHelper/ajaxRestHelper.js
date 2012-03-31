@@ -76,7 +76,7 @@ var chamarAjax = function (nomeController, metodo, id, dados, callback_done, cal
             metodo.configuradorAjax.CallBackErrorsTo.call(this, jqXHR);
         }
         if (!_.isUndefined(metodo.configuradorAjax.viewModel)) {
-            metodo.configuradorAjax.viewModel.pizzaVm_atualizando(false);
+            metodo.configuradorAjax.viewModel.pizzaVm.atualizando(false);
         }
 
     });

@@ -72,7 +72,7 @@ var inicializarViewModel = function(configuradorAjax, pizzasDto, ingredientesDto
 
 // seleciona a primeira pizza logo de cara
     if (pizzasViewModel.pizzaVm.lista().length > 0) {
-        pizzasViewModel.pizzaVm_selecionar(pizzasViewModel.pizzaVm.lista()[0]);
+        pizzasViewModel.pizzaVm.selecionar(pizzasViewModel.pizzaVm.lista()[0]);
     }
 // seleciona a primeira pizza logo de cara
     if (pizzasViewModel.todosIngredientes().length > 0) {
@@ -94,60 +94,60 @@ var ControlerKnockout = function (dadosDto, ViewModelClass, configuradorAjax) {
     };
 
     self.salvar = function (viewModel) {
-        if (_.isUndefined(viewModel.pizzaVm_selecionado)) {
+        if (_.isUndefined(viewModel.pizzaVm.selecionado)) {
             // não existe pizza selecionada
             return;
         }
 
         // somente salva se o JSON foi alterado
-        if (!viewModel.pizzaVm_foiAlterado()) {
+        if (!viewModel.pizzaVm.foiAlterado()) {
             return;
         }
 
-        viewModel.pizzaVm_atualizando(true);
+        viewModel.pizzaVm.atualizando(true);
 
-        var pizzaSerializada = ko.toJSON(viewModel.pizzaVm_selecionado);
+        var pizzaSerializada = ko.toJSON(viewModel.pizzaVm.selecionado);
 
         var metodoHttp = configuradorAjax.METHOD_PUT;
-        if (viewModel.pizzaVm_id()() === 0) {
+        if (viewModel.pizzaVm.id()() === 0) {
             metodoHttp = configuradorAjax.METHOD_POST;
         }
 
         chamarAjaxAsync(
             "pizza",
             metodoHttp,
-            viewModel.pizzaVm_selecionado().Id(),
+            viewModel.pizzaVm.selecionado().Id(),
             pizzaSerializada,
             function (data) {
-                viewModel.pizzaVm_atualizando(false);
-                viewModel.pizzaVm_removerCancelar();
-                viewModel.pizzaVm_adicionarCancelar();
+                viewModel.pizzaVm.atualizando(false);
+                viewModel.pizzaVm.removerCancelar();
+                viewModel.pizzaVm.adicionarCancelar();
             });
     };
 
     self.novo = function (viewModel) {
         var novaPizza = new PizzaVM();
         viewModel.pizzaVm.lista.push(novaPizza);
-        viewModel.pizzaVm_selecionar(novaPizza);
+        viewModel.pizzaVm.selecionar(novaPizza);
     };
 
     self.excluir = function (viewModel) {
 
         var novaListaPizzas = _.reject(viewModel.pizzaVm.lista(), function (pizza) {
-            return pizza.Id() === viewModel.pizzaVm_id()();
+            return pizza.Id() === viewModel.pizzaVm.id()();
         });
         viewModel.pizzaVm.lista(novaListaPizzas);
 
-        viewModel.pizzaVm_atualizando(true);
+        viewModel.pizzaVm.atualizando(true);
         chamarAjaxAsync(
             "pizza",
             configuradorAjax.METHOD_DELETE,
-            viewModel.pizzaVm_selecionado().Id(),
+            viewModel.pizzaVm.selecionado().Id(),
             undefined,
             function (data) {
-                viewModel.pizzaVm_atualizando(false);
-                viewModel.pizzaVm_removerCancelar();
-                viewModel.pizzaVm_adicionarCancelar();
+                viewModel.pizzaVm.atualizando(false);
+                viewModel.pizzaVm.removerCancelar();
+                viewModel.pizzaVm.adicionarCancelar();
             });
     };
 
@@ -191,26 +191,26 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
 // primeiro viewModel: pizzaVm
     controlerPizza.aplicarViewModel(self);
 
-    self.pizzaVm_atualizando = ko.observable(false);
+    self.pizzaVm.atualizando = ko.observable(false);
 
 // a pizza selecionada
-    self.pizzaVm_selecionado = ko.observable();
+    self.pizzaVm.selecionado = ko.observable();
 // somente o id da pizza que estiver selecionada
-    self.pizzaVm_id = ko.observable();
-    self.pizzaVm_selecionar = function (pizza) {
+    self.pizzaVm.id = ko.observable();
+    self.pizzaVm.selecionar = function (pizza) {
 // salva pizza anterior
         self.pizzaVm.salvar();
 
 // define a nova pizza selecionada
-        self.pizzaVm_id(pizza.Id);
-        self.pizzaVm_selecionado(pizza);
+        self.pizzaVm.id(pizza.Id);
+        self.pizzaVm.selecionado(pizza);
 
 // guarda o estado inicial da pizza nova
-        pizzaSelecionadaEstadoInicialJSON = ko.toJSON(self.pizzaVm_selecionado);
+        pizzaSelecionadaEstadoInicialJSON = ko.toJSON(self.pizzaVm.selecionado);
 
 // limpa as seleções dos ingredientes
-        self.pizzaVm_removerCancelar();
-        self.pizzaVm_adicionarCancelar();
+        self.pizzaVm.removerCancelar();
+        self.pizzaVm.adicionarCancelar();
     };
 
 // ////////////////////////////////////////
@@ -218,9 +218,9 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
 // ////////////////////////////////////////
     var pizzaSelecionadaEstadoInicialJSON = undefined;
 // selecionar pizza
-    self.pizzaVm_foiAlterado = function () {
+    self.pizzaVm.foiAlterado = function () {
         if (!_.isUndefined(pizzaSelecionadaEstadoInicialJSON)) {
-            var jsonPizzaAtual = ko.toJSON(self.pizzaVm_selecionado);
+            var jsonPizzaAtual = ko.toJSON(self.pizzaVm.selecionado);
             return (pizzaSelecionadaEstadoInicialJSON !== jsonPizzaAtual);
         }
         return false;
@@ -242,8 +242,8 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
 // Ingredientes não inseridos da pizza selecionada
     self.ingredientesAindaNaoInseridos = ko.computed(function () {
         var ingNaoInseridosLista = [];
-        if (!(_.isUndefined(self.pizzaVm_selecionado()))) {
-            var ids = _.map(self.pizzaVm_selecionado().Ingredientes(), function (ingPizza) {
+        if (!(_.isUndefined(self.pizzaVm.selecionado()))) {
+            var ids = _.map(self.pizzaVm.selecionado().Ingredientes(), function (ingPizza) {
                 return ingPizza.Id();
             });
 
@@ -263,10 +263,10 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
 // remover ingredientes
     self.ingredientesToRemove = ko.observableArray();
     self.removerIngredientes = function () {
-        self.pizzaVm_selecionado().Ingredientes.removeAll(self.ingredientesToRemove());
+        self.pizzaVm.selecionado().Ingredientes.removeAll(self.ingredientesToRemove());
         self.ingredientesToRemove([]); // Clear selection
     };
-    self.pizzaVm_removerCancelar = function () {
+    self.pizzaVm.removerCancelar = function () {
         self.ingredientesToRemove([]); // Clear selection
     };
 
@@ -276,13 +276,13 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
     self.incluirIngredientesPizza = function () {
         if (self.ingredientesToAdd() != "") // Prevent blanks
         {
-            var ingredientes = self.pizzaVm_selecionado().Ingredientes;
+            var ingredientes = self.pizzaVm.selecionado().Ingredientes;
             _.each(self.ingredientesToAdd(), function (ing) {
                 ingredientes.push(ing);
             });
         }
     };
-    self.pizzaVm_adicionarCancelar = function () {
+    self.pizzaVm.adicionarCancelar = function () {
         self.ingredientesToAdd([]); // Clear selection
     };
 
@@ -306,7 +306,7 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
     };
 
     self.salvarIngrediente = function () {
-        self.pizzaVm_atualizando(true);
+        self.pizzaVm.atualizando(true);
 
         var metodoAjax;
         if (self.ingredienteId() === 0) {
@@ -320,7 +320,7 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
             undefined,
             ko.toJSON(self.ingredienteSelecionado),
             function (data) {
-                self.pizzaVm_atualizando(false);
+                self.pizzaVm.atualizando(false);
                 if (metodoAjax === configuradorAjax.METHOD_POST) {
                     self.ingredienteSelecionado().Id(data);
                 }
@@ -330,14 +330,14 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
     };
 
     self.deletarIngrediente = function () {
-        self.pizzaVm_atualizando(true);
+        self.pizzaVm.atualizando(true);
         chamarAjaxAsync(
             "ingrediente",
             configuradorAjax.METHOD_DELETE,
             self.ingredienteSelecionado().Id(),
             undefined,
             function (data) {
-                self.pizzaVm_atualizando(false);
+                self.pizzaVm.atualizando(false);
 
                 var novaListaIngredientes = _.reject(self.todosIngredientes(), function (ingrediente) {
                     return ingrediente.Id() === self.ingredienteId();

@@ -13,13 +13,13 @@
             <div class="subTitulo">
                 Lista de Pizzas
                 <div id="divImagemAjax">&nbsp;
-                    <img data-bind="visible : IsUpdating" src="../IMG/main_black.gif" />
+                    <img data-bind="visible : pizzaVm.atualizando" src="../IMG/main_black.gif" />
                 </div>
             </div>
             <div id="divPizzas" data-bind="foreach: pizzaVm.lista">
                 <div id="divPizza" class="pizzaEstilo" data-bind="
-                    css: {pizzaSelecionada: Id === $root.pizzaIdSelecionada() },
-                    click: $root.selecionarPizza">
+                    css: {pizzaSelecionada : Id === $root.pizzaVm.id() },
+                    click: $root.pizzaVm.selecionar">
                     <span data-bind="text: Id"></span>- <span data-bind="text: Nome"></span>
                     <div id="divIngredientes" data-bind="foreach: Ingredientes">
                         <div style="display: block">
@@ -28,7 +28,7 @@
                     </div>
                 </div>
             </div>
-            <button data-bind="click : pizzaVm.criarNova">Nova</button>
+            <button data-bind="click : pizzaVm.novo">Nova</button>
             <button data-bind="click : pizzaVm.excluir">Excluir</button>
             <button data-bind="click : pizzaVm.salvar">Salvar</button>
         </div>
@@ -37,9 +37,9 @@
             <div class="subTitulo">
                 Detalhe
             </div>
-            <div id="divDetalhe" data-bind="with: pizzaSelecionada">
+            <div id="divDetalhe" data-bind="with: pizzaVm.selecionado">
                 <%--
-                Aqui dentro o contexto muda para pizzaSelecionada.
+                Aqui dentro o contexto muda para pizzaVm.selecionado.
                 --%>
                 <span>Pizza.Nome:</span>
                 <br />
