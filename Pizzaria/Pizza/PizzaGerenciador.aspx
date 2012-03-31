@@ -16,7 +16,7 @@
                     <img data-bind="visible : IsUpdating" src="../IMG/main_black.gif" />
                 </div>
             </div>
-            <div id="divPizzas" data-bind="foreach: pizzaVm_Lista">
+            <div id="divPizzas" data-bind="foreach: pizzaVm.lista">
                 <div id="divPizza" class="pizzaEstilo" data-bind="
                     css: {pizzaSelecionada: Id === $root.pizzaIdSelecionada() },
                     click: $root.selecionarPizza">
@@ -28,9 +28,9 @@
                     </div>
                 </div>
             </div>
-            <button data-bind="click : pizzaNova">Nova</button>
-            <button data-bind="click : pizzaExcluir">Excluir</button>
-            <button data-bind="click : pizzaSalvar">Salvar</button>
+            <button data-bind="click : pizzaVm.criarNova">Nova</button>
+            <button data-bind="click : pizzaVm.excluir">Excluir</button>
+            <button data-bind="click : pizzaVm.salvar">Salvar</button>
         </div>
         <%--Pizza selecionada--%>
         <div class="bloco">
