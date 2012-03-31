@@ -1,6 +1,6 @@
 ﻿/// <reference path="~/Scripts/knockout.debug.js" />
-/// <reference path="~/Scripts/jquery-1.6.4.min.js" />
 /// <reference path="~/Scripts/underscore/underscore-min.js" />
+/// <reference path="~/Scripts/jquery-1.7.1.js" />
 /// <reference path="~/Scripts/helpers.js" />
 /// <reference path="~/Scripts/ajaxRestHelper/ajaxRestHelper.js" />
 
@@ -71,8 +71,8 @@ var inicializarViewModel = function(configuradorAjax, pizzasDto, ingredientesDto
     configuradorAjax.viewModel = pizzasViewModel;
 
 // seleciona a primeira pizza logo de cara
-    if (pizzasViewModel.pizzaLista().length > 0) {
-        pizzasViewModel.selecionarPizza(pizzasViewModel.pizzaLista()[0]);
+    if (pizzasViewModel.pizzaVm_Lista().length > 0) {
+        pizzasViewModel.selecionarPizza(pizzasViewModel.pizzaVm_Lista()[0]);
     }
 // seleciona a primeira pizza logo de cara
     if (pizzasViewModel.todosIngredientes().length > 0) {
@@ -94,7 +94,7 @@ var Controler = function(dadosDto, ViewModelClass, configuradorAjax) {
     };
 
     self.salvar = function(viewModel) {
-        if (_.isUndefined(viewModel.pizzaSelecionada())) {
+        if (_.isUndefined(viewModel.pizzaSelecionada)) {
             // não existe pizza selecionada
             return;
         }
@@ -127,16 +127,16 @@ var Controler = function(dadosDto, ViewModelClass, configuradorAjax) {
 
     self.novo = function(viewModel) {
         var novaPizza = new PizzaVM();
-        viewModel.pizzaLista.push(novaPizza);
+        viewModel.pizzaVm_Lista.push(novaPizza);
         viewModel.selecionarPizza(novaPizza);
     };
 
     self.excluir = function(viewModel) {
 
-        var novaListaPizzas = _.reject(viewModel.pizzaLista(), function (pizza) {
+        var novaListaPizzas = _.reject(viewModel.pizzaVm_Lista(), function (pizza) {
             return pizza.Id() === viewModel.pizzaIdSelecionada()();
         });
-        viewModel.pizzaLista(novaListaPizzas);
+        viewModel.pizzaVm_Lista(novaListaPizzas);
 
         viewModel.IsUpdating(true);
         chamarAjaxAsync(
@@ -150,6 +150,25 @@ var Controler = function(dadosDto, ViewModelClass, configuradorAjax) {
                 viewModel.adicionarCancelar();
             });
     };
+
+    this.aplicarViewModel = function (viewModelParametro) {
+        // [GET] 
+        viewModelParametro.pizzaVm_Lista = self.listar();
+
+        // [POST/PUT] 
+        viewModelParametro.pizzaSalvar = function () {
+            self.salvar(self);
+        };
+        // [POST] 
+        viewModelParametro.pizzaNova = function () {
+            self.novo(self);
+            $("#txtPizzaNome").focus();
+        };
+        // [DELETE] 
+        viewModelParametro.pizzaExcluir = function () {
+            self.excluir(self);
+        };
+    };
 };
 
 // //////////////////////////////////////////////////////////////////////////////
@@ -160,33 +179,13 @@ var Controler = function(dadosDto, ViewModelClass, configuradorAjax) {
 //  - pizzasDto;
 //  - ingredientesDto;
 // //////////////////////////////////////////////////////////////////////////////
-var MainViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
+var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
     var self = this;
 
     var controlerPizza = new Controler(pizzasDto, PizzaVM, configuradorAjax);
+    controlerPizza.aplicarViewModel(self);
 
     self.IsUpdating = ko.observable(false);
-
-    // TODO ------------------------------------------------
-    // TODO PASSAR TODOS ESSES SELFs PARA UM METODO GENERICO
-    // TODO Usar herança de prototype?
-    // TODO ------------------------------------------------
-    
-    // [GET] 
-    self.pizzaLista = controlerPizza.listar();
-    // [POST/PUT] 
-    self.pizzaSalvar = function() {
-        controlerPizza.salvar(self);
-    };
-    // [POST] 
-    self.pizzaNova = function() {
-        controlerPizza.novo(self);
-        $("#txtPizzaNome").focus();
-    };
-    // [DELETE] 
-    self.pizzaExcluir = function() {
-        controlerPizza.excluir(self);
-    };
 
     // a pizza selecionada
     self.pizzaSelecionada = ko.observable();
@@ -230,19 +229,19 @@ var MainViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
 
 
     // todos ingredientes disponíveis
-    self.todosIngredientes = ko.observableArray(_.map(ingredientesDto, function(ingredienteDto) {
+    self.todosIngredientes = ko.observableArray(_.map(ingredientesDto, function (ingredienteDto) {
         return new IngredienteVM(ingredienteDto);
     }));
 
     // Ingredientes não inseridos da pizza selecionada
-    self.ingredientesAindaNaoInseridos = ko.computed(function() {
+    self.ingredientesAindaNaoInseridos = ko.computed(function () {
         var ingNaoInseridosLista = [];
         if (!(_.isUndefined(self.pizzaSelecionada()))) {
-            var ids = _.map(self.pizzaSelecionada().Ingredientes(), function(ingPizza) {
+            var ids = _.map(self.pizzaSelecionada().Ingredientes(), function (ingPizza) {
                 return ingPizza.Id();
             });
 
-            ingNaoInseridosLista = _.filter(self.todosIngredientes(), function(item) {
+            ingNaoInseridosLista = _.filter(self.todosIngredientes(), function (item) {
                 return (ids.indexOf(item.Id()) === -1);
             });
         }
@@ -257,50 +256,50 @@ var MainViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
 
     // remover ingredientes
     self.ingredientesToRemove = ko.observableArray();
-    self.removerIngredientes = function() {
+    self.removerIngredientes = function () {
         self.pizzaSelecionada().Ingredientes.removeAll(self.ingredientesToRemove());
         self.ingredientesToRemove([]); // Clear selection
     };
-    self.removerCancelar = function() {
+    self.removerCancelar = function () {
         self.ingredientesToRemove([]); // Clear selection
     };
 
 
     // inserir novo ingrediente
     self.ingredientesToAdd = ko.observableArray();
-    self.incluirIngredientesPizza = function() {
+    self.incluirIngredientesPizza = function () {
         if (self.ingredientesToAdd() != "") // Prevent blanks
         {
             var ingredientes = self.pizzaSelecionada().Ingredientes;
-            _.each(self.ingredientesToAdd(), function(ing) {
+            _.each(self.ingredientesToAdd(), function (ing) {
                 ingredientes.push(ing);
             });
         }
     };
-    self.adicionarCancelar = function() {
+    self.adicionarCancelar = function () {
         self.ingredientesToAdd([]); // Clear selection
     };
 
-    self.exibirDebug = function() {
+    self.exibirDebug = function () {
         $("#divDebug").toggle();
     };
 
 
     self.ingredienteId = ko.observable(0);
     self.ingredienteSelecionado = ko.observable();
-    self.selecionarIngrediente = function(ingrediente) {
+    self.selecionarIngrediente = function (ingrediente) {
         self.ingredienteSelecionado(ingrediente);
         self.ingredienteId(ingrediente.Id());
     };
 
-    self.novoIngrediente = function() {
+    self.novoIngrediente = function () {
         var novoIngrediente = new IngredienteVM();
         self.todosIngredientes.push(novoIngrediente);
         self.selecionarIngrediente(novoIngrediente);
         $("#txtIngredienteNome").focus();
     };
 
-    self.salvarIngrediente = function() {
+    self.salvarIngrediente = function () {
         self.IsUpdating(true);
 
         var metodoAjax;
@@ -314,7 +313,7 @@ var MainViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
             metodoAjax,
             undefined,
             ko.toJSON(self.ingredienteSelecionado),
-            function(data) {
+            function (data) {
                 self.IsUpdating(false);
                 if (metodoAjax === configuradorAjax.METHOD_POST) {
                     self.ingredienteSelecionado().Id(data);
@@ -324,17 +323,17 @@ var MainViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
 
     };
 
-    self.deletarIngrediente = function() {
+    self.deletarIngrediente = function () {
         self.IsUpdating(true);
         chamarAjaxAsync(
             "ingrediente",
             configuradorAjax.METHOD_DELETE,
             self.ingredienteSelecionado().Id(),
             undefined,
-            function(data) {
+            function (data) {
                 self.IsUpdating(false);
 
-                var novaListaIngredientes = _.reject(self.todosIngredientes(), function(ingrediente) {
+                var novaListaIngredientes = _.reject(self.todosIngredientes(), function (ingrediente) {
                     return ingrediente.Id() === self.ingredienteId();
                 });
                 self.todosIngredientes(novaListaIngredientes);

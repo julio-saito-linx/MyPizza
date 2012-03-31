@@ -16,7 +16,7 @@
                     <img data-bind="visible : IsUpdating" src="../IMG/main_black.gif" />
                 </div>
             </div>
-            <div id="divPizzas" data-bind="foreach: pizzaLista">
+            <div id="divPizzas" data-bind="foreach: pizzaVm_Lista">
                 <div id="divPizza" class="pizzaEstilo" data-bind="
                     css: {pizzaSelecionada: Id === $root.pizzaIdSelecionada() },
                     click: $root.selecionarPizza">
