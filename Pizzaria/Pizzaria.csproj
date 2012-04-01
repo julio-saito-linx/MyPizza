@@ -121,6 +121,7 @@
     <Content Include="Pizza\PizzaGerenciador.aspx" />
     <Content Include="Pizza\README.TXT" />
     <Content Include="Scripts\ajaxRestHelper\ajaxRestHelper.js" />
+    <Content Include="Scripts\ajaxRestHelper\ControllerKnockout.js" />
     <Content Include="Scripts\helpers.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />

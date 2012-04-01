@@ -129,5 +129,6 @@
     <script src="../Scripts/knockout.debug.js" type="text/javascript"> </script>
     <script src="../Scripts/helpers.js" type="text/javascript"> </script>
     <script src="../Scripts/ajaxRestHelper/ajaxRestHelper.js" type="text/javascript"> </script>
+    <script src="../Scripts/ajaxRestHelper/ControllerKnockout.js" type="text/javascript"></script>
     <script src="PizzaGerenciador.js" type="text/javascript"> </script>
 </html>

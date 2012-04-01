@@ -3,6 +3,7 @@
 /// <reference path="~/Scripts/jquery-1.7.1.js" />
 /// <reference path="~/Scripts/helpers.js" />
 /// <reference path="~/Scripts/ajaxRestHelper/ajaxRestHelper.js" />
+/// <reference path="~/Scripts/ajaxRestHelper/ControllerKnockout.js" />
 
 $().ready(function() {
     criarFadeVisible();
@@ -12,7 +13,6 @@ $().ready(function() {
 });
 
 
-
 // ///////////////////////////////////////////////////
 // inicializar ///////////////////////////////////////
 // ---------------------------------------------------
@@ -20,7 +20,7 @@ $().ready(function() {
 // Chama a criação do viewModel knockout.js
 // ---------------------------------------------------
 // ///////////////////////////////////////////////////
-var inicializar = function () {
+var inicializar = function() {
 // configura o caminho das APIs
 //  e ainda possui "enums" para definir
 //  qual método será chamado
@@ -71,14 +71,13 @@ var inicializar = function () {
 };
 
 
-
 // ///////////////////////////////////////////////////
 // inicializarViewModel //////////////////////////////
 // ---------------------------------------------------
 // cria o view model e aplica no knockout
 // ---------------------------------------------------
 // ///////////////////////////////////////////////////
-var inicializarViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
+var inicializarViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
 // inicializa o viewModel
     var pizzasViewModel = new MainViewModel(configuradorAjax, pizzasDto, ingredientesDto);
     configuradorAjax.viewModel = pizzasViewModel;
@@ -98,132 +97,6 @@ var inicializarViewModel = function (configuradorAjax, pizzasDto, ingredientesDt
 
 
 
-// ///////////////////////////////////////////////////
-// ControlerKnockout /////////////////////////////////
-// ---------------------------------------------------
-// Configura um viewModel knockout de forma automática.
-// Expõe um CRUD básico.
-// ---------------------------------------------------
-// ///////////////////////////////////////////////////
-var ControlerKnockout = function (nomeController, dadosDto, ClasseViewModel, configuradorAjax) {
-    var self = this;
-
-    self.aplicarViewModel = function (vmKO) {
-// em processo de comunicação com o servidor
-        vmKO.atualizando = ko.observable(false);
-// item selecionado
-        vmKO.selecionado = ko.observable();
-// somente o id que estiver selecionado
-        vmKO.id = ko.observable();
-        vmKO.selecionar = function (item) {
-// salva o item anterior
-            vmKO.salvar();
-// define o novo item selecionado
-            vmKO.id(item.Id);
-            vmKO.selecionado(item);
-// guarda o estado inicial do novo item
-            jsonItem = ko.toJSON(vmKO.selecionado);
-// limpa as seleções dos ingredientes
-            vmKO.removerCancelar();
-            vmKO.adicionarCancelar();
-        };
-        var jsonItem = undefined;
-// selecionar item
-        vmKO.foiAlterado = function () {
-            if (!_.isUndefined(jsonItem)) {
-                var jsonItemAtual = ko.toJSON(vmKO.selecionado);
-                return (jsonItem !== jsonItemAtual);
-            }
-            return false;
-        };
-
-
-// [GET] 
-        vmKO.lista = self.listar();
-
-// [POST/PUT] 
-        vmKO.salvar = function () {
-            self.salvar(vmKO);
-        };
-// [POST] 
-        vmKO.novo = function () {
-            self.novo(vmKO);
-            $("#txtPizzaNome").focus();
-        };
-// [DELETE] 
-        vmKO.excluir = function () {
-            self.excluir(vmKO);
-        };
-    };
-    
-    
-    self.listar = function () {
-        var viewModelLista = _.map(dadosDto, function (itemDto) {
-            return new ClasseViewModel(itemDto);
-        });
-        return ko.observableArray(viewModelLista);
-    };
-
-    self.salvar = function (vmKO) {
-        if (_.isUndefined(vmKO.selecionado)) {
-// não existe item selecionada
-            return;
-        }
-
-// somente salva se o JSON foi alterado
-        if (!vmKO.foiAlterado()) {
-            return;
-        }
-
-        vmKO.atualizando(true);
-
-        var vmSerializado = ko.toJSON(vmKO.selecionado);
-
-        var metodoHttp = configuradorAjax.METHOD_PUT;
-        if (vmKO.id()() === 0) {
-            metodoHttp = configuradorAjax.METHOD_POST;
-        }
-        chamarAjaxAsync(
-            nomeController,
-            metodoHttp,
-            vmKO.selecionado().Id(),
-            vmSerializado,
-            function (data) {
-                vmKO.atualizando(false);
-                vmKO.removerCancelar();
-                vmKO.adicionarCancelar();
-            });
-    };
-
-        self.novo = function (vmKO) {
-        var novoVm = new ClasseViewModel();
-        vmKO.lista.push(novoVm);
-        vmKO.selecionar(novoVm);
-    };
-
-    self.excluir = function (vmKO) {
-
-        var novaLista = _.reject(vmKO.lista(), function (item) {
-            return item.Id() === vmKO.id()();
-        });
-        vmKO.lista(novaLista);
-
-        vmKO.atualizando(true);
-        chamarAjaxAsync(
-            nomeController,
-            configuradorAjax.METHOD_DELETE,
-            vmKO.selecionado().Id(),
-            undefined,
-            function (data) {
-                vmKO.atualizando(false);
-                vmKO.removerCancelar();
-                vmKO.adicionarCancelar();
-            });
-    };
-
-
-};
-
 
 
 // //////////////////////////////////////////////////////////////////////////////
@@ -237,21 +110,24 @@ var ControlerKnockout = function (nomeController, dadosDto, ClasseViewModel, con
 var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
     var self = this;
 
-// inicializa o configurador de controlers
-//todo: passar configuração via objeto para ficar mais claro
-    var controlerPizza = new ControlerKnockout("pizza", pizzasDto, PizzaVM, configuradorAjax);
-// pizzaVm
-    self.pizzaVm = {};
-// primeiro viewModel: pizzaVm
-    controlerPizza.aplicarViewModel(self.pizzaVm);
+    // inicializa o configurador de controlers
+    //todo: passar configuração via objeto para ficar mais claro
+
+    // Controller pizzaVm
+    configControllerKnockout.viewMoldel = self.pizzaVm = {};
+    configControllerKnockout.nomeController = "pizza";
+    configControllerKnockout.dadosDto = pizzasDto;
+    configControllerKnockout.ClasseViewModel = PizzaVM;
+    configControllerKnockout.configuradorAjax = configuradorAjax;
+    var pizzaVmController = new ControllerKnockout(configControllerKnockout);
 
 
-// todos ingredientes disponíveis
+    // todos ingredientes disponíveis
     self.todosIngredientes = ko.observableArray(_.map(ingredientesDto, function (ingredienteDto) {
         return new IngredienteVM(ingredienteDto);
     }));
 
-// Ingredientes não inseridos da pizza selecionada
+    // Ingredientes não inseridos da pizza selecionada
     self.ingredientesAindaNaoInseridos = ko.computed(function () {
         var ingNaoInseridosLista = [];
         if (!(_.isUndefined(self.pizzaVm.selecionado()))) {
@@ -267,12 +143,7 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
     }, self);
 
 
-
-
-
-
-
-// remover ingredientes
+    // remover ingredientes
     self.ingredientesToRemove = ko.observableArray();
     self.removerIngredientes = function () {
         self.pizzaVm.selecionado().Ingredientes.removeAll(self.ingredientesToRemove());
@@ -283,7 +154,7 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
     };
 
 
-// inserir novo ingrediente
+    // inserir novo ingrediente
     self.ingredientesToAdd = ko.observableArray();
     self.incluirIngredientesPizza = function () {
         if (self.ingredientesToAdd() != "") // Prevent blanks
