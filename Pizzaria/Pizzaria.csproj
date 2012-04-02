@@ -111,6 +111,10 @@
     <Content Include="IMG\main_black.gif" />
     <Content Include="Pizza\PizzaGerenciador.js" />
     <Content Include="Pizza\PizzaGerenciador.css" />
+    <Content Include="Scripts\ajaxRestHelper\qUnitTests\qunit.css" />
+    <Content Include="Scripts\ajaxRestHelper\qUnitTests\qunit.js" />
+    <Content Include="Scripts\ajaxRestHelper\qUnitTests\Tests.html" />
+    <Content Include="Scripts\ajaxRestHelper\qUnitTests\Tests.js" />
     <Content Include="Scripts\noty\.gitignore" />
     <Content Include="Scripts\noty\css\jquery.noty.css" />
     <Content Include="Scripts\noty\img\alert-lines.png" />

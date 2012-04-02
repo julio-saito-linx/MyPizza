@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using AutoMapper;
 using Castle.Windsor;
@@ -76,25 +77,50 @@ namespace Pizzaria
             // limpa seus filhos
             // e salva...
             var pizzaAlterar = _pizzaServico.PesquisarID(id);
-            pizzaAlterar.Ingredientes.Clear();
             pizzaAlterar.Nome = pizzaDto.Nome;
-            _pizzaServico.Save(pizzaAlterar);
 
-            // pesquisa cada um dos ingredientes no banco
-            // insere na lista
-            // e salva de novo...
-            if (pizzaDto.Ingredientes != null)
-            {
-                foreach (var ingredienteDto in pizzaDto.Ingredientes)
-                {
-                    var ingrediente = _ingredienteServico.PesquisarID(ingredienteDto.Id);
-                    pizzaAlterar.AcrescentarIngrediente(ingrediente);
-                }
-            }
+            var ingredientesJaExistiam = pizzaAlterar.Ingredientes;
+            var ingredienteChegando = pizzaDto.Ingredientes;
+
+            AlterarListaManyToMany(ingredienteChegando, ingredientesJaExistiam);
 
             _pizzaServico.Save(pizzaAlterar);
 
             return "Pizza [" + pizzaAlterar.Id + "] salva com sucesso!";
+        }
+
+        private void AlterarListaManyToMany(IList<IngredienteDto> ingredienteChegando, IList<Ingrediente> ingredientesJaExistiam)
+        {
+            if (ingredienteChegando != null)
+            {
+                // incluir itens novos
+                foreach (var ingChegando in ingredienteChegando)
+                {
+                    // o item é novo
+                    if (!ingredientesJaExistiam.Any(x => x.Id == ingChegando.Id))
+                    {
+                        // temos que adicionar o novo
+                        var ingDoBanco = _ingredienteServico.PesquisarID(ingChegando.Id);
+                        ingredientesJaExistiam.Add(ingDoBanco);
+                    }
+                }
+                // excluir os que foram retirados
+                for (int i = ingredientesJaExistiam.Count - 1; i >= 0; i--)
+                {
+                    var ingJaExistia = ingredientesJaExistiam[i];
+                    // o item foi removido
+                    if (!ingredienteChegando.Any(x => x.Id == ingJaExistia.Id))
+                    {
+                        // retira da lista do banco
+                        ingredientesJaExistiam.RemoveAt(i);
+                    }
+                }
+            }
+            else
+            {
+                // a nova lista não possuia nenhum item
+                ingredientesJaExistiam.Clear();
+            }
         }
 
         // DELETE /api/pizza/5

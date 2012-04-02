@@ -12,11 +12,10 @@ namespace Pizzaria.NHibernate.Mappings
             Map(x => x.Nome);
 
             HasManyToMany(x => x.Ingredientes)
-                .Table("Pizza_Ingredientes").AsBag()
+                .Table("Pizza_Ingredientes")
                 .ParentKeyColumn("Pizza_id")
-                .ChildKeyColumn("Ingredientes_id")
-                .Cascade.SaveUpdate()
-                .Cascade.Delete();
+                .ChildKeyColumn("Ingredientes_id");
+                //.Cascade.All();//é padrão
         }
     }
 }

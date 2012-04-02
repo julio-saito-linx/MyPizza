@@ -56,7 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAO.cs" />
-    <Compile Include="Helpers\BancoDadosCreator.cs" />
     <Compile Include="Helpers\CascadeConvention.cs" />
     <Compile Include="Helpers\NhCastle.cs" />
     <Compile Include="Helpers\EnumConvention.cs" />

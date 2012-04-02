@@ -84,6 +84,9 @@ namespace Pizzaria
             pizza.AcrescentarIngrediente(molhoDeTomate);
             pizza.AcrescentarIngrediente(muçarela);
             pizzaServico.Save(pizza);
+
+            pizza = new Pizza { Nome = "Pizza de vento" };
+            pizzaServico.Save(pizza);
         }
     }
 }
