@@ -1,3 +1,54 @@
+## Knockout controller helper + Asp.Net Web.API
+### 1. dependências externas
+  * jquery      : http://jquery.com/
+  * json2.js    : https://github.com/douglascrockford/JSON-js
+  * noty        : http://needim.github.com/noty/
+  * underscore  : http://documentcloud.github.com/underscore
+  * knockout.js : http://knockoutjs.com/
+
+### 2. bibliotecas
+#### helpers.js
+Classes
+  * primeiroMaiusculo
+  * exibirNoty
+
+
+#### ajaxConfig.js
+  * METHOD.(LIST|SHOW|PUT|POST|DELETE)
+  * ajaxConfig
+    * helper para facilitar chamadas REST ao Asp.Net Web.API
+  * tratarErrorCSharp
+    * classe para tratar os erros mais comuns do C#, retornados via JSON.
+
+#### ControllerKnockout.js
+Cria automaticamente um view model padrão:
+  * lista
+  * selecionar
+  * id
+  * selecionado
+  * foiAlterado
+  * excluir
+  * novo
+  * adicionarCancelar
+  * salvar
+  * atualizando
+  * removerCancelar
+
+Exemplo:
+`
+// Controller ingredienteVm
+    configControllerKnockout.viewMoldel = self.ingredienteVm = { };
+    configControllerKnockout.nomeController = "ingrediente";
+    configControllerKnockout.dadosDto = ingredientesDto;
+    configControllerKnockout.ClasseViewModel = IngredienteVM;
+    configControllerKnockout.configuradorAjax = configuradorAjax;
+    new ControllerKnockout(configControllerKnockout);
+`
+#### LocalViewModels.js
+Entidades com as propriedades de mesmo nome e tipo do servidor.
+  * propriedades são observáveis
+
+
 ## 5 passos para configurar um projeto Asp.Net Web Application com FluentNhibernate e Castle Windsor
 
 ### 1. referenciar as DLLs
