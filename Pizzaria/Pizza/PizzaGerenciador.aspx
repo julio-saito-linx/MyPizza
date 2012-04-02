@@ -52,28 +52,28 @@
                     <select multiple="multiple" height="5" data-bind="
                         options:Ingredientes, 
                         optionsText:'Nome', 
-                        selectedOptions:$root.ingredientesToRemove">
+                        selectedOptions:$root.pizzaVm.ingredientesToRemove">
                     </select>
                     <div>
                         <button data-bind="
-                        click: $root.removerIngredientes, 
-                        enable: $root.ingredientesToRemove().length > 0">
+                        click: $root.pizzaVm.removerIngredientes, 
+                        enable: $root.pizzaVm.ingredientesToRemove().length > 0">
                             remover</button>
                     </div>
-                    <form data-bind="submit:$root.incluirIngredientesPizza">
+                    <form data-bind="submit:$root.pizzaVm.incluirIngredientesPizza">
                         <br />
                         <span>Ingredientes disponíveis:</span>
                         <br />
                         <div class="dado">
                             <select multiple="multiple" height="5" data-bind="
-                            options: $root.ingredientesAindaNaoInseridos,
+                            options: $root.pizzaVm.ingredientesAindaNaoInseridos,
                             optionsText: 'Nome',
-                            selectedOptions: $root.ingredientesToAdd,
-                            enable: $root.ingredientesAindaNaoInseridos().length > 0">
+                            selectedOptions: $root.pizzaVm.ingredientesToAdd,
+                            enable: $root.pizzaVm.ingredientesAindaNaoInseridos().length > 0">
                             </select>
                         </div>
                         <div>
-                            <button type="submit" data-bind="enable: $root.ingredientesToAdd().length > 0">
+                            <button type="submit" data-bind="enable: $root.pizzaVm.ingredientesToAdd().length > 0">
                                 adicionar</button>
                         </div>
                     </form>
@@ -89,27 +89,27 @@
             <div id="divIngredientesEditor">
                 <span>Ingredientes:</span>
                 <div class="dado">
-                    <div id="listaIngrediente" data-bind="foreach : todosIngredientes">
-                        <div data-bind="css: {pizzaSelecionada: Id() === $root.ingredienteId() }">
-                            <div id="itemIngredienteId" data-bind="text : Id, click : $root.selecionarIngrediente"></div>
-                            <div id="itemIngredienteNome" data-bind="text : Nome, click : $root.selecionarIngrediente"></div>
+                    <div id="listaIngrediente" data-bind="foreach : ingredienteVm.lista">
+                        <div data-bind="css: {pizzaSelecionada: Id() === $root.ingredienteVm.id() }">
+                            <div id="itemIngredienteId" data-bind="text : Id, click : $root.ingredienteVm.selecionar"></div>
+                            <div id="itemIngredienteNome" data-bind="text : Nome, click : $root.ingredienteVm.selecionar"></div>
                         </div>
                     </div>
                 </div>
                 <span>Ingrediente.Nome:</span>
                 <br />
                 <div class="dado">
-                    <span data-bind="text: ingredienteId()"></span>
-                    <input id="txtIngredienteNome" data-bind="value: ingredienteSelecionado().Nome"></input>
+                    <span data-bind="text: ingredienteVm.id()"></span>
+                    <input id="txtIngredienteNome" data-bind="value: ingredienteVm.selecionado().Nome"></input>
                 </div>
             </div>
-            <button data-bind="click: novoIngrediente">
+            <button data-bind="click: ingredienteVm.novo">
                 novo
             </button>
-            <button data-bind="click: salvarIngrediente">
+            <button data-bind="click: ingredienteVm.salvar">
                 salvar
             </button>
-            <button data-bind="click: deletarIngrediente">
+            <button data-bind="click: ingredienteVm.excluir">
                 deletar
             </button>
         </div>
@@ -128,7 +128,8 @@
     <script src="../Scripts/underscore/underscore-min.js" type="text/javascript"> </script>
     <script src="../Scripts/knockout.debug.js" type="text/javascript"> </script>
     <script src="../Scripts/helpers.js" type="text/javascript"> </script>
-    <script src="../Scripts/ajaxRestHelper/ajaxRestHelper.js" type="text/javascript"> </script>
+    <script src="../Scripts/ajaxRestHelper/ajaxConfig.js" type="text/javascript"> </script>
     <script src="../Scripts/ajaxRestHelper/ControllerKnockout.js" type="text/javascript"></script>
+    <script src="../Scripts/ajaxRestHelper/LocalViewModels.js" type="text/javascript"></script>
     <script src="PizzaGerenciador.js" type="text/javascript"> </script>
 </html>

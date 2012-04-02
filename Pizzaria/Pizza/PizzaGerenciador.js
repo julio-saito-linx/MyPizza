@@ -2,8 +2,9 @@
 /// <reference path="~/Scripts/underscore/underscore-min.js" />
 /// <reference path="~/Scripts/jquery-1.7.1.js" />
 /// <reference path="~/Scripts/helpers.js" />
-/// <reference path="~/Scripts/ajaxRestHelper/ajaxRestHelper.js" />
+/// <reference path="~/Scripts/ajaxRestHelper/ajaxConfig.js" />
 /// <reference path="~/Scripts/ajaxRestHelper/ControllerKnockout.js" />
+/// <reference path="~/Scripts/ajaxRestHelper/LocalViewModels.js" />
 
 $().ready(function() {
     criarFadeVisible();
@@ -28,7 +29,7 @@ var inicializar = function() {
         callBackErrorsTo: tratarErrorCSharp,
         exibirNoty: true
     };
-    var configuradorAjax = new ConfiguradorAjax(configuracoesAjax, undefined);
+    var ajax = new ajaxConfig(configuracoesAjax);
 
 // Banco de dados local
 // base de dados retornados do servidor
@@ -41,9 +42,9 @@ var inicializar = function() {
 //  verifica se o doneContador já zerou para continuar
     var doneContador = 2; // QUANTIDADE DE CHAMADAS
 
-    chamarAjaxAsync(
+    ajax.ajaxAsync(
         "ingrediente",
-        configuradorAjax.METHOD_LIST,
+        METHOD.LIST,
         undefined,
         undefined,
         function(data) {
@@ -51,9 +52,9 @@ var inicializar = function() {
             sincronizaContinua();
         }
     );
-    chamarAjaxAsync(
+    ajax.ajaxAsync(
         "pizza",
-        configuradorAjax.METHOD_LIST,
+        METHOD.LIST,
         undefined,
         undefined,
         function(data) {
@@ -65,38 +66,34 @@ var inicializar = function() {
         doneContador--;
         if (doneContador === 0) {
 // continua o processo principal
-            inicializarViewModel(configuradorAjax, pizzasDto, ingredientesDto);
+            inicializarViewModelKnockout(ajax, pizzasDto, ingredientesDto);
         }
     };
 };
 
 
 // ///////////////////////////////////////////////////
-// inicializarViewModel //////////////////////////////
+// inicializarViewModelKnockoutKnockout //////////////////////////////
 // ---------------------------------------------------
 // cria o view model e aplica no knockout
 // ---------------------------------------------------
 // ///////////////////////////////////////////////////
-var inicializarViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
+var inicializarViewModelKnockout = function(configuradorAjax, pizzasDto, ingredientesDto) {
 // inicializa o viewModel
     var pizzasViewModel = new MainViewModel(configuradorAjax, pizzasDto, ingredientesDto);
-    configuradorAjax.viewModel = pizzasViewModel;
 
 // seleciona a primeira pizza logo de cara
     if (pizzasViewModel.pizzaVm.lista().length > 0) {
         pizzasViewModel.pizzaVm.selecionar(pizzasViewModel.pizzaVm.lista()[0]);
     }
 // seleciona a primeira pizza logo de cara
-    if (pizzasViewModel.todosIngredientes().length > 0) {
-        pizzasViewModel.selecionarIngrediente(pizzasViewModel.todosIngredientes()[0]);
+    if (pizzasViewModel.ingredienteVm.lista().length > 0) {
+        pizzasViewModel.ingredienteVm.selecionar(pizzasViewModel.ingredienteVm.lista()[0]);
     }
 
 // This makes Knockout get to work
     ko.applyBindings(pizzasViewModel);
 };
-
-
-
 
 
 // //////////////////////////////////////////////////////////////////////////////
@@ -107,35 +104,59 @@ var inicializarViewModel = function(configuradorAjax, pizzasDto, ingredientesDto
 //  - pizzasDto;
 //  - ingredientesDto;
 // //////////////////////////////////////////////////////////////////////////////
-var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
+var MainViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
     var self = this;
 
-    // inicializa o configurador de controlers
-    //todo: passar configuração via objeto para ficar mais claro
+    self.exibirDebug = function() {
+        $("#divDebug").toggle();
+    };
 
-    // Controller pizzaVm
-    configControllerKnockout.viewMoldel = self.pizzaVm = {};
+// inicializa o configurador de controlers
+//todo: passar configuração via objeto para ficar mais claro
+
+//  vmKO.lista
+//  vmKO.selecionar
+//  vmKO.id
+//  vmKO.selecionado
+//  vmKO.foiAlterado
+//  vmKO.excluir
+//  vmKO.novo
+//  vmKO.adicionarCancelar
+//  vmKO.salvar
+//  vmKO.atualizando
+//  vmKO.removerCancelar
+
+// Controller pizzaVm
+    configControllerKnockout.viewMoldel = self.pizzaVm = { };
     configControllerKnockout.nomeController = "pizza";
     configControllerKnockout.dadosDto = pizzasDto;
     configControllerKnockout.ClasseViewModel = PizzaVM;
     configControllerKnockout.configuradorAjax = configuradorAjax;
-    var pizzaVmController = new ControllerKnockout(configControllerKnockout);
+    new ControllerKnockout(configControllerKnockout);
 
 
-    // todos ingredientes disponíveis
-    self.todosIngredientes = ko.observableArray(_.map(ingredientesDto, function (ingredienteDto) {
-        return new IngredienteVM(ingredienteDto);
-    }));
+// Controller ingredienteVm
+    configControllerKnockout.viewMoldel = self.ingredienteVm = { };
+    configControllerKnockout.nomeController = "ingrediente";
+    configControllerKnockout.dadosDto = ingredientesDto;
+    configControllerKnockout.ClasseViewModel = IngredienteVM;
+    configControllerKnockout.configuradorAjax = configuradorAjax;
+    new ControllerKnockout(configControllerKnockout);
 
-    // Ingredientes não inseridos da pizza selecionada
-    self.ingredientesAindaNaoInseridos = ko.computed(function () {
+
+// ///////////////////////////////
+// EXTRA - Ingredientes nas PIZZAS
+// ///////////////////////////////
+
+// Ingredientes não inseridos da pizza selecionada
+    self.pizzaVm.ingredientesAindaNaoInseridos = ko.computed(function() {
         var ingNaoInseridosLista = [];
         if (!(_.isUndefined(self.pizzaVm.selecionado()))) {
-            var ids = _.map(self.pizzaVm.selecionado().Ingredientes(), function (ingPizza) {
+            var ids = _.map(self.pizzaVm.selecionado().Ingredientes(), function(ingPizza) {
                 return ingPizza.Id();
             });
 
-            ingNaoInseridosLista = _.filter(self.todosIngredientes(), function (item) {
+            ingNaoInseridosLista = _.filter(self.ingredienteVm.lista(), function(item) {
                 return (ids.indexOf(item.Id()) === -1);
             });
         }
@@ -143,154 +164,33 @@ var MainViewModel = function (configuradorAjax, pizzasDto, ingredientesDto) {
     }, self);
 
 
-    // remover ingredientes
-    self.ingredientesToRemove = ko.observableArray();
-    self.removerIngredientes = function () {
-        self.pizzaVm.selecionado().Ingredientes.removeAll(self.ingredientesToRemove());
-        self.ingredientesToRemove([]); // Clear selection
+// remover ingredientes
+    self.pizzaVm.ingredientesToRemove = ko.observableArray();
+    self.pizzaVm.removerIngredientes = function() {
+        self.pizzaVm.selecionado().Ingredientes.removeAll(self.pizzaVm.ingredientesToRemove());
+        self.pizzaVm.ingredientesToRemove([]); // Clear selection
     };
-    self.pizzaVm.removerCancelar = function () {
-        self.ingredientesToRemove([]); // Clear selection
+    self.pizzaVm.removerCancelar = function() {
+        self.pizzaVm.ingredientesToRemove([]); // Clear selection
     };
 
 
-    // inserir novo ingrediente
-    self.ingredientesToAdd = ko.observableArray();
-    self.incluirIngredientesPizza = function () {
-        if (self.ingredientesToAdd() != "") // Prevent blanks
+// inserir novo ingrediente
+    self.pizzaVm.ingredientesToAdd = ko.observableArray();
+    self.pizzaVm.incluirIngredientesPizza = function() {
+        if (self.pizzaVm.ingredientesToAdd() != "") // Prevent blanks
         {
             var ingredientes = self.pizzaVm.selecionado().Ingredientes;
-            _.each(self.ingredientesToAdd(), function (ing) {
+            _.each(self.pizzaVm.ingredientesToAdd(), function(ing) {
                 ingredientes.push(ing);
             });
         }
     };
-    self.pizzaVm.adicionarCancelar = function () {
-        self.ingredientesToAdd([]); // Clear selection
+    self.pizzaVm.adicionarCancelar = function() {
+        self.pizzaVm.ingredientesToAdd([]); // Clear selection
     };
-
-    self.exibirDebug = function () {
-        $("#divDebug").toggle();
-    };
-
-
-    self.ingredienteId = ko.observable(0);
-    self.ingredienteSelecionado = ko.observable();
-    self.selecionarIngrediente = function (ingrediente) {
-        self.ingredienteSelecionado(ingrediente);
-        self.ingredienteId(ingrediente.Id());
-    };
-
-    self.novoIngrediente = function () {
-        var novoIngrediente = new IngredienteVM();
-        self.todosIngredientes.push(novoIngrediente);
-        self.selecionarIngrediente(novoIngrediente);
-        $("#txtIngredienteNome").focus();
-    };
-
-    self.salvarIngrediente = function () {
-        self.pizzaVm.atualizando(true);
-
-        var metodoAjax;
-        if (self.ingredienteId() === 0) {
-            metodoAjax = configuradorAjax.METHOD_POST;
-        } else {
-            metodoAjax = configuradorAjax.METHOD_PUT;
-        }
-        chamarAjaxAsync(
-            "ingrediente",
-            metodoAjax,
-            undefined,
-            ko.toJSON(self.ingredienteSelecionado),
-            function (data) {
-                self.pizzaVm.atualizando(false);
-                if (metodoAjax === configuradorAjax.METHOD_POST) {
-                    self.ingredienteSelecionado().Id(data);
-                }
-                self.selecionarIngrediente(self.ingredienteSelecionado());
-            });
-
-    };
-
-    self.deletarIngrediente = function () {
-        self.pizzaVm.atualizando(true);
-        chamarAjaxAsync(
-            "ingrediente",
-            configuradorAjax.METHOD_DELETE,
-            self.ingredienteSelecionado().Id(),
-            undefined,
-            function (data) {
-                self.pizzaVm.atualizando(false);
-
-                var novaListaIngredientes = _.reject(self.todosIngredientes(), function (ingrediente) {
-                    return ingrediente.Id() === self.ingredienteId();
-                });
-                self.todosIngredientes(novaListaIngredientes);
-            });
-
-    };
-
-
 };
 
-// ////////////////////////
-//  PizzaVM :: VIEWMODEL
-// ////////////////////////
-var PizzaVM = function(pizza) {
-    var self = this;
-    self.Id = ko.observable(0);
-    self.Nome = ko.observable("");
-    self.Ingredientes = ko.observableArray([]);
-
-    if (!_.isUndefined(pizza)) {
-        self.Id = ko.observable(pizza.Id);
-        self.Nome = ko.observable(pizza.Nome);
-        self.Ingredientes = ko.observableArray();
-        _.each(pizza.Ingredientes, function(ing) {
-            self.Ingredientes().push(new IngredienteVM(ing));
-        });
-    }
-};
-
-// ////////////////////////
-//  IngredienteVM :: VIEWMODEL
-// ////////////////////////
-var IngredienteVM = function(ingrediente) {
-    var self = this;
-    self.Id = ko.observable(0);
-    self.Nome = ko.observable("");
-
-    if (!_.isUndefined(ingrediente)) {
-        self.Id = ko.observable(ingrediente.Id);
-        self.Nome = ko.observable(ingrediente.Nome);
-    }
-};
-
-// ///////////////////////////////////////////////
-// tratamento de erros especifico para NHibernate
-// ///////////////////////////////////////////////
-var tratarErrorCSharp = function(jqXHR) {
-    var erroCSharp = JSON.parse(jqXHR.responseText, undefined);
-    console.info(erroCSharp);
-
-    if (erroCSharp.ExceptionType === "NHibernate.Exceptions.GenericADOException") {
-        if (!_.isUndefined(erroCSharp.InnerException)) {
-            var inner = erroCSharp.InnerException;
-            if (inner.ExceptionType === "System.Data.SqlClient.SqlException") {
-// trata pau de SQL
-                exibirNotyErro(":: ERRO DE SQL ::" + "<br /><br />"
-                    + "> " + erroCSharp.ExceptionType + "<br />"
-                    + "> " + inner.ExceptionType + "<br /><br />"
-                    + inner.Message);
-            }
-        }
-    } else {
-//pau genérico
-        exibirNotyErro(":: ERRO C# GENERICO ::" + "<br /><br />"
-            + "> " + erroCSharp.ExceptionType + "<br />"
-            + erroCSharp.Message);
-    }
-};
 
 var criarFadeVisible = function() {
 // extendendo os bindings

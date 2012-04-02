@@ -102,6 +102,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AutoCriarBancoDados.aspx" />
+    <Content Include="IngredienteTable\IngredienteTable.aspx" />
+    <Content Include="IngredienteTable\IngredienteTable.css" />
+    <Content Include="IngredienteTable\IngredienteTable.js" />
+    <Content Include="IngredienteTable\README.TXT" />
     <Content Include="Default.aspx" />
     <Content Include="IMG\Dark_Metal_Wallpaper_by_IMdotMS.jpg" />
     <Content Include="IMG\icon_loading.gif" />
@@ -120,8 +124,9 @@
     <Content Include="needim-noty-2481627\js\jquery.noty.js" />
     <Content Include="Pizza\PizzaGerenciador.aspx" />
     <Content Include="Pizza\README.TXT" />
-    <Content Include="Scripts\ajaxRestHelper\ajaxRestHelper.js" />
+    <Content Include="Scripts\ajaxRestHelper\ajaxConfig.js" />
     <Content Include="Scripts\ajaxRestHelper\ControllerKnockout.js" />
+    <Content Include="Scripts\ajaxRestHelper\LocalViewModels.js" />
     <Content Include="Scripts\helpers.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />

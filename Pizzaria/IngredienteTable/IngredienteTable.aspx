@@ -1,0 +1,81 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Ingrediente Table</title>
+    <link href="IngredienteTable.css" rel="stylesheet" type="text/css" />
+    <link href="../needim-noty-2481627/css/jquery.noty.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="bloco">
+        <div class="subTitulo">
+            Lista de Ingredientes
+            <div id="divImagemAjax">
+                &nbsp;
+                <img data-bind="visible : ingredienteVm.atualizando" src="../IMG/main_black.gif" />
+            </div>
+        </div>
+        <div class="divConteudo">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            Id
+                        </th>
+                        <th>
+                            Nome
+                        </th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach : ingredienteVm.lista">
+                    <tr data-bind="css: {linhaSelecionada : Id === $root.ingredienteVm.id() }, click: $root.ingredienteVm.selecionar">
+                        <td data-bind="text:Id" />
+                        <td data-bind="text:Nome" />
+                        <td data-bind="click:$root.ingredienteVm.excluir" >X</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="bloco">
+        <div class="subTitulo">
+            Detalhe
+        </div>
+        <div class="divConteudo" data-bind="with : ingredienteVm.selecionado">
+            <div>
+                <div class="campo">
+                    Id
+                </div>
+                <div class="dado">
+                    <span data-bind="text : Id"></span>
+                </div>
+            </div>
+            <div>
+                <div class="campo">
+                    Nome
+                </div>
+                <div class="dado">
+                    <input data-bind="value : Nome"/>
+                </div>
+            </div>
+        </div>
+    </div>    <div id="divDebug">
+        <h3>
+            debug</h3>
+        <div class="itemDebug">
+            <pre data-bind="text: JSON.stringify(ko.toJS($data), null, 2)" id="preDebug"></pre>
+        </div>
+    </div>
+</body>
+<script src="../Scripts/jquery-1.7.1.min.js" type="text/javascript"> </script>
+<script src="../Scripts/json2.js" type="text/javascript"> </script>
+<script src="../needim-noty-2481627/js/jquery.noty.js" type="text/javascript"> </script>
+<script src="../Scripts/underscore/underscore-min.js" type="text/javascript"> </script>
+<script src="../Scripts/knockout.debug.js" type="text/javascript"> </script>
+<script src="../Scripts/helpers.js" type="text/javascript"> </script>
+<script src="../Scripts/ajaxRestHelper/ajaxConfig.js" type="text/javascript"> </script>
+<script src="../Scripts/ajaxRestHelper/ControllerKnockout.js" type="text/javascript"> </script>
+<script src="../Scripts/ajaxRestHelper/LocalViewModels.js" type="text/javascript"> </script>
+<script src="IngredienteTable.js" type="text/javascript"> </script>
+</html>

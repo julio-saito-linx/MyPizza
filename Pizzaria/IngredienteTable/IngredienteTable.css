@@ -1,0 +1,99 @@
+﻿body
+{
+    color: #333;
+    font-family: Verdana;
+    font-size: 1.1em;
+    margin: 10px;
+    padding: 10px;
+    background-image: url('../IMG/Dark_Metal_Wallpaper_by_IMdotMS.jpg')
+    
+}
+
+option, input{
+    font-family: Verdana;
+    font-size: 1.1em;
+}
+
+.bloco {
+    float: left;
+    width: 350px;
+}
+
+.subTitulo {
+    padding: 10px;
+    font-family: Arial;
+    font-size: 1.3em;
+    color: #ccc;
+}
+#divImagemAjax 
+{
+    position: absolute;
+    top: 20px;
+    left: 170px;
+}
+
+.divConteudo {
+    padding: 10px;
+    width: 250px;
+    float: left;
+    border: solid 2px;
+    border-color: #aaa;
+    background-color: #ddd;
+}
+
+#divDebug {
+    background: #FFF;
+    color: #555;
+    font-family: Consolas;
+    font-size: 1.00em;
+    margin: 5px;
+    padding: 20px;
+    float: right;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+#divDebug h3{
+    margin: 2px;
+    padding: 1px;
+    font-family: Consolas;
+    font-size: 1.30em;
+}
+
+table td,th {
+    padding: 8px;
+    text-align: left;
+    border: solid 2px;
+    border-color: #aaa;
+}
+
+table td 
+{
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.linhaSelecionada {
+    background-color: #fff;
+}
+
+.campo {
+    color: #555;
+    font-size: 1.0em;
+    padding: 3px;
+    display: inline;
+}
+
+.dado {
+    color: #333;
+    font-weight: bold;
+    font-size: 0.90em;
+    padding: 3px;
+    display: inline;
+}
+
+.dado input{
+    width: 170px;
+}
+

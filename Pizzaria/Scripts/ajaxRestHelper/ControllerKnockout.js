@@ -40,9 +40,6 @@ var ControllerKnockout = function (config) {
         vmKO.selecionado(item);
 // guarda o estado inicial do novo item
         jsonItem = ko.toJSON(vmKO.selecionado);
-// limpa as seleções dos ingredientes
-        vmKO.removerCancelar();
-        vmKO.adicionarCancelar();
     };
     var jsonItem = undefined;
 // selecionar item
@@ -86,19 +83,17 @@ var ControllerKnockout = function (config) {
 
         var vmSerializado = ko.toJSON(vmKO.selecionado);
 
-        var metodoHttp = configuradorAjax.METHOD_PUT;
+        var metodoHttp = METHOD.PUT;
         if (vmKO.id()() === 0) {
-            metodoHttp = configuradorAjax.METHOD_POST;
+            metodoHttp = METHOD.POST;
         }
-        chamarAjaxAsync(
+        configuradorAjax.ajaxAsync(
             nomeController,
             metodoHttp,
             vmKO.selecionado().Id(),
             vmSerializado,
             function (data) {
                 vmKO.atualizando(false);
-                vmKO.removerCancelar();
-                vmKO.adicionarCancelar();
             });
     };
 
@@ -116,15 +111,13 @@ var ControllerKnockout = function (config) {
         vmKO.lista(novaLista);
 
         vmKO.atualizando(true);
-        chamarAjaxAsync(
+        configuradorAjax.ajaxAsync(
             nomeController,
-            configuradorAjax.METHOD_DELETE,
+            METHOD.DELETE,
             vmKO.selecionado().Id(),
             undefined,
             function (data) {
                 vmKO.atualizando(false);
-                vmKO.removerCancelar();
-                vmKO.adicionarCancelar();
             });
     };
 };
