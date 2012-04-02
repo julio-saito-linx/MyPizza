@@ -36,15 +36,15 @@ Cria automaticamente um view model padrão:
 
 Exemplo:
 
-`
-// Controller ingredienteVm
+```
+    // Controller ingredienteVm
     configControllerKnockout.viewMoldel = self.ingredienteVm = { };
     configControllerKnockout.nomeController = "ingrediente";
     configControllerKnockout.dadosDto = ingredientesDto;
     configControllerKnockout.ClasseViewModel = IngredienteVM;
     configControllerKnockout.configuradorAjax = configuradorAjax;
     new ControllerKnockout(configControllerKnockout);
-`
+```
 #### LocalViewModels.js
 Entidades com as propriedades de mesmo nome e tipo do servidor.
   * propriedades são observáveis
