@@ -1,5 +1,6 @@
 ## Knockout controller helper + Asp.Net Web.API
 ### 1. dependências externas
+
   * jquery      : http://jquery.com/
   * json2.js    : https://github.com/douglascrockford/JSON-js
   * noty        : http://needim.github.com/noty/
@@ -9,6 +10,7 @@
 ### 2. bibliotecas
 #### helpers.js
 Classes
+
   * primeiroMaiusculo
   * exibirNoty
 
@@ -22,6 +24,7 @@ Classes
 
 #### ControllerKnockout.js
 Cria automaticamente um view model padrão:
+
   * lista
   * selecionar
   * id
@@ -47,6 +50,7 @@ Exemplo:
 ```
 #### LocalViewModels.js
 Entidades com as propriedades de mesmo nome e tipo do servidor.
+
   * propriedades são observáveis
 
 
