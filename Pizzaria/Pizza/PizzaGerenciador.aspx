@@ -5,7 +5,7 @@
     <head runat="server">
         <title>Pizza Gerenciador</title>
         <link href="PizzaGerenciador.css" rel="stylesheet" type="text/css" />
-        <link href="../needim-noty-2481627/css/jquery.noty.css" rel="stylesheet" type="text/css" />
+        <link href="../Scripts/noty/css/jquery.noty.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <%--Todas as pizzas--%>
@@ -124,7 +124,7 @@
     </body>
     <script src="../Scripts/jquery-1.7.1.min.js" type="text/javascript"> </script>
     <script src="../Scripts/json2.js" type="text/javascript"> </script>
-    <script src="../needim-noty-2481627/js/jquery.noty.js" type="text/javascript"> </script>
+    <script src="../Scripts/noty/js/jquery.noty.js" type="text/javascript"></script>
     <script src="../Scripts/underscore/underscore-min.js" type="text/javascript"> </script>
     <script src="../Scripts/knockout.debug.js" type="text/javascript"> </script>
     <script src="../Scripts/helpers.js" type="text/javascript"> </script>

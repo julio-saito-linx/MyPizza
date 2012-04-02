@@ -105,25 +105,23 @@
     <Content Include="IngredienteTable\IngredienteTable.aspx" />
     <Content Include="IngredienteTable\IngredienteTable.css" />
     <Content Include="IngredienteTable\IngredienteTable.js" />
-    <Content Include="IngredienteTable\README.TXT" />
     <Content Include="Default.aspx" />
     <Content Include="IMG\Dark_Metal_Wallpaper_by_IMdotMS.jpg" />
     <Content Include="IMG\icon_loading.gif" />
     <Content Include="IMG\main_black.gif" />
     <Content Include="Pizza\PizzaGerenciador.js" />
     <Content Include="Pizza\PizzaGerenciador.css" />
-    <Content Include="needim-noty-2481627\.gitignore" />
-    <Content Include="needim-noty-2481627\css\jquery.noty.css" />
-    <Content Include="needim-noty-2481627\img\alert-lines.png" />
-    <Content Include="needim-noty-2481627\img\closelabel.png" />
-    <Content Include="needim-noty-2481627\img\mitgux\alert.png" />
-    <Content Include="needim-noty-2481627\img\mitgux\bg.png" />
-    <Content Include="needim-noty-2481627\img\mitgux\close.png" />
-    <Content Include="needim-noty-2481627\img\mitgux\done.png" />
-    <Content Include="needim-noty-2481627\img\mitgux\error.png" />
-    <Content Include="needim-noty-2481627\js\jquery.noty.js" />
+    <Content Include="Scripts\noty\.gitignore" />
+    <Content Include="Scripts\noty\css\jquery.noty.css" />
+    <Content Include="Scripts\noty\img\alert-lines.png" />
+    <Content Include="Scripts\noty\img\closelabel.png" />
+    <Content Include="Scripts\noty\img\mitgux\alert.png" />
+    <Content Include="Scripts\noty\img\mitgux\bg.png" />
+    <Content Include="Scripts\noty\img\mitgux\close.png" />
+    <Content Include="Scripts\noty\img\mitgux\done.png" />
+    <Content Include="Scripts\noty\img\mitgux\error.png" />
+    <Content Include="Scripts\noty\js\jquery.noty.js" />
     <Content Include="Pizza\PizzaGerenciador.aspx" />
-    <Content Include="Pizza\README.TXT" />
     <Content Include="Scripts\ajaxRestHelper\ajaxConfig.js" />
     <Content Include="Scripts\ajaxRestHelper\ControllerKnockout.js" />
     <Content Include="Scripts\ajaxRestHelper\LocalViewModels.js" />
@@ -184,7 +182,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="needim-noty-2481627\README.markdown" />
+    <None Include="Scripts\noty\README.markdown" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
