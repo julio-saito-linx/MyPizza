@@ -18,7 +18,7 @@
             </div>
             <div id="divPizzas" data-bind="foreach: pizzaVm.lista">
                 <div id="divPizza" class="pizzaEstilo" data-bind="
-                    css: {pizzaSelecionada : Id === $root.pizzaVm.id() },
+                    css: {pizzaSelecionada : $root.pizzaVm.selecionado() && Id === $root.pizzaVm.selecionado().Id },
                     click: $root.pizzaVm.selecionar">
                     <span data-bind="text: Id"></span>- <span data-bind="text: Nome"></span>
                     <div id="divIngredientes" data-bind="foreach: Ingredientes">
@@ -90,7 +90,7 @@
                 <span>Ingredientes:</span>
                 <div class="dado">
                     <div id="listaIngrediente" data-bind="foreach : ingredienteVm.lista">
-                        <div data-bind="css: {pizzaSelecionada: Id() === $root.ingredienteVm.id() }">
+                        <div data-bind="css: {pizzaSelecionada: Id() === $root.ingredienteVm.selecionado().Id() }">
                             <div id="itemIngredienteId" data-bind="text : Id, click : $root.ingredienteVm.selecionar"></div>
                             <div id="itemIngredienteNome" data-bind="text : Nome, click : $root.ingredienteVm.selecionar"></div>
                         </div>
@@ -99,7 +99,7 @@
                 <span>Ingrediente.Nome:</span>
                 <br />
                 <div class="dado">
-                    <span data-bind="text: ingredienteVm.id()"></span>
+                    <span data-bind="text: ingredienteVm.selecionado().Id()"></span>
                     <input id="txtIngredienteNome" data-bind="value: ingredienteVm.selecionado().Nome"></input>
                 </div>
             </div>
