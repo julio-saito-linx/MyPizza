@@ -29,7 +29,7 @@
                     </tr>
                 </thead>
                 <tbody data-bind="foreach : ingredienteVm.lista">
-                    <tr data-bind="css: {linhaSelecionada : Id === $root.ingredienteVm.id() }, click: $root.ingredienteVm.selecionar">
+                    <tr data-bind="css: {linhaSelecionada : Id === $root.ingredienteVm.selecionado().Id }, click: $root.ingredienteVm.selecionar">
                         <td data-bind="text:Id" />
                         <td data-bind="text:Nome" />
                         <td data-bind="click:$root.ingredienteVm.excluir" >X</td>

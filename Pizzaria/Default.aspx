@@ -23,6 +23,9 @@
         <a href="Pizza/PizzaGerenciador.aspx">Pizza/PizzaGerenciador.aspx</a>
     </div>
     <div>
+        <a href="IngredienteTable/IngredienteTable.aspx">IngredienteTable/IngredienteTable.aspx</a>
+    </div>
+    <div>
         <a href="AutoCriarBancoDados.aspx">AutoCriarBancoDados.aspx</a>
     </div>
     </form>

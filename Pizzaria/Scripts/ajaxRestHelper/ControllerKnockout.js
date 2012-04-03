@@ -28,15 +28,13 @@ var ControllerKnockout = function (config) {
 
 // em processo de comunicação com o servidor
     vmKO.atualizando = ko.observable(false);
-// item selecionado
-    vmKO.selecionado = ko.observable();
+// item selecionado, inicia com o primeiro
+    vmKO.selecionado = ko.observable(viewModelLista[0]);
 // somente o id que estiver selecionado
-    vmKO.id = ko.observable();
     vmKO.selecionar = function (item) {
 // salva o item anterior
         vmKO.salvar();
-// define o novo item selecionado
-        vmKO.id(item.Id);
+// define o novo ITEM selecionado
         vmKO.selecionado(item);
 // guarda o estado inicial do novo item
         jsonItem = ko.toJSON(vmKO.selecionado);
@@ -84,7 +82,7 @@ var ControllerKnockout = function (config) {
         var vmSerializado = ko.toJSON(vmKO.selecionado);
 
         var metodoHttp = METHOD.PUT;
-        if (vmKO.id()() === 0) {
+        if (vmKO.selecionado().Id() === 0) {
             metodoHttp = METHOD.POST;
         }
         configuradorAjax.ajaxAsync(
@@ -106,7 +104,7 @@ var ControllerKnockout = function (config) {
     self.excluir = function (vmKO) {
 
         var novaLista = _.reject(vmKO.lista(), function (item) {
-            return item.Id() === vmKO.id()();
+            return item.Id() === vmKO.selecionado().Id();
         });
         vmKO.lista(novaLista);
 

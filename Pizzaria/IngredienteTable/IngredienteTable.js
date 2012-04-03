@@ -83,10 +83,8 @@ var MainViewModel = function(configuradorAjax, ingredientesDto) {
 //  vmKO.foiAlterado
 //  vmKO.excluir
 //  vmKO.novo
-//  vmKO.adicionarCancelar
 //  vmKO.salvar
 //  vmKO.atualizando
-//  vmKO.removerCancelar
 
 // Controller ingredienteVm
     configControllerKnockout.viewMoldel = self.ingredienteVm = { };
