@@ -28,8 +28,10 @@ var ControllerKnockout = function (config) {
 
 // em processo de comunicação com o servidor
     vmKO.atualizando = ko.observable(false);
+    
 // item selecionado, inicia com o primeiro
     vmKO.selecionado = ko.observable(viewModelLista[0]);
+    
 // somente o id que estiver selecionado
     vmKO.selecionar = function (item) {
 // salva o item anterior
@@ -39,8 +41,9 @@ var ControllerKnockout = function (config) {
 // guarda o estado inicial do novo item
         jsonItem = ko.toJSON(vmKO.selecionado);
     };
-    var jsonItem = undefined;
+
 // selecionar item
+    var jsonItem = undefined;
     vmKO.foiAlterado = function () {
         if (!_.isUndefined(jsonItem)) {
             var jsonItemAtual = ko.toJSON(vmKO.selecionado);
@@ -52,23 +55,18 @@ var ControllerKnockout = function (config) {
 // [GET] 
     vmKO.lista = ko.observableArray(viewModelLista);
 
-// [POST/PUT] 
-    vmKO.salvar = function () {
-        self.salvar(vmKO);
-    };
 // [POST] 
     vmKO.novo = function () {
-        self.novo(vmKO);
-        $("#txtPizzaNome").focus();
-    };
-// [DELETE] 
-    vmKO.excluir = function () {
-        self.excluir(vmKO);
+        var novoVm = new ClasseViewModel();
+        vmKO.lista.push(novoVm);
+        vmKO.selecionar(novoVm);
     };
 
-    self.salvar = function (vmKO) {
+// [POST/PUT] 
+    vmKO.salvar = function () {
+
+// não existe item selecionado, cai fora
         if (_.isUndefined(vmKO.selecionado)) {
-// não existe item selecionada
             return;
         }
 
@@ -77,14 +75,22 @@ var ControllerKnockout = function (config) {
             return;
         }
 
+// marca como em processo de atualização, fazendo alguma forma de comunicação
+// visual com o usuário informar que o processo está em execução.
+// Geralmente utilizamos uma animação GIF com a bolinha rodando
         vmKO.atualizando(true);
 
+// guarda o novo objeto em JSON, para posteriores comparações
         var vmSerializado = ko.toJSON(vmKO.selecionado);
 
         var metodoHttp = METHOD.PUT;
         if (vmKO.selecionado().Id() === 0) {
+// se o Id estiver zerado, significa que é um item novo.
             metodoHttp = METHOD.POST;
         }
+
+
+// chamada ajax
         configuradorAjax.ajaxAsync(
             nomeController,
             metodoHttp,
@@ -95,14 +101,8 @@ var ControllerKnockout = function (config) {
             });
     };
 
-    self.novo = function (vmKO) {
-        var novoVm = new ClasseViewModel();
-        vmKO.lista.push(novoVm);
-        vmKO.selecionar(novoVm);
-    };
-
-    self.excluir = function (vmKO) {
-
+// [DELETE] 
+    vmKO.excluir = function () {
         var novaLista = _.reject(vmKO.lista(), function (item) {
             return item.Id() === vmKO.selecionado().Id();
         });
