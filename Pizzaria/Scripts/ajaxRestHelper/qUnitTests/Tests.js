@@ -1,15 +1,27 @@
+/// <reference path="../../jquery-1.7.1.js" />
+/// <reference path="../../knockout.debug.js" />
+/// <reference path="../../underscore/underscore-min.js" />
+/// <reference path="qunit.js" />
+/// <reference path="jsmockito-1.0.4.js" />
+/// <reference path="jshamcrest-0.5.2.js" />
+/// <reference path="../ajaxConfig.js" />
+/// <reference path="../ControllerKnockout.js" />
+/// <reference path="../LocalViewModels.js" />
+
 var vmKO;
+JsHamcrest.Integration.QUnit();
+JsMockito.Integration.QUnit();
 
 var inicializarViewModel = function (configuradorAjax) {
 
     if (_.isUndefined(configuradorAjax)) {
-        configuradorAjax = { };
+        configuradorAjax = {};
     }
 
     // Inicializa o ViewModel
     var pizzaDto = [{ "Id": 1, "Ingredientes": [{ "Id": 3, "Nome": "Molho de Tomate" }, { "Id": 4, "Nome": "Ovo"}], "Nome": "Portuguesa" }, { "Id": 2, "Ingredientes": [{ "Id": 3, "Nome": "Molho de Tomate" }, { "Id": 1, "Nome": "Cebola" }, { "Id": 5, "Nome": "Calabresa"}], "Nome": "Calabresa" }, { "Id": 3, "Ingredientes": [{ "Id": 3, "Nome": "Molho de Tomate" }, { "Id": 2, "Nome": "Muçarela"}], "Nome": "Muçarela" }, { "Id": 4, "Ingredientes": [], "Nome": "Pizza de vento"}];
     configControllerKnockout.viewMoldel = vmKO = {};
-    configControllerKnockout.nomeController = "ingrediente";
+    configControllerKnockout.nomeController = "pizza";
     configControllerKnockout.dadosDto = pizzaDto;
     configControllerKnockout.ClasseViewModel = PizzaVM;
     configControllerKnockout.configuradorAjax = configuradorAjax;
@@ -63,7 +75,7 @@ $(document).ready(function () {
         // verifica se foi alterada
         equal(true, vmKO.foiAlterado(), "foi alterado");
     });
-    test("04.vmKO.novo :: inclui novo item na lista", function () {
+    test("05.vmKO.novo :: inclui novo item na lista", function () {
         inicializarViewModel();
 
         equal(vmKO.lista().length, 4, "vmKO.lista().length === 4");
@@ -75,25 +87,27 @@ $(document).ready(function () {
         equal(vmKO.lista().length, 5, "vmKO.lista().length === 5");
         equal(0, vmKO.selecionado().Id(), "id deve ser zerado");
     });
-    test("05.vmKO.salvar :: salva no banco de dados via jQuery Ajax", function () {
+    test("06.vmKO.salvar :: salva no banco de dados via jQuery Ajax", function () {
+        var ajax_config = new ajaxConfig({});
+
         // mocka a dependencia de chamada do ajax
-        var confAjax = { };
-        confAjax.ajaxAsync = function (nomeController, metodo, id, dados, callback_done, callback_error) {
-            equal(nomeController, "pizz a");
-            equal(metodo, METHOD.PUT);
-            equal(id, 1);
-            equal(dados, '{ "Id": 1, "Ingredientes": [{ "Id": 3, "Nome": "Molho de Tomate" }, { "Id": 4, "Nome": "Ovo"}], "Nome": "Portuguesa 2" }');
-            equal(callback_done, undefined);
-            equal(callback_error, undefined);
-        };
+        ajax_config.ajaxAsync = mockFunction();
+
+        // prepara a chamada esperada
+        when(ajax_config.ajaxAsync)("pizza", METHOD.PUT, 1, '{"Id":1,"Nome":"Portuguesa 2","Ingredientes":[{"Id":3,"Nome":"Molho de Tomate"},{"Id":4,"Nome":"Ovo"}]}')
+            .then(function () {return "foo";
+        });
 
         // inicializa o VM
-        inicializarViewModel(confAjax);
+        inicializarViewModel(ajax_config);
 
+        // altera a primeira pizza
         var itemAtual = vmKO.selecionado;
         itemAtual().Nome("Portuguesa 2");
 
-
         vmKO.salvar();
+
+        // verifica se a função foi chamada com os parametros
+        verify(ajax_config.ajaxAsync)("pizza", METHOD.PUT, 1, '{"Id":1,"Nome":"Portuguesa 2","Ingredientes":[{"Id":3,"Nome":"Molho de Tomate"},{"Id":4,"Nome":"Ovo"}]}');
     });
 });

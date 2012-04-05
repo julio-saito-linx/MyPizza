@@ -25,13 +25,13 @@ var IngredienteVM = function (ingrediente) {
     self.Id = ko.observable(0);
     self.Nome = ko.observable("");
 
-    self.selecionado = ko.observable(false);
-    self.selecionarme = function () {
-        self.selecionado(true);
-    };
-    self.ecluirme = function () {
+//    self.selecionado = ko.observable(false);
+//    self.selecionarme = function () {
+//        self.selecionado(true);
+//    };
+//    self.ecluirme = function () {
 
-    };
+//    };
 
     if (!_.isUndefined(ingrediente)) {
         self.Id = ko.observable(ingrediente.Id);
