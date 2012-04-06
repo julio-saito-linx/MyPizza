@@ -120,6 +120,7 @@ var inicializarControllerKnockout = function (config) {
                 }
             },
             callback_error: function (jqXHR) {
+                vmKO.atualizando(false);
                 if (!_.isUndefined(vmKO.ajax_error)) {
                     vmKO.ajax_error(jqXHR);
                 }
@@ -130,11 +131,6 @@ var inicializarControllerKnockout = function (config) {
 
     // [DELETE] 
     vmKO.excluir = function () {
-        var novaLista = _.reject(vmKO.lista(), function (item) {
-            return item.Id() === vmKO.selecionado().Id();
-        });
-        vmKO.lista(novaLista);
-
         vmKO.atualizando(true);
 
         chamarAjax({
@@ -142,7 +138,13 @@ var inicializarControllerKnockout = function (config) {
             metodo: METHOD.DELETE,
             id: vmKO.selecionado().Id(),
             callback_done: function (data) {
+                // se conseguiu excluir no servidor
+                var novaLista = _.reject(vmKO.lista(), function (item) {
+                    return item.Id() === vmKO.selecionado().Id();
+                });
+                vmKO.lista(novaLista);
                 vmKO.atualizando(false);
+                
                 if (!_.isUndefined(vmKO.ajax_done)) {
                     vmKO.ajax_done(data);
                 }
@@ -151,6 +153,7 @@ var inicializarControllerKnockout = function (config) {
                 }
             },
             callback_error: function (jqXHR) {
+                vmKO.atualizando(false);
                 if (!_.isUndefined(vmKO.ajax_error)) {
                     vmKO.ajax_error(jqXHR);
                 }

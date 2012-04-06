@@ -75,24 +75,27 @@ $(document).ready(function () {
     test("05.vmKO.novo :: inclui novo item na lista", function () {
         inicializarViewModel();
 
-        equal(vmKO.lista().length, 4, "vmKO.lista().length === 4");
+        var quantidadeInicial = vmKO.lista().length;
 
         // inclui novo item
         // e seleciona-o
         vmKO.novo();
 
-        equal(vmKO.lista().length, 5, "vmKO.lista().length === 5");
-        equal(0, vmKO.selecionado().Id(), "id deve ser zerado");
+        equal(vmKO.lista().length, quantidadeInicial + 1,
+            "inclui novo item na lista");
+
+        equal(0, vmKO.selecionado().Id(),
+            "seleciona o item novo logo de cara");
     });
-    test("06.ajaxRest atribui settings corretamente", function () {
+    test("06.1.ajaxRest atribui settings corretamente", function () {
         var options = {
             nomeController: "pizza1",
             metodo: METHOD.LIST,
             id: 1,
             dados: { "Id": 1, "Nome": "Portuguesa 2", "Ingredientes": [{ "Id": 3, "Nome": "Molho de Tomate" }, { "Id": 4, "Nome": "Ovo"}] },
-            callback_done: undefined,
-            callback_error: undefined,
-            assincrono: true
+            callback_done: { objeto: 1 },
+            callback_error: { objeto: 2 },
+            assincrono: false
         };
 
         var ajax_config = new ajaxRest(options);
@@ -105,17 +108,33 @@ $(document).ready(function () {
         equal(ajax_config.settings.callback_error, options.callback_error, "callback_error");
         equal(ajax_config.settings.assincrono, options.assincrono, "assincrono");
     });
+    test("06.2.ajaxRest atribui settings padroes corretamente", function () {
+        var options = {
+            nomeController: "pizza2"
+        };
+
+        var ajax_config = new ajaxRest(options);
+
+        equal(ajax_config.settings.nomeController, options.nomeController, "nomeController");
+        equal(ajax_config.settings.metodo, METHOD.LIST, "metodo");
+        equal(ajax_config.settings.id, undefined, "id");
+        equal(ajax_config.settings.dados, undefined, "dados");
+        equal(ajax_config.settings.callback_done, undefined, "callback_done ");
+        equal(ajax_config.settings.callback_error, undefined, "callback_error");
+        equal(ajax_config.settings.assincrono, true, "assincrono");
+    });
     test("07.1.vmKO.salvar :: salvar OK", function () {
         // inicializa o VM
         var controller = inicializarViewModel();
-        controller.simularResposta = "sucesso";
+        controller.nomeController = "simular_sucesso";
 
         // altera a primeira pizza
         var itemAtual = vmKO.selecionado;
         itemAtual().Nome("Portuguesa 2");
 
         vmKO.ajax_done = function () {
-            equal(false, vmKO.atualizando(), "vmKO.ajax_done :: vmKO.atualizando() === false");
+            equal(false, vmKO.atualizando(),
+                "vmKO.ajax_done :: vmKO.atualizando() === false");
         };
 
         vmKO.salvar();
@@ -124,16 +143,54 @@ $(document).ready(function () {
     test("07.2.vmKO.salvar :: salvar ERRO", function () {
         // inicializa o VM
         var controller = inicializarViewModel();
-        controller.simularResposta = "erro";
+        controller.nomeController = "simular_erro";
 
         // altera a primeira pizza
         var itemAtual = vmKO.selecionado;
         itemAtual().Nome("Portuguesa 2");
 
         vmKO.ajax_error = function () {
-            equal(false, vmKO.atualizando(), "vmKO.ajax_error :: vmKO.atualizando() === false");
+            equal(false, vmKO.atualizando(),
+                "vmKO.ajax_error :: vmKO.atualizando() === false");
         };
 
         vmKO.salvar();
     });
+
+    test("08.1.vmKO.excluir :: excluir OK", function () {
+        // inicializa o VM
+        var controller = inicializarViewModel();
+        controller.nomeController = "simular_sucesso";
+
+        var quantidadeInicialItens = vmKO.lista().length;
+
+        vmKO.ajax_done = function () {
+            equal(false, vmKO.atualizando(),
+                "vmKO.ajax_done :: vmKO.atualizando() === false");
+        };
+
+        vmKO.excluir();
+
+        equal(vmKO.lista().length, quantidadeInicialItens - 1,
+        "deve retirar um item da lista");
+
+    });
+    test("08.2.vmKO.excluir :: excluir ERRO", function () {
+        // inicializa o VM
+        var controller = inicializarViewModel();
+        controller.nomeController = "simular_erro";
+
+        var quantidadeInicialItens = vmKO.lista().length;
+
+        vmKO.ajax_error = function () {
+            equal(false, vmKO.atualizando(),
+                "vmKO.ajax_error :: vmKO.atualizando() === false");
+        };
+
+        vmKO.excluir();
+
+        equal(vmKO.lista().length, quantidadeInicialItens,
+        "não deve alterar a quantidade pois deu erro");
+    });
+
 });

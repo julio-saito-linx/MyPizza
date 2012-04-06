@@ -8,13 +8,11 @@
 };
 
 var chamarAjax = function (options) {
-    
-    if (!_.isUndefined(options.callback_done) && options.simularResposta == "sucesso") {
+
+    if (!_.isUndefined(options.callback_done) && options.nomeController == "simular_sucesso") {
         options.callback_done();
     }
-    if (!_.isUndefined(options.callback_error) && options.simularResposta == "erro") {
+    if (!_.isUndefined(options.callback_error) && options.nomeController == "simular_erro") {
         options.callback_error();
     }
-
-    //(new ajaxRest(options)).callAjax();
 };

@@ -24,18 +24,13 @@ var inicializar = function () {
     // configura o caminho das APIs
     //  e ainda possui "enums" para definir
     //  qual método será chamado
-    var configuracoesAjax = {
-        callBackErrorsTo: function (jqXHR) {
-            exibirNotyErro(tratarErrorCSharp(jqXHR));
-        }
-    };
 
     // "Banco de dados local"
     var ingredientesDto;
 
     // Busca dados do banco de dados
     chamarAjax({
-        controller: "ingrediente",
+        nomeController: "ingrediente",
         callback_done: function(data) {
             ingredientesDto = data;
             inicializarViewModelKnockout(ingredientesDto);
@@ -67,27 +62,32 @@ var inicializarViewModelKnockout = function(ingredientesDto) {
 //  esta classe depende das seguintes variáveis 'globais':
 //  - ingredientesDto;
 // //////////////////////////////////////////////////////////////////////////////
-var MainViewModel = function(ingredientesDto) {
+var MainViewModel = function (ingredientesDto) {
     var self = this;
 
-// inicializa o configurador de controlers
+    // inicializa o configurador de controlers
 
-//  vmKO.lista
-//  vmKO.selecionar
-//  vmKO.id
-//  vmKO.selecionado
-//  vmKO.foiAlterado
-//  vmKO.excluir
-//  vmKO.novo
-//  vmKO.salvar
-//  vmKO.atualizando
+    //  vmKO.lista
+    //  vmKO.selecionar
+    //  vmKO.id
+    //  vmKO.selecionado
+    //  vmKO.foiAlterado
+    //  vmKO.excluir
+    //  vmKO.novo
+    //  vmKO.salvar
+    //  vmKO.atualizando
 
-//todo: Utilizar padrão do Test. Chamar com objeto.
-// Controller ingredienteVm
+    //todo: Utilizar padrão do Test. Chamar com objeto.
+    // Controller ingredienteVm
     var controllerIngrediente = new inicializarControllerKnockout({
-        viewMoldel: self.ingredienteVm = { },
+        viewMoldel: self.ingredienteVm = {},
         nomeController: "ingrediente",
         dadosDto: ingredientesDto,
         ClasseViewModel: IngredienteVM
     });
+
+    // Em caso de erro no ajax, exibe noty
+    self.ingredienteVm.ajax_error = function (jqXHR) {
+        exibirNotyErro(tratarErrorCSharp(jqXHR));
+    };
 };
