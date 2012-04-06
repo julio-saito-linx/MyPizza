@@ -20,6 +20,9 @@
 <body>
     <form id="form1" runat="server">
     <div>
+        <a href="Scripts/ajaxRestHelper/qUnitTests/Tests.html">qUnit tests</a>
+    </div>
+    <div>
         <a href="Pizza/PizzaGerenciador.aspx">Pizza/PizzaGerenciador.aspx</a>
     </div>
     <div>

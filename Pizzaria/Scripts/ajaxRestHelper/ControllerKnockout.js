@@ -2,29 +2,37 @@
     viewMoldel: {},
     nomeController: "",
     dadosDto: [],
-    ClasseViewModel: undefined,
-    configuradorAjax: undefined
+    ClasseViewModel: undefined
 };
 
 // ///////////////////////////////////////////////////
-// ControllerKnockout /////////////////////////////////
+// inicializarControllerKnockout /////////////////////////////////
 // ---------------------------------------------------
 // Configura um viewModel knockout de forma automática.
 // Expõe um CRUD básico.
 // ---------------------------------------------------
 // ///////////////////////////////////////////////////
-var ControllerKnockout = function (config) {
-    var vmKO = config.viewMoldel;
-    var nomeController = config.nomeController;
-    var dadosDto = config.dadosDto;
-    var ClasseViewModel = config.ClasseViewModel;
-    var configuradorAjax = config.configuradorAjax;
-
+var inicializarControllerKnockout = function (config) {
     var self = this;
 
-    var viewModelLista = _.map(dadosDto, function (itemDto) {
-        return new ClasseViewModel(itemDto);
+    var controller = {};
+    controller.nomeController = config.nomeController;
+    controller.dadosDto = config.dadosDto;
+    controller.ClasseViewModel = config.ClasseViewModel;
+
+    var viewModelLista = _.map(controller.dadosDto, function (itemDto) {
+        return new controller.ClasseViewModel(itemDto);
     });
+
+    var vmKO = config.viewMoldel;
+
+    // ///////////////////////////////////////////////////
+    // CALL BACKS
+    // ///////////////////////////////////////////////////
+    vmKO.ajax_done = undefined;
+    vmKO.ajax_salvar = undefined;
+    vmKO.ajax_excluir = undefined;
+    vmKO.ajax_error = undefined;
 
     // em processo de comunicação com o servidor
     vmKO.atualizando = ko.observable(false);
@@ -53,12 +61,17 @@ var ControllerKnockout = function (config) {
         return false;
     };
 
+
+
+    // ///////////////////////////////////////////////////
+    // REST
+    // ///////////////////////////////////////////////////
     // [GET] 
     vmKO.lista = ko.observableArray(viewModelLista);
 
     // [POST] 
     vmKO.novo = function () {
-        var novoVm = new ClasseViewModel();
+        var novoVm = new controller.ClasseViewModel();
         vmKO.lista.push(novoVm);
         vmKO.selecionar(novoVm);
     };
@@ -91,15 +104,28 @@ var ControllerKnockout = function (config) {
         }
 
 
-        // chamada ajax
-        configuradorAjax.ajaxAsync(
-            nomeController,
-            metodoHttp,
-            vmKO.selecionado().Id(),
-            vmSerializado,
-            function (data) {
+        // chamada callAjax
+        chamarAjax({
+            nomeController: controller.nomeController,
+            metodo: metodoHttp,
+            id: vmKO.selecionado().Id(),
+            dados: vmSerializado,
+            callback_done: function (data) {
                 vmKO.atualizando(false);
-            });
+                if (!_.isUndefined(vmKO.ajax_done)) {
+                    vmKO.ajax_done(data);
+                }
+                if (!_.isUndefined(vmKO.ajax_salvar)) {
+                    vmKO.ajax_salvar(data);
+                }
+            },
+            callback_error: function (jqXHR) {
+                if (!_.isUndefined(vmKO.ajax_error)) {
+                    vmKO.ajax_error(jqXHR);
+                }
+            },
+            assincrono: true
+        });
     };
 
     // [DELETE] 
@@ -110,13 +136,28 @@ var ControllerKnockout = function (config) {
         vmKO.lista(novaLista);
 
         vmKO.atualizando(true);
-        configuradorAjax.ajaxAsync(
-            nomeController,
-            METHOD.DELETE,
-            vmKO.selecionado().Id(),
-            undefined,
-            function (data) {
+
+        chamarAjax({
+            nomeController: controller.nomeController,
+            metodo: METHOD.DELETE,
+            id: vmKO.selecionado().Id(),
+            callback_done: function (data) {
                 vmKO.atualizando(false);
-            });
+                if (!_.isUndefined(vmKO.ajax_done)) {
+                    vmKO.ajax_done(data);
+                }
+                if (!_.isUndefined(vmKO.ajax_excluir)) {
+                    vmKO.ajax_excluir(data);
+                }
+            },
+            callback_error: function (jqXHR) {
+                if (!_.isUndefined(vmKO.ajax_error)) {
+                    vmKO.ajax_error(jqXHR);
+                }
+            },
+            assincrono: true
+        });
     };
+
+    return controller;
 };

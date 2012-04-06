@@ -2,7 +2,8 @@
 /// <reference path="~/Scripts/underscore/underscore-min.js" />
 /// <reference path="~/Scripts/jquery-1.7.1.js" />
 /// <reference path="~/Scripts/helpers.js" />
-/// <reference path="~/Scripts/ajaxRestHelper/ajaxConfig.js" />
+/// <reference path="~/Scripts/ajaxRestHelper/RepositorioAjax.js" />
+/// <reference path="~/Scripts/ajaxRestHelper/ajaxRest.js" />
 /// <reference path="~/Scripts/ajaxRestHelper/ControllerKnockout.js" />
 /// <reference path="~/Scripts/ajaxRestHelper/LocalViewModels.js" />
 
@@ -29,7 +30,7 @@ var inicializar = function() {
         callBackErrorsTo: tratarErrorCSharp,
         exibirNoty: true
     };
-    var ajax = new ajaxConfig(configuracoesAjax);
+    var ajax = new ajaxRest(configuracoesAjax);
 
 // Banco de dados local
 // base de dados retornados do servidor
@@ -42,26 +43,22 @@ var inicializar = function() {
 //  verifica se o doneContador já zerou para continuar
     var doneContador = 2; // QUANTIDADE DE CHAMADAS
 
-    ajax.ajaxAsync(
-        "ingrediente",
-        METHOD.LIST,
-        undefined,
-        undefined,
-        function(data) {
+    chamarAjax({
+        nomeController: "ingrediente",
+        callback_done: function (data) {
             ingredientesDto = data;
             sincronizaContinua();
         }
-    );
-    ajax.ajaxAsync(
-        "pizza",
-        METHOD.LIST,
-        undefined,
-        undefined,
-        function(data) {
+    });
+
+    chamarAjax({
+        nomeController: "pizza",
+        callback_done: function (data) {
             pizzasDto = data;
             sincronizaContinua();
         }
-    );
+    });
+
     var sincronizaContinua = function() {
         doneContador--;
         if (doneContador === 0) {
@@ -111,8 +108,6 @@ var MainViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
         $("#divDebug").toggle();
     };
 
-// inicializa o configurador de controlers
-//todo: passar configuração via objeto para ficar mais claro
 
 //  vmKO.lista
 //  vmKO.selecionar
@@ -126,13 +121,14 @@ var MainViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
 //  vmKO.atualizando
 //  vmKO.removerCancelar
 
+//todo: Utilizar padrão do Test. Chamar com objeto.
 // Controller pizzaVm
     configControllerKnockout.viewMoldel = self.pizzaVm = { };
     configControllerKnockout.nomeController = "pizza";
     configControllerKnockout.dadosDto = pizzasDto;
     configControllerKnockout.ClasseViewModel = PizzaVM;
     configControllerKnockout.configuradorAjax = configuradorAjax;
-    new ControllerKnockout(configControllerKnockout);
+    new inicializarControllerKnockout(configControllerKnockout);
 
 
 // Controller ingredienteVm
@@ -141,7 +137,7 @@ var MainViewModel = function(configuradorAjax, pizzasDto, ingredientesDto) {
     configControllerKnockout.dadosDto = ingredientesDto;
     configControllerKnockout.ClasseViewModel = IngredienteVM;
     configControllerKnockout.configuradorAjax = configuradorAjax;
-    new ControllerKnockout(configControllerKnockout);
+    new inicializarControllerKnockout(configControllerKnockout);
 
 
 // ///////////////////////////////

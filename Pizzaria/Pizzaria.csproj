@@ -111,6 +111,8 @@
     <Content Include="IMG\main_black.gif" />
     <Content Include="Pizza\PizzaGerenciador.js" />
     <Content Include="Pizza\PizzaGerenciador.css" />
+    <Content Include="Scripts\ajaxRestHelper\RepositorioAjax.mock.js" />
+    <Content Include="Scripts\ajaxRestHelper\RepositorioAjax.js" />
     <Content Include="Scripts\ajaxRestHelper\qUnitTests\jshamcrest-0.5.2.js" />
     <Content Include="Scripts\ajaxRestHelper\qUnitTests\jsmockito-1.0.4.js" />
     <Content Include="Scripts\ajaxRestHelper\qUnitTests\qunit.css" />
@@ -128,7 +130,7 @@
     <Content Include="Scripts\noty\img\mitgux\error.png" />
     <Content Include="Scripts\noty\js\jquery.noty.js" />
     <Content Include="Pizza\PizzaGerenciador.aspx" />
-    <Content Include="Scripts\ajaxRestHelper\ajaxConfig.js" />
+    <Content Include="Scripts\ajaxRestHelper\ajaxRest.js" />
     <Content Include="Scripts\ajaxRestHelper\ControllerKnockout.js" />
     <Content Include="Scripts\ajaxRestHelper\LocalViewModels.js" />
     <Content Include="Scripts\helpers.js" />

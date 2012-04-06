@@ -74,7 +74,8 @@
 <script src="../Scripts/underscore/underscore-min.js" type="text/javascript"> </script>
 <script src="../Scripts/knockout.debug.js" type="text/javascript"> </script>
 <script src="../Scripts/helpers.js" type="text/javascript"> </script>
-<script src="../Scripts/ajaxRestHelper/ajaxConfig.js" type="text/javascript"> </script>
+<script src="../Scripts/ajaxRestHelper/RepositorioAjax.js" type="text/javascript"></script>
+<script src="../Scripts/ajaxRestHelper/ajaxRest.js" type="text/javascript"> </script>
 <script src="../Scripts/ajaxRestHelper/ControllerKnockout.js" type="text/javascript"> </script>
 <script src="../Scripts/ajaxRestHelper/LocalViewModels.js" type="text/javascript"> </script>
 <script src="IngredienteTable.js" type="text/javascript"> </script>

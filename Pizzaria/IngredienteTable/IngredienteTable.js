@@ -2,7 +2,8 @@
 /// <reference path="~/Scripts/underscore/underscore-min.js" />
 /// <reference path="~/Scripts/jquery-1.7.1.js" />
 /// <reference path="~/Scripts/helpers.js" />
-/// <reference path="~/Scripts/ajaxRestHelper/ajaxConfig.js" />
+/// <reference path="~/Scripts/ajaxRestHelper/RepositorioAjax.js" />
+/// <reference path="~/Scripts/ajaxRestHelper/ajaxRest.js" />
 /// <reference path="~/Scripts/ajaxRestHelper/ControllerKnockout.js" />
 /// <reference path="~/Scripts/ajaxRestHelper/LocalViewModels.js" />
 
@@ -28,23 +29,19 @@ var inicializar = function () {
             exibirNotyErro(tratarErrorCSharp(jqXHR));
         }
     };
-    var ajax = new ajaxConfig(configuracoesAjax);
 
-    // Banco de dados local
-    // base de dados retornados do servidor
+    // "Banco de dados local"
     var ingredientesDto;
 
     // Busca dados do banco de dados
-    ajax.ajaxAsync(
-        "ingrediente",
-        METHOD.LIST,
-        undefined,
-        undefined,
-        function (data) {
+    chamarAjax({
+        controller: "ingrediente",
+        callback_done: function(data) {
             ingredientesDto = data;
-            inicializarViewModelKnockout(ajax, ingredientesDto);
-        }
-    );
+            inicializarViewModelKnockout(ingredientesDto);
+        },
+        assincrono: true
+    });
 };
 
 
@@ -54,9 +51,9 @@ var inicializar = function () {
 // cria o view model e aplica no knockout
 // ---------------------------------------------------
 // ///////////////////////////////////////////////////
-var inicializarViewModelKnockout = function(configuradorAjax, ingredientesDto) {
+var inicializarViewModelKnockout = function(ingredientesDto) {
 // inicializa o viewModel
-    var pizzasViewModel = new MainViewModel(configuradorAjax, ingredientesDto);
+    var pizzasViewModel = new MainViewModel(ingredientesDto);
 
 // This makes Knockout get to work
     ko.applyBindings(pizzasViewModel);
@@ -70,11 +67,10 @@ var inicializarViewModelKnockout = function(configuradorAjax, ingredientesDto) {
 //  esta classe depende das seguintes variáveis 'globais':
 //  - ingredientesDto;
 // //////////////////////////////////////////////////////////////////////////////
-var MainViewModel = function(configuradorAjax, ingredientesDto) {
+var MainViewModel = function(ingredientesDto) {
     var self = this;
 
 // inicializa o configurador de controlers
-//todo: passar configuração via objeto para ficar mais claro
 
 //  vmKO.lista
 //  vmKO.selecionar
@@ -86,11 +82,12 @@ var MainViewModel = function(configuradorAjax, ingredientesDto) {
 //  vmKO.salvar
 //  vmKO.atualizando
 
+//todo: Utilizar padrão do Test. Chamar com objeto.
 // Controller ingredienteVm
-    configControllerKnockout.viewMoldel = self.ingredienteVm = { };
-    configControllerKnockout.nomeController = "ingrediente";
-    configControllerKnockout.dadosDto = ingredientesDto;
-    configControllerKnockout.ClasseViewModel = IngredienteVM;
-    configControllerKnockout.configuradorAjax = configuradorAjax;
-    new ControllerKnockout(configControllerKnockout);
+    var controllerIngrediente = new inicializarControllerKnockout({
+        viewMoldel: self.ingredienteVm = { },
+        nomeController: "ingrediente",
+        dadosDto: ingredientesDto,
+        ClasseViewModel: IngredienteVM
+    });
 };
