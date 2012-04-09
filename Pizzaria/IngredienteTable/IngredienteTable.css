@@ -61,6 +61,16 @@ option, input{
     font-size: 1.30em;
 }
 
+.itemDebug 
+{
+    border: solid 2px;
+    border-color: #888;
+    display: block;
+    width: 500px;
+    height: 500px;
+    overflow: auto
+}
+
 table td,th {
     padding: 8px;
     text-align: left;

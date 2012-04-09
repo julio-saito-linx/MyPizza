@@ -9,26 +9,23 @@ var METHOD = {
     DELETE: { type: "DELETE", url: "../api/__controller__/__id__"}
 };
 
-var ajaxRestSettings = {
-    nomeController: "",
-    metodo: METHOD.LIST,
-    id: undefined,
-    dados: undefined,
-    callback_done: undefined,
-    callback_error: undefined,
-    assincrono: true
-};
-
 var ajaxRest = function (options) {
     var self = this;
 
     // Force options to be an object
     options = options || {};
 
-    //self.callBackErrorsTo = configuracaoParametro.callBackErrorsTo;
-
     // padrão
-    self.settings = ajaxRestSettings;
+    self.settings = {};
+    self.settings.nomeController = "";
+    self.settings.metodo = METHOD.LIST;
+    self.settings.id = undefined;
+    self.settings.dados = undefined;
+    self.settings.callback_done = undefined;
+    self.settings.callback_error = undefined;
+    self.settings.assincrono = true;
+
+    //self.settings = ajaxRestSettings;
     if (!_.isUndefined(options.nomeController)) {
         self.settings.nomeController = options.nomeController;
     }
@@ -50,7 +47,7 @@ var ajaxRest = function (options) {
     if (!_.isUndefined(options.assincrono)) {
         self.settings.assincrono = options.assincrono;
     }
-    
+
     self.callAjax = function () {
         // prepara URL
         var uri;
@@ -72,7 +69,7 @@ var ajaxRest = function (options) {
 
         request.done(function (data) {
             if (!_.isUndefined(self.settings.callback_done)) {
-                self.settings.callback_done.call(self, data);   
+                self.settings.callback_done.call(self, data);
             }
         });
 

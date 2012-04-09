@@ -32,7 +32,9 @@
                     <tr data-bind="css: {linhaSelecionada : Id === $root.ingredienteVm.selecionado().Id }, click: $root.ingredienteVm.selecionar">
                         <td data-bind="text:Id" />
                         <td data-bind="text:Nome" />
-                        <td data-bind="click:$root.ingredienteVm.excluir" >X</td>
+                        <td data-bind="click:$root.ingredienteVm.excluir">
+                            X
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -56,11 +58,12 @@
                     Nome
                 </div>
                 <div class="dado">
-                    <input data-bind="value : Nome"/>
+                    <input data-bind="value : Nome" />
                 </div>
             </div>
         </div>
-    </div>    <div id="divDebug">
+    </div>
+    <div id="divDebug">
         <h3>
             debug</h3>
         <div class="itemDebug">
