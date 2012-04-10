@@ -23,10 +23,10 @@
         <a href="Scripts/ajaxRestHelper/qUnitTests/Tests.html">qUnit tests</a>
     </div>
     <div>
-        <a href="Pizza/PizzaGerenciador.aspx">Pizza/PizzaGerenciador.aspx</a>
+        <a href="Pizza/PizzaGerenciador.html">Pizza/PizzaGerenciador</a>
     </div>
     <div>
-        <a href="IngredienteTable/IngredienteTable.aspx">IngredienteTable/IngredienteTable.aspx</a>
+        <a href="IngredienteTable/IngredienteTable.html">IngredienteTable/IngredienteTable</a>
     </div>
     <div>
         <a href="AutoCriarBancoDados.aspx">AutoCriarBancoDados.aspx</a>

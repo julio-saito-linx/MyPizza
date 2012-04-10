@@ -102,7 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AutoCriarBancoDados.aspx" />
-    <Content Include="IngredienteTable\IngredienteTable.aspx" />
+    <Content Include="IngredienteTable\IngredienteTable.html" />
     <Content Include="IngredienteTable\IngredienteTable.css" />
     <Content Include="IngredienteTable\IngredienteTable.js" />
     <Content Include="Default.aspx" />
@@ -129,7 +129,7 @@
     <Content Include="Scripts\noty\img\mitgux\done.png" />
     <Content Include="Scripts\noty\img\mitgux\error.png" />
     <Content Include="Scripts\noty\js\jquery.noty.js" />
-    <Content Include="Pizza\PizzaGerenciador.aspx" />
+    <Content Include="Pizza\PizzaGerenciador.html" />
     <Content Include="Scripts\ajaxRestHelper\ajaxRest.js" />
     <Content Include="Scripts\ajaxRestHelper\ControllerKnockout.js" />
     <Content Include="Scripts\ajaxRestHelper\LocalViewModels.js" />
