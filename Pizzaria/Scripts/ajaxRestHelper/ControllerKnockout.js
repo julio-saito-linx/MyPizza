@@ -143,7 +143,7 @@ var inicializarControllerKnockout = function (config) {
                 });
                 vmKO.lista(novaLista);
                 vmKO.atualizando(false);
-                
+
                 if (!_.isUndefined(vmKO.ajax_done)) {
                     vmKO.ajax_done(data);
                 }
@@ -159,6 +159,9 @@ var inicializarControllerKnockout = function (config) {
             }
         });
     };
+
+
+    controller.VmKO = vmKO;
 
     return controller;
 };
