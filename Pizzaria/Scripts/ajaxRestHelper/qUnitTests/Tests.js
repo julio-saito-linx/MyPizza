@@ -48,6 +48,18 @@ $(document).ready(function () {
         var pizzaPortuguesa = vmKO.lista()[0];
         equal(pizzaPortuguesa.Id(), vmKO.selecionado().Id(), "pizzaPortuguesa.Id() === vmKO.id()()");
     });
+    test("02.vmKO.lista :: chama ajax se lista nao estiver preenchida", function () {
+        var controller = inicializarControllerKnockout({
+            viewMoldel: vmKO = {},
+            nomeController: "pizza",
+            ClasseViewModel: PizzaVM
+        });
+
+        vmKO.ajax_done = function () {
+            equal(false, vmKO.atualizando(),
+                "vmKO.ajax_done :: vmKO.atualizando() === false");
+        };
+    });
     test("03.vmKO.selecionar :: muda o item selecionado", function () {
         var vmKO = inicializarViewModel().VmKO;
 
@@ -127,7 +139,7 @@ $(document).ready(function () {
         var controller = inicializarViewModel();
         controller.nomeController = "simular_sucesso";
         var vmKO = controller.VmKO;
-        
+
         // altera a primeira pizza
         var itemAtual = vmKO.selecionado;
         itemAtual().Nome("Portuguesa 2");

@@ -13,17 +13,12 @@
 // ---------------------------------------------------
 // ///////////////////////////////////////////////////
 var inicializarControllerKnockout = function (config) {
-    var self = this;
-
     var controller = {};
     controller.nomeController = config.nomeController;
-    controller.dadosDto = config.dadosDto;
     controller.ClasseViewModel = config.ClasseViewModel;
-
-    var viewModelLista = _.map(controller.dadosDto, function (itemDto) {
-        return new controller.ClasseViewModel(itemDto);
-    });
-
+    controller.dadosDto = undefined;
+    var viewModelLista;
+    
     var vmKO = config.viewMoldel;
 
     // ///////////////////////////////////////////////////
@@ -36,9 +31,6 @@ var inicializarControllerKnockout = function (config) {
 
     // em processo de comunicação com o servidor
     vmKO.atualizando = ko.observable(false);
-
-    // item selecionado, inicia com o primeiro
-    vmKO.selecionado = ko.observable(viewModelLista[0]);
 
     vmKO.jsonItem = ko.toJSON(vmKO.selecionado);
 
@@ -66,8 +58,6 @@ var inicializarControllerKnockout = function (config) {
     // ///////////////////////////////////////////////////
     // REST
     // ///////////////////////////////////////////////////
-    // [GET] 
-    vmKO.lista = ko.observableArray(viewModelLista);
 
     // [POST] 
     vmKO.novo = function () {
@@ -118,6 +108,10 @@ var inicializarControllerKnockout = function (config) {
                 if (!_.isUndefined(vmKO.ajax_salvar)) {
                     vmKO.ajax_salvar(data);
                 }
+                // se foi inclusão, pega o novo ID
+                if(metodoHttp === METHOD.POST){
+                	vmKO.selecionado().Id(data);
+                }
             },
             callback_error: function (jqXHR) {
                 vmKO.atualizando(false);
@@ -138,6 +132,7 @@ var inicializarControllerKnockout = function (config) {
             id: vmKO.selecionado().Id(),
             callback_done: function (data) {
                 // se conseguiu excluir no servidor
+                // retira o item da lista atual
                 var novaLista = _.reject(vmKO.lista(), function (item) {
                     return item.Id() === vmKO.selecionado().Id();
                 });
@@ -160,8 +155,32 @@ var inicializarControllerKnockout = function (config) {
         });
     };
 
-
     controller.VmKO = vmKO;
+
+    // Os dados já vieram preenchidos
+    if (!_.isUndefined(config.dadosDto)) {
+        controller.dadosDto = config.dadosDto;
+    }
+    else {
+        chamarAjax({
+            nomeController: controller.nomeController,
+            callback_done: function (data) {
+                controller.dadosDto = data;
+            },
+            assincrono: false
+        });
+    }
+
+    // cria viewModel para cada Dto
+    viewModelLista = _.map(controller.dadosDto, function (itemDto) {
+        return new controller.ClasseViewModel(itemDto);
+    });
+
+    // item selecionado, inicia com o primeiro
+    vmKO.selecionado = ko.observable(viewModelLista[0]);
+
+    // [GET] 
+    vmKO.lista = ko.observableArray(viewModelLista);
 
     return controller;
 };
