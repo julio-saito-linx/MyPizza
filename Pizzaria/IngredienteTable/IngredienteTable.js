@@ -33,7 +33,9 @@ var MainViewModel = function (ingredientesDto) {
 // //////////////////////////////////////////////////////////////////////////////
 //  READY: Inicializa o knockout
 // //////////////////////////////////////////////////////////////////////////////
+var mainViewModel;
 $().ready(function() {
-    ko.applyBindings(new MainViewModel()); // This makes Knockout get to work
+    mainViewModel = new MainViewModel()
+    ko.applyBindings(mainViewModel); // This makes Knockout get to work
 });
 

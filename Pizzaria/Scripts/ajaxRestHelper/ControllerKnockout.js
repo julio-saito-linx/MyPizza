@@ -131,6 +131,9 @@ var inicializarControllerKnockout = function (config) {
             metodo: METHOD.DELETE,
             id: vmKO.selecionado().Id(),
             callback_done: function (data) {
+                //guarda indice atual
+                var indiceAtual = _.indexOf(vmKO.lista(), vmKO.selecionado())
+                
                 // se conseguiu excluir no servidor
                 // retira o item da lista atual
                 var novaLista = _.reject(vmKO.lista(), function (item) {
@@ -138,6 +141,11 @@ var inicializarControllerKnockout = function (config) {
                 });
                 vmKO.lista(novaLista);
                 vmKO.atualizando(false);
+                
+                //seleciona próximo da lista
+                var ultimoItem = vmKO.lista().length - 1;
+                var selecionarIndice = (indiceAtual <= ultimoItem) ? indiceAtual : ultimoItem;
+        		vmKO.selecionar(vmKO.lista()[selecionarIndice]);
 
                 if (!_.isUndefined(vmKO.ajax_done)) {
                     vmKO.ajax_done(data);
