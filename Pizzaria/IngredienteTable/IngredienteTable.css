@@ -3,7 +3,7 @@
     color: #333;
     font-family: Verdana;
     font-size: 1.1em;
-    margin: 10px;
+    margin: 20px;
     padding: 10px;
     background-image: url('../IMG/Dark_Metal_Wallpaper_by_IMdotMS.jpg')
     
@@ -16,7 +16,7 @@ option, input{
 
 .bloco {
     float: left;
-    width: 350px;
+    width: 300px;
 }
 
 .subTitulo {
@@ -71,6 +71,11 @@ option, input{
     overflow: auto
 }
 
+table {
+    padding: 7px;
+    margin: 7px;
+}
+
 table td,th {
     padding: 8px;
     text-align: left;
@@ -105,5 +110,14 @@ table td
 
 .dado input{
     width: 170px;
+}
+
+button {
+    color: #338;
+    font-weight: bold;
+    font-size: 0.90em;
+    padding: 7px;
+    margin: 7px;
+    display: inline;
 }
 
