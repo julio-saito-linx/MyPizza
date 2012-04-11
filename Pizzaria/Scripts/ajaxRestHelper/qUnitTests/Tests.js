@@ -137,16 +137,18 @@ $(document).ready(function () {
     test("07.1.vmKO.salvar :: salvar OK", function () {
         // inicializa o VM
         var controller = inicializarViewModel();
-        controller.nomeController = "simular_sucesso";
+        controller.nomeController = "POST_sucesso";
         var vmKO = controller.VmKO;
 
         // altera a primeira pizza
         var itemAtual = vmKO.selecionado;
         itemAtual().Nome("Portuguesa 2");
 
-        vmKO.ajax_done = function () {
+        vmKO.ajax_done = function (data) {
             equal(false, vmKO.atualizando(),
                 "vmKO.ajax_done :: vmKO.atualizando() === false");
+            equal(11, data, 
+            	"vmKO.ajax_done :: retorna novo ID inserido via POST");
         };
 
         vmKO.salvar();
@@ -188,6 +190,8 @@ $(document).ready(function () {
         equal(vmKO.lista().length, quantidadeInicialItens - 1,
         "deve retirar um item da lista");
 
+        equal(vmKO.selecionado().Id(), 2,
+        "deve selecionar o proximo item");
     });
     test("08.2.vmKO.excluir :: excluir ERRO", function () {
         // inicializa o VM

@@ -32,8 +32,6 @@ var inicializarControllerKnockout = function (config) {
     // em processo de comunicação com o servidor
     vmKO.atualizando = ko.observable(false);
 
-    vmKO.jsonItem = ko.toJSON(vmKO.selecionado);
-
     // somente o id que estiver selecionado
     vmKO.selecionar = function (item) {
         // salva o item anterior
@@ -184,11 +182,13 @@ var inicializarControllerKnockout = function (config) {
         return new controller.ClasseViewModel(itemDto);
     });
 
+    // [GET] 
+    vmKO.lista = ko.observableArray(viewModelLista);
+
     // item selecionado, inicia com o primeiro
     vmKO.selecionado = ko.observable(viewModelLista[0]);
 
-    // [GET] 
-    vmKO.lista = ko.observableArray(viewModelLista);
+    vmKO.jsonItem = ko.toJSON(vmKO.selecionado);
 
     return controller;
 };
